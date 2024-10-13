@@ -27,7 +27,7 @@ const SplashPageContent = () => {
   return (
     <div className="h-full relative">
       <div className="h-full flex flex-col items-start justify-center p-10">
-        <h1 className="text-5xl font-black">TPServis</h1>
+        <h1 className="text-5xl font-black">TPService</h1>
         <h2 className="text-lg">Наразі наш вебсайт перебуває у процесі розробки.</h2>
         <p className="text-sm opacity-50 text-pretty">
           Скоро ми будемо готові до запуску, тому залишайтеся з нами!
