@@ -29,9 +29,7 @@ const SplashPageContent = () => {
       <div className="h-full flex flex-col items-start justify-center p-10">
         <h1 className="text-5xl font-black">TPService</h1>
         <h2 className="text-lg">Наразі наш вебсайт перебуває у процесі розробки.</h2>
-        <p className="text-sm opacity-50 text-pretty">
-          Скоро ми будемо готові до запуску, тому залишайтеся з нами!
-        </p>
+        <p className="text-sm opacity-50">Скоро ми будемо готові до запуску, тому залишайтеся з нами!</p>
       </div>
       <ul className="bg-gray-500/10 absolute bottom-0 left-0 w-full p-4 px-10">
         <SplashPageContactItem
