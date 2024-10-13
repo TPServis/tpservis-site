@@ -51,7 +51,7 @@ const SplashPageContent = () => {
           tpservice@ukr.net
         </SplashPageContactItem>
         <SplashPageContactItem
-          href="https://maps.app.goo.gl/CGFwaTtPhQJqhGv56"
+          href="https://maps.app.goo.gl/2RwzgQWy136z4jJp6"
           icon={<SiGooglemaps className="mr-2 w-4 h-4" />}
         >
           вул. Ст. Прощенка, 34, Ніжин
