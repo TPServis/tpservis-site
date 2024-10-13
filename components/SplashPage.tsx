@@ -39,12 +39,6 @@ const SplashPageContent = () => {
           +38 (097) 530-08-60
         </SplashPageContactItem>
         <SplashPageContactItem
-          href="tel:+380681299177"
-          icon={<FaPhoneAlt className="mr-2 w-4 h-4" />}
-        >
-          +38 (068) 129-91-77
-        </SplashPageContactItem>
-        <SplashPageContactItem
           href="mailto:tpservice@ukr.net"
           icon={<IoIosMail className="mr-2 w-4 h-4  " />}
         >
