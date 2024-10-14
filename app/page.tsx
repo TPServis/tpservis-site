@@ -1,9 +1,9 @@
-import SplashPage from "@/components/SplashPage";
+import Hero from "@/components/Hero/Hero";
 
 export default function Home() {
   return (
     <main>
-      <SplashPage />
+      <Hero />
     </main>
   );
 }
