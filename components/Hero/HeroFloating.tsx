@@ -24,19 +24,19 @@ export default function HeroFloating() {
           img={Hero2}
           alt="Hero"
           className=" row-start-2 animate-[float_10s_ease-in-out_1s_infinite]"
-          delay={0.2}
+          delay={0.1}
         />
         <FloatingImage
           img={Hero3}
           alt="Hero"
           className="animate-[float_10s_ease-in-out_2s_infinite]"
-          delay={0.4}
+          delay={0.2}
         />
         <FloatingImage
           img={Hero4}
           alt="Hero"
           className=" animate-[float_10s_ease-in-out_3s_infinite]"
-          delay={0.6}
+          delay={0.3}
         />
       </div>
     </div>
@@ -56,7 +56,7 @@ const FloatingImage = (props: FloatingImageProps) => {
       className={`rounded-3xl overflow-hidden col-span-1 row-span-2 w-[25vw] animate-float ${props.className}`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 1, delay: props.delay, ease: "easeInOut" }}
+      transition={{ duration: 0.8, delay: props.delay, ease: "easeInOut" }}
     >
       <Image
         src={props.img}
