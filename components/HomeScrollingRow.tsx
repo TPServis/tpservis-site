@@ -62,7 +62,7 @@ const HomePopularDestinationItem = (props: HomeScrollingRowItem) => {
         width={0}
         height={0}
       />
-      <div className="absolute bottom-4 left-4 p-2 px-6 bg-white/80 rounded-lg">
+      <div className="absolute bottom-4 left-4 p-2 px-6 bg-white/80 rounded-lg backdrop-blur-sm">
         <h3 className="text-2xl font-bold text-astral-900">{props.title}</h3>
       </div>
     </div>

@@ -20,7 +20,10 @@ export default function HomePopularDestinations() {
   });
 
   return (
-    <div ref={ref}>
+    <div
+      ref={ref}
+      className="pb-20"
+    >
       <div className="w-full container-spacing !pb-10">
         <div className="container-wrapper pb-0">
           <h2 className="text-6xl font-bold text-astral-900 pb-4">Популярні напрямки</h2>
