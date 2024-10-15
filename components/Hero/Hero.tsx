@@ -5,7 +5,7 @@ import { FaArrowRightLong } from "react-icons/fa6";
 
 export default function Hero() {
   return (
-    <div className="h-screen w-full bg-astral-50 container-spacing overflow-hidden">
+    <div className="h-screen w-full bg-astral-50 container-spacing py-0 overflow-hidden flex items-center">
       <div className="container-wrapper grid grid-cols-5">
         <div className="flex flex-col justify-center h-full col-span-3">
           <h1 className="text-sm uppercase pb-6">Travel Professional Service</h1>

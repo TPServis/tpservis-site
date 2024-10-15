@@ -20,7 +20,7 @@ body {
 }
 
 .container-spacing {
-  @apply px-16 py-24;
+  @apply px-16 py-32;
 }
 
 .container-wrapper {
