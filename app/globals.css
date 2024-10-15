@@ -18,3 +18,11 @@ body {
     text-wrap: balance;
   }
 }
+
+.container-spacing {
+  @apply px-16 py-24;
+}
+
+.container-wrapper {
+  @apply max-w-screen-xl mx-auto;
+}

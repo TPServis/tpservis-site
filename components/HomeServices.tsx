@@ -2,8 +2,8 @@ import React from "react";
 
 export default function HomeAbout() {
   return (
-    <div className="w-full px-4 py-24 pt-48">
-      <div className="max-w-screen-2xl mx-auto grid grid-cols-5">
+    <div className="w-full container-spacing pt-48">
+      <div className="container-wrapper grid grid-cols-5">
         <div className="col-span-3 row-span-1 w-[80%]">
           <h2 className="text-6xl font-bold text-astral-900">Наші суперпропозиції для вашої подорожі</h2>
         </div>
