@@ -1,6 +1,5 @@
 import React from "react";
 import NextLink from "next/link";
-import { MdAirplaneTicket } from "react-icons/md";
 import { PiAirplaneTakeoff, PiTrain, PiBus } from "react-icons/pi";
 
 export default function HomeTickets() {

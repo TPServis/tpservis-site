@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
-import { useRef, useEffect } from "react";
+import { motion, useSpring, useTransform } from "framer-motion";
+import type { MotionValue } from "framer-motion";
+import { useRef } from "react";
 import { StaticImageData } from "next/image";
 
 import Image from "next/image";
@@ -10,13 +11,12 @@ import React from "react";
 type HomeScrollingRowProps = {
   direction: "left" | "right";
   items: HomeScrollingRowItem[];
-  scrollYProgress: any;
+  scrollYProgress: MotionValue<number>;
 };
 
 export default function HomeScrollingRow(props: HomeScrollingRowProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const mouseXValue = useMotionValue(50);
-  let widthDifference = 400;
+  const widthDifference = 400;
 
   const x = useTransform(
     props.scrollYProgress,

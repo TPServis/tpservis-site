@@ -5,6 +5,7 @@ import HomeTourMainBlock from "@/components/HomeTourMainBlock";
 import HomeWhyUs from "@/components/HomeWhyUs";
 import HomePopularDestinations from "@/components/HomePopularDestinations";
 import HomeTickets from "@/components/HomeTickets";
+import HomeDocuments from "@/components/HomeDocuments";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <HomeWhyUs />
       <HomePopularDestinations />
       <HomeTickets />
+      <HomeDocuments />
     </main>
   );
 }
