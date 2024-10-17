@@ -50,7 +50,7 @@ type HomeDocumentsItemProps = {
 };
 
 function HomeDocumentsItem(props: HomeDocumentsItemProps) {
-  const cls = "bg-astral-600 rounded-3xl p-4 col-span-1 row-span-2 group " + props.className;
+  const cls = "bg-astral-700 rounded-3xl p-4 col-span-1 row-span-2 group " + props.className;
 
   return (
     <div className={cls}>
@@ -71,7 +71,7 @@ function HomeDocumentsItem(props: HomeDocumentsItemProps) {
 
 function HomeDocumentsItemSmall(props: HomeDocumentsItemProps) {
   const cls =
-    "bg-astral-600 rounded-3xl p-4 col-span-1 row-span-1 flex justify-between group " + props.className;
+    "bg-astral-700 rounded-3xl p-4 col-span-1 row-span-1 flex justify-between group " + props.className;
 
   return (
     <div className={cls}>

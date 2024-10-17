@@ -6,7 +6,7 @@ import HomeWhyUs from "@/components/HomeWhyUs";
 import HomePopularDestinations from "@/components/HomePopularDestinations";
 import HomeTickets from "@/components/HomeTickets";
 import HomeDocuments from "@/components/HomeDocuments";
-
+import HomeFaq from "@/components/HomeFaq";
 export default function Home() {
   return (
     <main>
@@ -18,6 +18,7 @@ export default function Home() {
       <HomePopularDestinations />
       <HomeTickets />
       <HomeDocuments />
+      <HomeFaq />
     </main>
   );
 }

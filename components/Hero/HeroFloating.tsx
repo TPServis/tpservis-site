@@ -53,7 +53,7 @@ interface FloatingImageProps {
 const FloatingImage = (props: FloatingImageProps) => {
   return (
     <motion.div
-      className={`rounded-3xl overflow-hidden col-span-1 row-span-2 w-[25vw] animate-float ${props.className}`}
+      className={`col-span-1 row-span-2 w-[25vw] animate-float ${props.className}`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8, delay: props.delay, ease: "easeInOut" }}
@@ -61,7 +61,14 @@ const FloatingImage = (props: FloatingImageProps) => {
       <Image
         src={props.img}
         alt={props.alt}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover rounded-3xl scale-100 blur-lg brightness-200"
+        width={1000}
+        height={1000}
+      />
+      <Image
+        src={props.img}
+        alt={props.alt}
+        className="w-full h-full object-cover rounded-3xl absolute inset-0"
         width={1000}
         height={1000}
       />
