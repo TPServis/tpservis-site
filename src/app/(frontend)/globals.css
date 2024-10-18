@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: auto;
+    font-weight: auto;
+  }
+
+  :root {
+    --background: #fbfffe;
+    --foreground: #252323;
+
+    --card: #fbfffe;
+    --card-foreground: #252323;
+
+    --popover: #fbfffe;
+    --popover-foreground: #252323;
+
+    --primary: #fbfffe;
+    --primary-foreground: #252323;
+
+    --secondary: #fbfffe;
+    --secondary-foreground: #252323;
+
+    --muted: #fbfffe;
+    --muted-foreground: #252323;
+
+    --accent: #fbfffe;
+    --accent-foreground: #252323;
+
+    --destructive: #fbfffe;
+    --destructive-foreground: #252323;
+
+    --border: #252323;
+    --input: #252323;
+    --ring: #252323;
+
+    --radius: 0.2rem;
+
+    --success: #fbfffe;
+    --warning: #fbfffe;
+    --error: #fbfffe;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+html {
+  opacity: 0;
+}
+
+html[data-theme='dark'],
+html[data-theme='light'] {
+  opacity: initial;
+}
+
+.container-spacing {
+  @apply px-16 py-32;
+}
+
+.container-wrapper {
+  @apply max-w-screen-xl mx-auto;
+}
