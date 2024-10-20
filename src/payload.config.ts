@@ -1,13 +1,11 @@
 // storage-adapter-import-placeholder
 import { postgresAdapter } from '@payloadcms/db-postgres'
-import { cloudStorage } from '@payloadcms/plugin-cloud-storage'
-import { s3Adapter } from '@payloadcms/plugin-cloud-storage/s3'
-import { payloadCloudPlugin } from '@payloadcms/plugin-cloud'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
+import { s3Storage } from '@payloadcms/storage-s3'
 import {
   BoldFeature,
   FixedToolbarFeature,
@@ -48,23 +46,6 @@ const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
     ? `${process.env.NEXT_PUBLIC_SERVER_URL!}/${doc.slug}`
     : process.env.NEXT_PUBLIC_SERVER_URL!
 }
-
-let accessKeyId = process.env.S3_ACCESS_KEY_ID || ''
-let secretAccessKey = process.env.S3_SECRET_ACCESS_KEY || ''
-let bucket = process.env.S3_BUCKET || ''
-let region = process.env.S3_REGION || ''
-
-const adapter = s3Adapter({
-  config: {
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
-    region,
-    // ... Other S3 configuration
-  },
-  bucket,
-})
 
 export default buildConfig({
   admin: {
@@ -203,12 +184,19 @@ export default buildConfig({
         },
       },
     }),
-
-    cloudStorage({
+    s3Storage({
       collections: {
-        media: {
-          adapter,
+        [Media.slug]: true,
+      },
+      bucket: process.env.S3_BUCKET || '',
+      config: {
+        credentials: {
+          accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
         },
+        region: process.env.S3_REGION || '',
+        endpoint: process.env.S3_ENDPOINT || '',
+        // ... Other S3 configuration
       },
     }),
   ],

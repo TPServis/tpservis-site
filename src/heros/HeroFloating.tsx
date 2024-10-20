@@ -61,6 +61,8 @@ const FloatingImage = (props: FloatingImageProps) => {
         className="w-full h-full object-cover rounded-3xl scale-100 blur-lg brightness-200"
         quality={100}
         sizes="100vw"
+        width={100}
+        height={100}
       />
       <Image
         src={props.img?.url ?? ''}
@@ -68,6 +70,8 @@ const FloatingImage = (props: FloatingImageProps) => {
         className="w-full h-full object-cover rounded-3xl absolute inset-0"
         quality={100}
         sizes="100vw"
+        width={100}
+        height={100}
       />
     </motion.div>
   )
