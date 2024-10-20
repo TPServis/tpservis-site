@@ -17,7 +17,6 @@ const nextConfig = {
         }
       }),
     ],
-    domains: ['localhost', 'localhost:3000', 'tpservis.com', '*.tpservis.com'],
   },
   reactStrictMode: false,
   redirects,
