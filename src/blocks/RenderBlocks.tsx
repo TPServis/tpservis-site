@@ -11,6 +11,7 @@ import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { TextAside } from '@/blocks/TextAside/Component'
 import { ListAside } from '@/blocks/ListAside/Component'
 import { ImageWithInfoGrid } from '@/blocks/ImageWithInfoGrid/Component'
+import { HorizontalIconsGroup } from '@/blocks/HorizontalIconsGroup/Components'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -21,6 +22,7 @@ const blockComponents = {
   listAside: ListAside,
   textAside: TextAside,
   imageWithInfoGrid: ImageWithInfoGrid,
+  horizontalIconsGroup: HorizontalIconsGroup,
 }
 
 export const RenderBlocks: React.FC<{

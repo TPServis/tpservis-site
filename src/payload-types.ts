@@ -89,6 +89,7 @@ export interface Page {
     | TextAside
     | ListAside
     | ImageWithInfoGrid
+    | HorizontalIconsGroup
   )[];
   meta?: {
     title?: string | null;
@@ -628,6 +629,39 @@ export interface ImageWithInfoGrid {
   id?: string | null;
   blockName?: string | null;
   blockType: 'imageWithInfoGrid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HorizontalIconsGroup".
+ */
+export interface HorizontalIconsGroup {
+  pretitle?: string | null;
+  title: string;
+  items?:
+    | {
+        icon: 'MdSupportAgent' | 'BsPersonBoundingBox' | 'FaRegRectangleList';
+        title: string;
+        description: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'horizontalIconsGroup';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
