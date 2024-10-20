@@ -12,7 +12,7 @@ import { TextAside } from '@/blocks/TextAside/Component'
 import { ListAside } from '@/blocks/ListAside/Component'
 import { ImageWithInfoGrid } from '@/blocks/ImageWithInfoGrid/Component'
 import { HorizontalIconsGroup } from '@/blocks/HorizontalIconsGroup/Components'
-
+import { ScrollingImages } from '@/blocks/ScrollingImages/Component'
 const blockComponents = {
   archive: ArchiveBlock,
   content: ContentBlock,
@@ -23,6 +23,7 @@ const blockComponents = {
   textAside: TextAside,
   imageWithInfoGrid: ImageWithInfoGrid,
   horizontalIconsGroup: HorizontalIconsGroup,
+  scrollingImages: ScrollingImages,
 }
 
 export const RenderBlocks: React.FC<{

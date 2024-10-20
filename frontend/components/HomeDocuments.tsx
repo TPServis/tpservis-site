@@ -1,11 +1,11 @@
-import React from "react";
-import { StaticImageData } from "next/image";
-import NextImage from "next/image";
+import React from 'react'
+import { StaticImageData } from 'next/image'
+import NextImage from 'next/image'
 
-import Image1 from "@/public/images/documents-1.png";
-import Image2 from "@/public/images/documents-2.png";
-import Image3 from "@/public/images/documents-3.png";
-import Image4 from "@/public/images/documents-4.png";
+import Image1 from '@/public/images/documents-1.png'
+import Image2 from '@/public/images/documents-2.png'
+import Image3 from '@/public/images/documents-3.png'
+import Image4 from '@/public/images/documents-4.png'
 
 export default function HomeDocuments() {
   return (
@@ -39,18 +39,18 @@ export default function HomeDocuments() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 type HomeDocumentsItemProps = {
-  title: string;
-  description: string;
-  image: StaticImageData;
-  className?: string;
-};
+  title: string
+  description: string
+  image: StaticImageData
+  className?: string
+}
 
 function HomeDocumentsItem(props: HomeDocumentsItemProps) {
-  const cls = "bg-astral-700 rounded-3xl p-4 col-span-1 row-span-2 group " + props.className;
+  const cls = 'bg-astral-700 rounded-3xl p-4 col-span-1 row-span-2 group ' + props.className
 
   return (
     <div className={cls}>
@@ -58,20 +58,21 @@ function HomeDocumentsItem(props: HomeDocumentsItemProps) {
         <NextImage
           src={props.image}
           alt={props.title}
-          width={0}
-          height={0}
+          width={1000}
+          height={1000}
           className=" h-full object-cover group-hover:scale-110 transition-all duration-300"
         />
       </div>
       <h3 className="text-2xl font-bold text-astral-50 pb-2">{props.title}</h3>
       <p className="text-lg text-astral-200 pb-2 text-balance">{props.description}</p>
     </div>
-  );
+  )
 }
 
 function HomeDocumentsItemSmall(props: HomeDocumentsItemProps) {
   const cls =
-    "bg-astral-700 rounded-3xl p-4 col-span-1 row-span-1 flex justify-between group " + props.className;
+    'bg-astral-700 rounded-3xl p-4 col-span-1 row-span-1 flex justify-between group ' +
+    props.className
 
   return (
     <div className={cls}>
@@ -89,5 +90,5 @@ function HomeDocumentsItemSmall(props: HomeDocumentsItemProps) {
         />
       </div>
     </div>
-  );
+  )
 }

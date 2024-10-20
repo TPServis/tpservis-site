@@ -90,6 +90,7 @@ export interface Page {
     | ListAside
     | ImageWithInfoGrid
     | HorizontalIconsGroup
+    | ScrollingImages
   )[];
   meta?: {
     title?: string | null;
@@ -662,6 +663,23 @@ export interface HorizontalIconsGroup {
   id?: string | null;
   blockName?: string | null;
   blockType: 'horizontalIconsGroup';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ScrollingImages".
+ */
+export interface ScrollingImages {
+  title: string;
+  images?:
+    | {
+        image: number | Media;
+        title: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'scrollingImages';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
