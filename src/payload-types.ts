@@ -80,7 +80,16 @@ export interface Page {
         }[]
       | null;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | TextAside | ListAside)[];
+  layout: (
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | FormBlock
+    | TextAside
+    | ListAside
+    | ImageWithInfoGrid
+  )[];
   meta?: {
     title?: string | null;
     image?: (number | null) | Media;
@@ -568,6 +577,57 @@ export interface ListAside {
   id?: string | null;
   blockName?: string | null;
   blockType: 'listAside';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImageWithInfoGrid".
+ */
+export interface ImageWithInfoGrid {
+  title: string;
+  subtitle?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  cta?: {
+    url?: string | null;
+    label?: string | null;
+  };
+  image: number | Media;
+  items?:
+    | {
+        title: string;
+        description: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'imageWithInfoGrid';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

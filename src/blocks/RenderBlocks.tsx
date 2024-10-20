@@ -10,6 +10,7 @@ import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { TextAside } from '@/blocks/TextAside/Component'
 import { ListAside } from '@/blocks/ListAside/Component'
+import { ImageWithInfoGrid } from '@/blocks/ImageWithInfoGrid/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -19,6 +20,7 @@ const blockComponents = {
   mediaBlock: MediaBlock,
   listAside: ListAside,
   textAside: TextAside,
+  imageWithInfoGrid: ImageWithInfoGrid,
 }
 
 export const RenderBlocks: React.FC<{

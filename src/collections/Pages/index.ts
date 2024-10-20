@@ -9,7 +9,7 @@ import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { TextAside } from '../../blocks/TextAside/config'
 import { ListAside } from '../../blocks/ListAside/config'
-
+import { ImageWithInfoGrid } from '../../blocks/ImageWithInfoGrid/config'
 import { hero } from '@/heros/config'
 import { slugField } from '@/fields/slug'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -71,7 +71,16 @@ export const Pages: CollectionConfig = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock, TextAside, ListAside],
+              blocks: [
+                CallToAction,
+                Content,
+                MediaBlock,
+                Archive,
+                FormBlock,
+                TextAside,
+                ListAside,
+                ImageWithInfoGrid,
+              ],
               required: true,
             },
           ],
