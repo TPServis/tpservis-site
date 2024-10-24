@@ -35,8 +35,6 @@ export const RenderBlocks: React.FC<{
 }> = (props) => {
   const { blocks } = props
 
-  console.log(blocks)
-
   const hasBlocks = blocks && Array.isArray(blocks) && blocks.length > 0
 
   if (hasBlocks) {
