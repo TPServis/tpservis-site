@@ -26,7 +26,7 @@ export const Media: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
-      required: false,
+      required: true,
     },
     {
       name: 'caption',
