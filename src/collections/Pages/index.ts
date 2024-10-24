@@ -17,6 +17,7 @@ import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { revalidatePage } from './hooks/revalidatePage'
 import { HorizontalIconsGroup } from '@/blocks/HorizontalIconsGroup/config'
 import { PopularDestinationsGallery } from '@/blocks/PopularDestinationsGallery/config'
+import { SideListWithIcons } from '@/blocks/SideListWithIcons/config'
 
 import {
   MetaDescriptionField,
@@ -84,6 +85,7 @@ export const Pages: CollectionConfig = {
                 ImageWithInfoGrid,
                 HorizontalIconsGroup,
                 PopularDestinationsGallery,
+                SideListWithIcons,
               ],
               required: true,
             },

@@ -91,6 +91,7 @@ export interface Page {
     | ImageWithInfoGrid
     | HorizontalIconsGroup
     | PopularDestinationsGallery
+    | SideListWithIcons
   )[];
   meta?: {
     title?: string | null;
@@ -685,6 +686,58 @@ export interface PopularDestinationsGallery {
   id?: string | null;
   blockName?: string | null;
   blockType: 'popularDestinationsGallery';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SideListWithIcons".
+ */
+export interface SideListWithIcons {
+  pretitle?: string | null;
+  title: string;
+  subtitle?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  cta?: {
+    url?: string | null;
+    label?: string | null;
+  };
+  items?:
+    | {
+        icon?: ('airplane' | 'bus' | 'train') | null;
+        title: string;
+        description: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'sideListWithIcons';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
