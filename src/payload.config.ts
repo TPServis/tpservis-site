@@ -5,7 +5,7 @@ import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
-import { s3Storage } from '@payloadcms/storage-s3'
+import { s3Storage, S3StorageOptions } from '@payloadcms/storage-s3'
 import {
   BoldFeature,
   FixedToolbarFeature,
@@ -45,6 +45,24 @@ const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
   return doc?.slug
     ? `${process.env.NEXT_PUBLIC_SERVER_URL!}/${doc.slug}`
     : process.env.NEXT_PUBLIC_SERVER_URL!
+}
+
+const s3Config: S3StorageOptions = {
+  collections: {
+    media: true,
+  },
+  enabled: true,
+  bucket: process.env.S3_BUCKET || '',
+  acl: 'public-read',
+  config: {
+    credentials: {
+      accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
+    },
+    region: process.env.S3_REGION || '',
+    endpoint: process.env.S3_ENDPOINT || '',
+    forcePathStyle: true,
+  },
 }
 
 export default buildConfig({
@@ -185,19 +203,7 @@ export default buildConfig({
       },
     }),
     s3Storage({
-      collections: {
-        [Media.slug]: true,
-      },
-      bucket: process.env.S3_BUCKET || '',
-      config: {
-        credentials: {
-          accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
-          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
-        },
-        region: process.env.S3_REGION || '',
-        endpoint: process.env.S3_ENDPOINT || '',
-        // ... Other S3 configuration
-      },
+      ...s3Config,
     }),
   ],
   secret: process.env.PAYLOAD_SECRET!,
