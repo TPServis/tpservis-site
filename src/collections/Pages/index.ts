@@ -16,7 +16,8 @@ import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { revalidatePage } from './hooks/revalidatePage'
 import { HorizontalIconsGroup } from '@/blocks/HorizontalIconsGroup/config'
-import { ScrollingImages } from '@/blocks/ScrollingImages/config'
+import { PopularDestinationsGallery } from '@/blocks/PopularDestinationsGallery/config'
+
 import {
   MetaDescriptionField,
   MetaImageField,
@@ -82,7 +83,7 @@ export const Pages: CollectionConfig = {
                 ListAside,
                 ImageWithInfoGrid,
                 HorizontalIconsGroup,
-                ScrollingImages,
+                PopularDestinationsGallery,
               ],
               required: true,
             },

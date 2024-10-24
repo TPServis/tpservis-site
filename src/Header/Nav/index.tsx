@@ -9,8 +9,6 @@ import type { Header as HeaderType } from '@/payload-types'
 
 import { CMSLink } from '@/components/Link'
 
-import Link from 'next/link'
-import { SearchIcon } from 'lucide-react'
 import { Menu, X } from 'lucide-react'
 
 import { motion, AnimatePresence, delay } from 'framer-motion'
@@ -42,9 +40,12 @@ export const HeaderNav: React.FC<{ header: HeaderType }> = ({ header }) => {
     >
       <button
         onClick={() => setMenuIsOpen(!menuIsOpen)}
-        className={cn('bg-jaffa-400 p-4 rounded-full transition-colors shadow-lg', {
-          'bg-shark-200': menuIsOpen,
-        })}
+        className={cn(
+          'bg-jaffa-400 p-4 rounded-full transition shadow-lg hover:scale-105 hover:shadow-xl',
+          {
+            'bg-shark-200': menuIsOpen,
+          },
+        )}
       >
         {menuIsOpen ? (
           <X className="w-6 h-6 text-shark-900" />

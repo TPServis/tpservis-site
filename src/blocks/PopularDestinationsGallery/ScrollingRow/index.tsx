@@ -1,20 +1,21 @@
 'use client'
-
 import { motion, useSpring, useTransform } from 'framer-motion'
 import type { MotionValue } from 'framer-motion'
 import { useRef } from 'react'
-import { StaticImageData } from 'next/image'
 
+import type { Media } from '@/payload-types'
 import Image from 'next/image'
-import React from 'react'
 
-type HomeScrollingRowProps = {
-  direction: 'left' | 'right'
-  items: HomeScrollingRowItem[]
+interface ScrollingRowProps {
+  items: {
+    image: Media
+    title: string
+  }[]
   scrollYProgress: MotionValue<number>
+  direction: 'left' | 'right'
 }
 
-export default function HomeScrollingRow(props: HomeScrollingRowProps) {
+export default function ScrollingRow(props: ScrollingRowProps) {
   const ref = useRef<HTMLDivElement>(null)
   const widthDifference = 400
 
@@ -29,23 +30,23 @@ export default function HomeScrollingRow(props: HomeScrollingRowProps) {
     <div className="w-full overflow-hidden pb-8" ref={ref}>
       <motion.div className="grid grid-cols-3 w-[130vw] gap-8" style={{ x: xSpring }}>
         {props.items.map((item) => (
-          <HomePopularDestinationItem key={item.title} title={item.title} image={item.image} />
+          <ScrollingRowItem key={item.title} title={item.title} image={item.image} />
         ))}
       </motion.div>
     </div>
   )
 }
 
-type HomeScrollingRowItem = {
+type ScrollingRowItem = {
   title: string
-  image: StaticImageData
+  image: Media
 }
 
-const HomePopularDestinationItem = (props: HomeScrollingRowItem) => {
+const ScrollingRowItem = (props: ScrollingRowItem) => {
   return (
     <div className="w-40vw aspect-video rounded-3xl overflow-hidden col-span-1 relative">
       <Image
-        src={props.image}
+        src={props.image.url || ''}
         alt={props.title}
         className="w-full h-full object-cover"
         sizes="33vw"

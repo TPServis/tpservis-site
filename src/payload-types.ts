@@ -90,7 +90,7 @@ export interface Page {
     | ListAside
     | ImageWithInfoGrid
     | HorizontalIconsGroup
-    | ScrollingImages
+    | PopularDestinationsGallery
   )[];
   meta?: {
     title?: string | null;
@@ -666,20 +666,25 @@ export interface HorizontalIconsGroup {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ScrollingImages".
+ * via the `definition` "PopularDestinationsGallery".
  */
-export interface ScrollingImages {
+export interface PopularDestinationsGallery {
   title: string;
-  images?:
+  rows?:
     | {
-        image: number | Media;
-        title: string;
+        items?:
+          | {
+              image: number | Media;
+              title: string;
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'scrollingImages';
+  blockType: 'popularDestinationsGallery';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
