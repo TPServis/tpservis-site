@@ -14,7 +14,7 @@ import { ImageWithInfoGrid } from '@/blocks/ImageWithInfoGrid/Component'
 import { HorizontalIconsGroup } from '@/blocks/HorizontalIconsGroup/Components'
 import { PopularDestinationsGallery } from '@/blocks/PopularDestinationsGallery/Component'
 import { SideListWithIcons } from '@/blocks/SideListWithIcons/Component'
-
+import { Bento4x4 } from '@/blocks/Bento4x4/Component'
 const blockComponents = {
   archive: ArchiveBlock,
   content: ContentBlock,
@@ -27,6 +27,7 @@ const blockComponents = {
   horizontalIconsGroup: HorizontalIconsGroup,
   popularDestinationsGallery: PopularDestinationsGallery,
   sideListWithIcons: SideListWithIcons,
+  bento4x4: Bento4x4,
 }
 
 export const RenderBlocks: React.FC<{

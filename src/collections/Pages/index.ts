@@ -18,6 +18,7 @@ import { revalidatePage } from './hooks/revalidatePage'
 import { HorizontalIconsGroup } from '@/blocks/HorizontalIconsGroup/config'
 import { PopularDestinationsGallery } from '@/blocks/PopularDestinationsGallery/config'
 import { SideListWithIcons } from '@/blocks/SideListWithIcons/config'
+import { Bento4x4 } from '@/blocks/Bento4x4/config'
 
 import {
   MetaDescriptionField,
@@ -86,6 +87,7 @@ export const Pages: CollectionConfig = {
                 HorizontalIconsGroup,
                 PopularDestinationsGallery,
                 SideListWithIcons,
+                Bento4x4,
               ],
               required: true,
             },
