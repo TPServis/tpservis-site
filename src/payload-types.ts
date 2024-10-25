@@ -93,6 +93,7 @@ export interface Page {
     | PopularDestinationsGallery
     | SideListWithIcons
     | Bento4X4
+    | FAQ
   )[];
   meta?: {
     title?: string | null;
@@ -769,6 +770,35 @@ export interface Bento4X4 {
   id?: string | null;
   blockName?: string | null;
   blockType: 'bento4x4';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FAQ".
+ */
+export interface FAQ {
+  title: string;
+  questions: {
+    question: string;
+    answer: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faq';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

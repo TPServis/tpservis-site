@@ -58,7 +58,7 @@ const FloatingImage = (props: FloatingImageProps) => {
       <Image
         src={props.img?.url ?? ''}
         alt={props.alt}
-        className="w-full h-full object-cover rounded-3xl scale-100 blur-lg brightness-200"
+        className="w-full h-full object-cover rounded-3xl scale-105 blur-lg brightness-100 animate-pulse opacity-50"
         quality={100}
         sizes="100vw"
         width={100}

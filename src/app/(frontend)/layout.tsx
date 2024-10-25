@@ -16,7 +16,6 @@ import { draftMode } from 'next/headers'
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
   variable: '--font-inter',
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 })
 
 import './globals.css'
@@ -25,7 +24,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const { isEnabled } = await draftMode()
 
   return (
-    <html className={cn(inter.className)} lang="en" suppressHydrationWarning>
+    <html className={cn(inter.variable)} lang="en" suppressHydrationWarning>
       <head>
         <InitTheme />
         <link href="/favicon.ico" rel="icon" sizes="32x32" />

@@ -1,71 +1,53 @@
-@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-size: auto;
-    font-weight: auto;
-  }
+@import 'tailwindcss';
 
-  :root {
-    --background: #fbfffe;
-    --foreground: #252323;
+@theme {
+  --color-jaffa-50: #fef6ee;
+  --color-jaffa-100: #feead6;
+  --color-jaffa-200: #fbd2ad;
+  --color-jaffa-300: #f9b278;
+  --color-jaffa-400: #f5853f;
+  --color-jaffa-500: #f2661d;
+  --color-jaffa-600: #e34c13;
+  --color-jaffa-700: #bc3812;
+  --color-jaffa-800: #962e16;
+  --color-jaffa-900: #792815;
+  --color-jaffa-950: #411109;
 
-    --card: #fbfffe;
-    --card-foreground: #252323;
+  --color-astral-50: #f0f9fb;
+  --color-astral-100: #d8eef5;
+  --color-astral-200: #b6deeb;
+  --color-astral-300: #83c4dd;
+  --color-astral-400: #4aa3c6;
+  --color-astral-500: #2e86ab;
+  --color-astral-600: #296d91;
+  --color-astral-700: #275a77;
+  --color-astral-800: #284b62;
+  --color-astral-900: #254054;
+  --color-astral-950: #142938;
 
-    --popover: #fbfffe;
-    --popover-foreground: #252323;
+  --color-shark-50: #f8f7f7;
+  --color-shark-100: #f0eeee;
+  --color-shark-200: #dddada;
+  --color-shark-300: #bfbaba;
+  --color-shark-400: #9b9595;
+  --color-shark-500: #7f7879;
+  --color-shark-600: #686162;
+  --color-shark-700: #554f4f;
+  --color-shark-800: #484445;
+  --color-shark-900: #3f3b3b;
+  --color-shark-950: #252323;
 
-    --primary: #fbfffe;
-    --primary-foreground: #252323;
+  --color-white: #fbfffe;
 
-    --secondary: #fbfffe;
-    --secondary-foreground: #252323;
+  --screen-sm: 640px;
+  --screen-md: 768px;
+  --screen-lg: 1024px;
+  --screen-xl: 1280px;
 
-    --muted: #fbfffe;
-    --muted-foreground: #252323;
-
-    --accent: #fbfffe;
-    --accent-foreground: #252323;
-
-    --destructive: #fbfffe;
-    --destructive-foreground: #252323;
-
-    --border: #252323;
-    --input: #252323;
-    --ring: #252323;
-
-    --radius: 0.2rem;
-
-    --success: #fbfffe;
-    --warning: #fbfffe;
-    --error: #fbfffe;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-html {
-  opacity: 0;
-}
-
-html[data-theme='dark'],
-html[data-theme='light'] {
-  opacity: initial;
+  --width-container: var(--screen-xl);
 }
 
 .container-spacing {
@@ -73,5 +55,5 @@ html[data-theme='light'] {
 }
 
 .container-wrapper {
-  @apply max-w-screen-xl mx-auto;
+  @apply mx-auto max-w-[var(--width-container)];
 }

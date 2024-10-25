@@ -19,6 +19,7 @@ import { HorizontalIconsGroup } from '@/blocks/HorizontalIconsGroup/config'
 import { PopularDestinationsGallery } from '@/blocks/PopularDestinationsGallery/config'
 import { SideListWithIcons } from '@/blocks/SideListWithIcons/config'
 import { Bento4x4 } from '@/blocks/Bento4x4/config'
+import { FAQ } from '@/blocks/FAQ/config'
 
 import {
   MetaDescriptionField,
@@ -88,6 +89,7 @@ export const Pages: CollectionConfig = {
                 PopularDestinationsGallery,
                 SideListWithIcons,
                 Bento4x4,
+                FAQ,
               ],
               required: true,
             },

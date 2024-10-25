@@ -15,6 +15,8 @@ import { HorizontalIconsGroup } from '@/blocks/HorizontalIconsGroup/Components'
 import { PopularDestinationsGallery } from '@/blocks/PopularDestinationsGallery/Component'
 import { SideListWithIcons } from '@/blocks/SideListWithIcons/Component'
 import { Bento4x4 } from '@/blocks/Bento4x4/Component'
+import { FAQ } from '@/blocks/FAQ/Component'
+
 const blockComponents = {
   archive: ArchiveBlock,
   content: ContentBlock,
@@ -28,6 +30,7 @@ const blockComponents = {
   popularDestinationsGallery: PopularDestinationsGallery,
   sideListWithIcons: SideListWithIcons,
   bento4x4: Bento4x4,
+  faq: FAQ,
 }
 
 export const RenderBlocks: React.FC<{

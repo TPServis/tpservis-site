@@ -64,12 +64,18 @@ export const ImageWithInfoGrid = (props: ImageWithInfoGridProps) => {
         </div>
       </div>
       {props.image && (
-        <div className="container-wrapper rounded-3xl overflow-hidden aspect-video mb-16" ref={ref}>
-          <motion.div style={{ y: ySpring }}>
+        <div
+          className="container-wrapper rounded-3xl overflow-hidden aspect-[2/1] mb-16 relative"
+          ref={ref}
+        >
+          <motion.div
+            style={{ y: ySpring }}
+            className="absolute w-full h-auto top-1/2 -translate-y-1/2"
+          >
             <Image
               src={props.image.url}
               alt={props.image.alt}
-              className="w-full h-full object-cover scale-125"
+              className="w-full h-full object-cover"
               sizes="100vw"
               width={0}
               height={0}
