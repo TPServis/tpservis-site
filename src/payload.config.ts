@@ -51,7 +51,6 @@ const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
 const s3Config: S3StorageOptions = {
   collections: {
     media: true,
-    MediaBlock: true,
   },
   enabled: true,
   bucket: process.env.S3_BUCKET || '',
