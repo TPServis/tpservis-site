@@ -46,7 +46,7 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
     alt = altFromResource
 
     // src = `${process.env.NEXT_PUBLIC_SERVER_URL}${url}`
-    src = url
+    src = url || ''
     console.log(src)
   }
 
