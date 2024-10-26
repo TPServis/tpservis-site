@@ -23,10 +23,10 @@ export const SideListWithIcons = (props: SideListWithIconsProps) => {
   return (
     <div className="container-spacing">
       <div className="container-wrapper">
-        <div className="grid grid-cols-5 gap-8 items-center">
-          <div className="col-span-3">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
+          <div className="md:col-span-3">
             <h3 className="text-sm uppercase text-shark-500 pb-7 ">{props.pretitle}</h3>
-            <h2 className="text-6xl font-bold text-astral-900 pb-6">{props.title}</h2>
+            <h2 className="md:text-6xl text-3xl font-bold text-astral-900 pb-6">{props.title}</h2>
             <RichText
               className="text-lg text-shark-500 pb-20 pt-4 text-balance"
               content={props.subtitle}
@@ -41,7 +41,7 @@ export const SideListWithIcons = (props: SideListWithIconsProps) => {
               </NextLink>
             )}
           </div>
-          <div className="col-span-2">
+          <div className="md:col-span-2">
             {props.items.map((item, index) => (
               <SideListWithIconsItem key={index} title={item.title} description={item.description}>
                 {item.icon === 'airplane' && (

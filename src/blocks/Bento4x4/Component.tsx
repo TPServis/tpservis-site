@@ -18,8 +18,8 @@ export const Bento4x4 = (props: Bento4x4Props) => {
   return (
     <div className="container-spacing">
       <div className="container-wrapper">
-        <h2 className="text-6xl font-bold text-astral-900 pb-10">{props.title}</h2>
-        <div className="grid grid-cols-2 grid-rows-3 gap-8">
+        <h2 className="text-3xl md:text-6xl font-bold text-astral-900 pb-10">{props.title}</h2>
+        <div className="grid md:grid-cols-2 grid-rows-3 gap-2 md:gap-8">
           {props.cards.map((card, index) => {
             if (index === 0 || index === 3) {
               return (
@@ -30,7 +30,7 @@ export const Bento4x4 = (props: Bento4x4Props) => {
                   image={card.image}
                   className={cn(
                     'row-span-2',
-                    index === 0 ? 'col-start-1 row-start-1' : 'col-start-2 row-start-2',
+                    index === 0 ? 'md:col-start-1 md:row-start-1' : 'md:col-start-2 md:row-start-2',
                   )}
                 />
               )
@@ -41,7 +41,7 @@ export const Bento4x4 = (props: Bento4x4Props) => {
                   title={card.title}
                   description={card.description}
                   image={card.image}
-                  className={cn('row-span-1', index === 1 ? 'col-start-2' : 'col-start-1')}
+                  className={cn('row-span-1', index === 1 ? 'md:col-start-2' : 'md:col-start-1')}
                 />
               )
             }

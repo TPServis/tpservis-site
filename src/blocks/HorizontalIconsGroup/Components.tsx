@@ -22,8 +22,10 @@ export const HorizontalIconsGroup = (props: HorizontalIconsGroupProps) => {
         {props.pretitle && (
           <h3 className="text-sm font-bold text-shark-400 pb-6 uppercase">{props.pretitle}</h3>
         )}
-        {props.title && <h2 className="text-6xl font-bold text-astral-900 pb-16">{props.title}</h2>}
-        <div className="grid grid-cols-3 gap-16">
+        {props.title && (
+          <h2 className="md:text-6xl text-3xl font-bold text-astral-900 pb-16">{props.title}</h2>
+        )}
+        <div className="grid md:grid-cols-3 gap-8 md:gap-16">
           {props.items &&
             props.items.map((item, index) => (
               <HomeWhyUsItem
@@ -55,8 +57,8 @@ type HomeWhyUsItemProps = {
 
 const HomeWhyUsItem = (props: HomeWhyUsItemProps) => {
   return (
-    <div className="border-l-2 border-shark-100/50 pl-10 py-10">
-      <div className="bg-jaffa-400 rounded-full w-16 h-16 flex items-center justify-center text-white text-2xl mb-12 shadow-lg shadow-jaffa-400/50">
+    <div className="md:border-l-2 border-shark-100 md:pl-10 py-4 md:py-10">
+      <div className="bg-jaffa-400 rounded-full w-16 h-16 flex items-center justify-center text-white text-2xl mb-4 md:mb-12 shadow-lg shadow-jaffa-400/50">
         {props.icon}
       </div>
       <h3 className="text-2xl font-bold text-astral-900 pb-6">{props.title}</h3>

@@ -27,8 +27,8 @@ export default function ScrollingRow(props: ScrollingRowProps) {
   const xSpring = useSpring(x, { stiffness: 200, damping: 40, mass: 1 })
 
   return (
-    <div className="w-full overflow-hidden pb-8" ref={ref}>
-      <motion.div className="grid grid-cols-3 w-[130vw] gap-8" style={{ x: xSpring }}>
+    <div className="w-full overflow-hidden pb-2 md:pb-8" ref={ref}>
+      <motion.div className="grid grid-cols-3 w-[130vw] gap-2 md:gap-8" style={{ x: xSpring }}>
         {props.items.map((item) => (
           <ScrollingRowItem key={item.title} title={item.title} image={item.image} />
         ))}

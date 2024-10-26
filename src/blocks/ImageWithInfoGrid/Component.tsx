@@ -38,9 +38,9 @@ export const ImageWithInfoGrid = (props: ImageWithInfoGridProps) => {
 
   return (
     <div className="w-full container-spacing pt-48">
-      <div className="container-wrapper grid grid-cols-5 pb-10">
-        <div className="col-span-3 row-span-1 w-[80%]">
-          <h2 className="text-6xl font-bold text-astral-900">{props.title}</h2>
+      <div className="container-wrapper grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-10 pb-6 md:pb-10">
+        <div className="md:col-span-3 row-span-1 w-[80%]">
+          <h2 className="md:text-6xl text-3xl font-bold text-astral-900">{props.title}</h2>
         </div>
         <div className="col-span-2 row-span-1">
           <RichText
@@ -63,7 +63,7 @@ export const ImageWithInfoGrid = (props: ImageWithInfoGridProps) => {
       </div>
       {props.image && (
         <div
-          className="container-wrapper rounded-3xl overflow-hidden aspect-[2/1] mb-16 relative"
+          className="container-wrapper rounded-3xl overflow-hidden aspect-square md:aspect-[2/1] mb-16 relative"
           ref={ref}
         >
           <motion.div
@@ -81,7 +81,7 @@ export const ImageWithInfoGrid = (props: ImageWithInfoGridProps) => {
           </motion.div>
         </div>
       )}
-      <div className="container-wrapper grid grid-cols-3 gap-16">
+      <div className="container-wrapper grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16">
         {props.items &&
           props.items.map((item, index) => (
             <div className="col-span-1" key={index}>
