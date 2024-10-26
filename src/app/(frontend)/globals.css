@@ -51,7 +51,7 @@
 }
 
 .container-spacing {
-  @apply px-16 py-32;
+  @apply px-8 py-16 lg:px-16 lg:py-32;
 }
 
 .container-wrapper {

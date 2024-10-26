@@ -17,7 +17,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
 
   useEffect(() => {
     // setHeaderTheme('dark')
-    console.log(mediaGroup)
+    mediaGroup
   })
 
   return (

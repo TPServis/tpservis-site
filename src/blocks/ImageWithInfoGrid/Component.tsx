@@ -36,8 +36,6 @@ export const ImageWithInfoGrid = (props: ImageWithInfoGridProps) => {
   const y = useTransform(scrollYProgress, [0, 1], [50, -50])
   const ySpring = useSpring(y, { stiffness: 200, damping: 40, mass: 1 })
 
-  console.log(props.cta)
-
   return (
     <div className="w-full container-spacing pt-48">
       <div className="container-wrapper grid grid-cols-5 pb-10">

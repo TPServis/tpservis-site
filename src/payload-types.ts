@@ -998,6 +998,49 @@ export interface Footer {
         id?: string | null;
       }[]
     | null;
+  rightNavItems?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?: {
+            relationTo: 'pages';
+            value: number | Page;
+          } | null;
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  contactInfo?: {
+    telephoneLabel?: {
+      telephone?: string | null;
+      label?: string | null;
+    };
+    email?: string | null;
+  };
+  socialLinks?: {
+    facebook?: string | null;
+    instagram?: string | null;
+  };
+  copyright?: string | null;
+  legalLinks?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?: {
+            relationTo: 'pages';
+            value: number | Page;
+          } | null;
+          url?: string | null;
+          label: string;
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
