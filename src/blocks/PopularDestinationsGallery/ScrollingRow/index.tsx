@@ -28,7 +28,10 @@ export default function ScrollingRow(props: ScrollingRowProps) {
 
   return (
     <div className="w-full overflow-hidden pb-2 md:pb-8" ref={ref}>
-      <motion.div className="grid grid-cols-3 w-[130vw] gap-2 md:gap-8" style={{ x: xSpring }}>
+      <motion.div
+        className="grid grid-cols-[repeat(3,max(40vw,300px))] grid-flow-col gap-2 md:gap-8"
+        style={{ x: xSpring }}
+      >
         {props.items.map((item) => (
           <ScrollingRowItem key={item.title} title={item.title} image={item.image} />
         ))}
@@ -44,7 +47,7 @@ type ScrollingRowItem = {
 
 const ScrollingRowItem = (props: ScrollingRowItem) => {
   return (
-    <div className="w-40vw aspect-video rounded-3xl overflow-hidden col-span-1 relative">
+    <div className="min-w-[300px] aspect-video rounded-3xl overflow-hidden col-span-1 relative">
       <Image
         src={props.image.url || ''}
         alt={props.title}

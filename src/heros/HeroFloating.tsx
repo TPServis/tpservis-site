@@ -14,8 +14,8 @@ interface HeroFloatingProps {
 
 export default function HeroFloating({ mediaGroup }: HeroFloatingProps) {
   return (
-    <div className="col-span-2 flex items-center justify-center">
-      <div className="grid gap-8 grid-rows-5 w-full grid-[repeat(2, 10vw)] ">
+    <div className="col-span-2 flex items-center justify-center relative md:translate-y-0 -translate-y-3/4 h-[30vw] md:h-auto">
+      <div className="grid md:gap-8 gap-2 grid-rows-5 w-full grid-[repeat(2, 10vw)] scale-125 md:scale-100 ">
         <FloatingImage img={mediaGroup[0].media1} alt="Hero" className="row-start-1" delay={0} />
         <FloatingImage
           img={mediaGroup[0].media2}
@@ -50,7 +50,10 @@ interface FloatingImageProps {
 const FloatingImage = (props: FloatingImageProps) => {
   return (
     <motion.div
-      className={clsx('col-span-1 row-span-2 w-[25vw] animate-float relative', props.className)}
+      className={clsx(
+        'col-span-1 row-span-2 -translate-x-1/4 md:-translate-x-1/8 w-[50vw] md:w-[25vw] md:min-w-[400px] animate-float relative aspect-[2/1]',
+        props.className,
+      )}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8, delay: props.delay, ease: 'easeInOut' }}
