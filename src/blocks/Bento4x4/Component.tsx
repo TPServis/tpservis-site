@@ -24,6 +24,7 @@ export const Bento4x4 = (props: Bento4x4Props) => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    arrows: false,
   }
 
   return (

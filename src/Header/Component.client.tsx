@@ -33,27 +33,39 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
   }, [headerTheme])
 
   useEffect(() => {
+    const THRESHOLD = 100
     let lastScrollTop = 0
     window.addEventListener('scroll', (e) => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+      if (scrollTop <= 0) {
+        setIsShown(true)
+        return
+      }
+
       if (scrollTop > lastScrollTop) {
         setIsShown(false)
-      } else {
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop
+      } else if (scrollTop < lastScrollTop - THRESHOLD) {
         setIsShown(true)
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop
       }
-      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop
     })
   }, [])
 
   return (
     <header
       className={cn(
-        'w-full container-spacing z-20 sticky top-0 !py-0 -mb-[120px] transition-all duration-300',
-        {
-          'bg-white/10 backdrop-blur-sm': isShown,
-        },
+        'w-full container-spacing z-20 sticky top-0 !py-0 -mb-[120px] transition-all duration-300 ',
       )}
     >
+      <div
+        className={cn(
+          'absolute inset-0 bg-gradient-to-t from-transparent to-white transition-opacity duration-300 -z-[1]',
+          {
+            // 'opacity-0': !isShown,
+          },
+        )}
+      />
       <div className="container-wrapper flex justify-between items-center md:py-5 py-3">
         <motion.div
           initial={{ y: 0, opacity: 1 }}
