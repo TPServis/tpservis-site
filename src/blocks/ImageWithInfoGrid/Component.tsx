@@ -75,8 +75,10 @@ export const ImageWithInfoGrid = (props: ImageWithInfoGridProps) => {
               alt={props.image.alt}
               className="w-full h-full object-cover"
               sizes="100vw"
-              width={0}
-              height={0}
+              width={2000}
+              height={2000}
+              priority
+              quality={100}
             />
           </motion.div>
         </div>
