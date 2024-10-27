@@ -85,7 +85,7 @@ const MenuWindow = ({ navItems, closeMenu }: MenuWindowProps) => {
       }}
     >
       <div className="container-wrapper grid grid-cols-5 h-full">
-        <ul className="col-span-3 flex flex-col gap-12 justify-center h-full">
+        <ul className="col-span-3 flex flex-col md:gap-12 gap-4 justify-center h-full">
           {navItems?.map(({ link }, i) => {
             return (
               <motion.li
@@ -108,7 +108,7 @@ const MenuWindow = ({ navItems, closeMenu }: MenuWindowProps) => {
                   key={i}
                   {...link}
                   appearance="link"
-                  className="text-8xl font-bold text-astral-950 hover:text-jaffa-400 transition duration-100 hover:!no-underline"
+                  className="text-4xl md:text-6xl lg:text-8xl font-bold text-astral-950 hover:text-jaffa-400 transition duration-100 hover:!no-underline"
                   onClick={closeMenu}
                 />
               </motion.li>

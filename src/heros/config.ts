@@ -73,6 +73,11 @@ export const hero: Field = {
     {
       name: 'mediaGroup',
       type: 'array',
+      admin: {
+        description:
+          'Add up to 4 images to the hero. The first image will be used for the floating image, the second image will be used for the background image, and the third and fourth images will be used for the additional images.',
+        condition: (_, { impact }) => impact === 'highImpact',
+      },
       fields: [
         {
           name: 'media1',
