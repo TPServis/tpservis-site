@@ -67,7 +67,7 @@ export const HorizontalIconsGroup = (props: HorizontalIconsGroupProps) => {
           </div>
         </div>
       </div>
-      <div className="md:hidden pb-36">
+      <div className="md:hidden pb-24">
         <Slider {...settings}>
           {props.items.map((item, index) => (
             <div key={index} className="px-8">

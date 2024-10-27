@@ -3,7 +3,9 @@ import { useHeaderTheme } from '@/providers/HeaderTheme'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
+import { cn } from '@/utilities/cn'
 import type { Header } from '@/payload-types'
 
 import { Logo } from '@/components/Logo/Logo'
@@ -17,6 +19,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
   /* Storing the value in a useState to avoid hydration errors */
   const [theme, setTheme] = useState<string | null>(null)
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
+  const [isShown, setIsShown] = useState(true)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -29,15 +32,37 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headerTheme])
 
+  useEffect(() => {
+    let lastScrollTop = 0
+    window.addEventListener('scroll', (e) => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+      if (scrollTop > lastScrollTop) {
+        setIsShown(false)
+      } else {
+        setIsShown(true)
+      }
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop
+    })
+  }, [])
+
   return (
     <header
-      className="w-full container-spacing z-20 sticky top-0 !py-0 -mb-[120px]"
-      {...(theme ? { 'data-theme': theme } : {})}
+      className={cn(
+        'w-full container-spacing z-20 sticky top-0 !py-0 -mb-[120px] transition-all duration-300',
+        {
+          'bg-white/10 backdrop-blur-sm': isShown,
+        },
+      )}
     >
-      <div className="container-wrapper flex justify-between py-8">
-        <Link href="/">
-          <Logo />
-        </Link>
+      <div className="container-wrapper flex justify-between items-center md:py-5 py-3">
+        <motion.div
+          initial={{ y: 0, opacity: 1 }}
+          animate={{ y: isShown ? 0 : -100, opacity: isShown ? 1 : 0 }}
+        >
+          <Link href="/">
+            <Logo />
+          </Link>
+        </motion.div>
         <HeaderNav header={header} />
       </div>
     </header>
