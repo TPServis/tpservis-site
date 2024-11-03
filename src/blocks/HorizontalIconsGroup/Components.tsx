@@ -44,7 +44,7 @@ export const HorizontalIconsGroup = (props: HorizontalIconsGroupProps) => {
             <h3 className="text-sm font-bold text-shark-400 pb-6 uppercase">{props.pretitle}</h3>
           )}
           {props.title && (
-            <h2 className="md:text-6xl text-3xl font-bold text-astral-900 pb-16">{props.title}</h2>
+            <h2 className="md:text-6xl text-3xl font-bold text-heading pb-16">{props.title}</h2>
           )}
           <div className=" grid-cols-3 gap-16 hidden md:grid">
             {props.items &&

@@ -26,7 +26,7 @@ export const SideListWithIcons = (props: SideListWithIconsProps) => {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
           <div className="md:col-span-3">
             <h3 className="text-sm uppercase text-shark-500 pb-7 ">{props.pretitle}</h3>
-            <h2 className="md:text-6xl text-3xl font-bold text-astral-900 pb-6">{props.title}</h2>
+            <h2 className="md:text-6xl text-3xl font-bold text-heading pb-6">{props.title}</h2>
             <RichText
               className="text-lg text-shark-500 pb-20 pt-4 text-balance"
               content={props.subtitle}

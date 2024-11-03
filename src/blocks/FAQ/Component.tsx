@@ -22,7 +22,7 @@ export const FAQ = (props: Props) => {
   return (
     <div className="container-spacing">
       <div className="container-wrapper">
-        <h2 className="text-3xl md:text-6xl font-bold text-astral-900 pb-10">{props.title}</h2>
+        <h2 className="text-3xl md:text-6xl font-bold text-heading pb-10">{props.title}</h2>
         <div className="border border-shark-100 rounded-3xl overflow-hidden">
           {props.questions.map((item, index) => (
             <FaqItem

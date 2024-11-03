@@ -42,6 +42,8 @@
 
   --color-white: #fbfffe;
 
+  --color-heading: var(--color-astral-600);
+
   --screen-sm: 640px;
   --screen-md: 768px;
   --screen-lg: 1024px;
@@ -51,7 +53,7 @@
 }
 
 .container-spacing {
-  @apply px-8 py-24 lg:px-16 lg:py-32;
+  @apply px-8 py-24 lg:px-16 lg:py-24;
 }
 
 .container-wrapper {

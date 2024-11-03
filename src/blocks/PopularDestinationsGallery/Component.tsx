@@ -29,7 +29,7 @@ export const PopularDestinationsGallery = (props: PopularDestinationsGalleryProp
     <div ref={ref} className="pb-20">
       <div className="w-full container-spacing !pb-10">
         <div className="container-wrapper pb-0">
-          <h2 className="md:text-6xl text-3xl font-bold text-astral-900 pb-4">{props.title}</h2>
+          <h2 className="md:text-6xl text-3xl font-bold text-heading pb-4">{props.title}</h2>
         </div>
       </div>
       {props.rows.map((row, index) => (

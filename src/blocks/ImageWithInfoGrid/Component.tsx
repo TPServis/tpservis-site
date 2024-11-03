@@ -40,7 +40,7 @@ export const ImageWithInfoGrid = (props: ImageWithInfoGridProps) => {
     <div className="w-full container-spacing pt-48">
       <div className="container-wrapper grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-10 pb-6 md:pb-10">
         <div className="md:col-span-3 row-span-1 w-[80%]">
-          <h2 className="md:text-6xl text-3xl font-bold text-astral-900">{props.title}</h2>
+          <h2 className="md:text-6xl text-3xl font-bold text-heading">{props.title}</h2>
         </div>
         <div className="col-span-2 row-span-1">
           <RichText

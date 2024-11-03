@@ -31,7 +31,7 @@ export const Bento4x4 = (props: Bento4x4Props) => {
     <>
       <div className="container-spacing !pb-0">
         <div className="container-wrapper">
-          <h2 className="text-3xl md:text-6xl font-bold text-astral-900 pb-10">{props.title}</h2>
+          <h2 className="text-3xl md:text-6xl font-bold text-heading pb-10">{props.title}</h2>
           <div className="grid md:grid-cols-2 grid-rows-3 gap-2 md:gap-8 hidden md:grid">
             {props.cards.map((card, index) => {
               if (index === 0 || index === 3) {
