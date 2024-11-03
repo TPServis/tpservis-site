@@ -1,10 +1,13 @@
 'use client'
 import { useHeaderTheme } from '@/providers/HeaderTheme'
-import React, { useEffect } from 'react'
+import React, { use, useEffect } from 'react'
 import { FaArrowRightLong } from 'react-icons/fa6'
 import HeroFloating from '@/heros/HeroFloating'
 
 import type { Page } from '@/payload-types'
+
+import { useScroll, useMotionValueEvent } from 'framer-motion'
+import { useRef } from 'react'
 
 export const HighImpactHero: React.FC<Page['hero']> = ({
   preTitle,
@@ -14,14 +17,34 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
   mediaGroup,
 }) => {
   const { setHeaderTheme } = useHeaderTheme()
+  const ref = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  })
 
   useEffect(() => {
     // setHeaderTheme('dark')
     mediaGroup
   })
 
+  useMotionValueEvent(scrollYProgress, 'change', (value) => {
+    if (value < 0.7) {
+      console.log('value is less than 0.5')
+      // update the --color-background to white
+      document.documentElement.style.setProperty('--color-background', 'var(--color-astral-100)')
+    } else {
+      console.log('value is greater than 0.5')
+      // update the --color-background to black
+      document.documentElement.style.setProperty('--color-background', 'var(--color-white)')
+    }
+  })
+
   return (
-    <div className="min-h-screen w-full bg-astral-50 container-spacing overflow-hidden flex items-center !py-0">
+    <div
+      className="min-h-screen w-full  container-spacing overflow-hidden flex items-center !py-0"
+      ref={ref}
+    >
       <div className="container-wrapper grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-10">
         <div className="flex flex-col justify-center h-full md:col-span-3 relative z-10 md:z-0 h-screen">
           <h1 className="md:text-sm text-xs uppercase pb-6">{preTitle}</h1>

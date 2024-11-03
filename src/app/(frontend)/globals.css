@@ -44,6 +44,8 @@
 
   --color-heading: var(--color-astral-600);
 
+  --color-background: var(--color-white);
+
   --screen-sm: 640px;
   --screen-md: 768px;
   --screen-lg: 1024px;
