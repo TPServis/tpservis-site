@@ -6,7 +6,8 @@ import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import { s3Storage, S3StorageOptions } from '@payloadcms/storage-s3'
-import { uploadthingStorage } from '@payloadcms/storage-uploadthing'
+// import { uploadthingStorage } from '@payloadcms/storage-uploadthing'
+import { uploadthingStorage } from './uploadthing'
 import {
   BoldFeature,
   FixedToolbarFeature,
@@ -234,7 +235,9 @@ export default buildConfig({
         [Media.slug]: true,
       },
       options: {
-        apiKey: process.env.UPLOADTHING_SECRET,
+        // apiKey: process.env.UPLOADTHING_SECRET ?? '',
+        // @ts-ignore
+        token: process.env.UPLOADTHING_TOKEN ?? '',
         acl: 'public-read',
       },
     }),
