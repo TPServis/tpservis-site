@@ -90,16 +90,16 @@ const MenuWindow = ({ navItems, closeMenu }: MenuWindowProps) => {
             return (
               <motion.li
                 key={i}
-                initial={{ opacity: 0, y: 100, filter: 'blur(10px)' }}
+                initial={{ opacity: 0, y: 40, filter: 'blur(10px)' }}
                 animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                 transition={{
-                  duration: 0.2,
+                  duration: 0.5,
                   delay: i * 0.1 + 0.3,
-                  ease: 'easeInOut',
+                  ease: 'backOut',
                 }}
                 exit={{
                   opacity: 0,
-                  y: 100,
+                  y: 40,
                   filter: 'blur(10px)',
                   transition: { duration: 0.2, delay: -0.1 * i, ease: 'easeInOut' },
                 }}
@@ -108,7 +108,7 @@ const MenuWindow = ({ navItems, closeMenu }: MenuWindowProps) => {
                   key={i}
                   {...link}
                   appearance="link"
-                  className="text-4xl md:text-6xl lg:text-8xl font-bold text-astral-950 hover:text-jaffa-400 transition duration-100 hover:!no-underline"
+                  className="text-4xl md:text-6xl lg:text-6xl font-bold text-astral-950 hover:text-jaffa-400 transition duration-100 hover:!no-underline"
                   onClick={closeMenu}
                 />
               </motion.li>
