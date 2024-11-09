@@ -6,6 +6,7 @@ import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import { s3Storage, S3StorageOptions } from '@payloadcms/storage-s3'
+import { uploadthingStorage } from '@payloadcms/storage-uploadthing'
 import {
   BoldFeature,
   FixedToolbarFeature,
@@ -63,6 +64,31 @@ const s3Config: S3StorageOptions = {
     region: process.env.S3_REGION || '',
     endpoint: process.env.S3_ENDPOINT || '',
     forcePathStyle: true,
+  },
+}
+
+// export default buildConfig({
+//   collections: [Media],
+//   plugins: [
+//     uploadthingStorage({
+//       collections: {
+//         [mediaSlug]: true,
+//       },
+//       options: {
+//         apiKey: process.env.UPLOADTHING_SECRET,
+//         acl: 'public-read',
+//       },
+//     }),
+//   ],
+// })
+
+const uploadthingStorageConfig = {
+  collections: {
+    ['media']: true,
+  },
+  options: {
+    apiKey: process.env.UPLOADTHING_SECRET,
+    acl: 'public-read',
   },
 }
 
@@ -203,8 +229,14 @@ export default buildConfig({
         },
       },
     }),
-    s3Storage({
-      ...s3Config,
+    uploadthingStorage({
+      collections: {
+        [Media.slug]: true,
+      },
+      options: {
+        apiKey: process.env.UPLOADTHING_SECRET,
+        acl: 'public-read',
+      },
     }),
   ],
   secret: process.env.PAYLOAD_SECRET!,
