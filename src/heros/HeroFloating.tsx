@@ -14,7 +14,7 @@ interface HeroFloatingProps {
 
 export default function HeroFloating({ mediaGroup }: HeroFloatingProps) {
   return (
-    <div className="col-span-2 flex items-center justify-center relative md:translate-y-0 -translate-y-3/4 h-[30vw] md:h-auto">
+    <div className="col-span-2 flex items-center justify-center relative md:translate-y-0 -translate-y-3/4 h-[50vw] md:h-auto">
       <div className="grid md:gap-8 gap-2 grid-rows-5 w-full grid-[repeat(2, 10vw)] scale-125 md:scale-100 ">
         <FloatingImage img={mediaGroup[0].media1} alt="Hero" className="row-start-1" delay={0} />
         <FloatingImage
@@ -64,6 +64,7 @@ const FloatingImage = (props: FloatingImageProps) => {
         width={100}
         height={100}
         priority
+        loading="eager"
       />
     </motion.div>
   )

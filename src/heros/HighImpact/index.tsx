@@ -37,13 +37,13 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
 
   return (
     <div
-      className="min-h-screen w-full  container-spacing overflow-hidden flex items-center !py-0"
+      className="min-h-screen w-full container-spacing overflow-x-hidden flex items-center !py-0"
       ref={ref}
     >
       <div className="container-wrapper grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-10">
         <div className="flex flex-col justify-center md:col-span-3 relative z-10 md:z-0 h-screen">
           <h1 className="md:text-sm text-xs uppercase pb-6">{preTitle}</h1>
-          <h2 className="text-2xl sm:text-4xl md:text-7xl font-bold text-heading text-pretty md:pb-9 pb-4">
+          <h2 className="text-4xl md:text-7xl font-bold text-heading text-pretty md:pb-9 pb-4">
             {title}
           </h2>
           <p className="text-shark-500 text-lg md:text-2xl md:pb-16 pb-8 text-balance md:w-[80%]">
