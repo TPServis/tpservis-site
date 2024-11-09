@@ -60,9 +60,9 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
     >
       <div
         className={cn(
-          'absolute inset-0 bg-gradient-to-t from-transparent to-white transition-opacity duration-300 -z-[1]',
+          'absolute inset-0 bg-background/5 backdrop-blur-md transition duration-300 -z-[1]',
           {
-            // 'opacity-0': !isShown,
+            'backdrop-blur-none opacity-0': !isShown,
           },
         )}
       />
