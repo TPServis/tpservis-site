@@ -78,7 +78,7 @@ export const ImageWithInfoGrid = (props: ImageWithInfoGridProps) => {
               width={2000}
               height={2000}
               priority
-              quality={100}
+              quality={80}
             />
           </motion.div>
         </div>

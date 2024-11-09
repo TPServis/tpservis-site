@@ -63,6 +63,7 @@ const FloatingImage = (props: FloatingImageProps) => {
         sizes="20vw"
         width={100}
         height={100}
+        priority
       />
     </motion.div>
   )

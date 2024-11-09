@@ -97,8 +97,11 @@ function HomeDocumentsItem(props: HomeDocumentsItemProps) {
         <NextImage
           src={props.image.url || ''}
           alt={props.title}
-          width={1000}
-          height={1000}
+          width={800}
+          height={500}
+          sizes="20vw"
+          priority={false}
+          quality={60}
           className=" h-full object-cover group-hover:scale-110 transition-all duration-300"
         />
       </div>
@@ -133,6 +136,9 @@ function HomeDocumentsItemSmall(props: HomeDocumentsItemProps) {
           alt={props.title}
           width={200}
           height={200}
+          sizes="20vw"
+          priority={false}
+          quality={50}
           className=" h-full  object-cover group-hover:scale-110 transition-all duration-300"
         />
       </div>
