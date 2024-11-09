@@ -1,10 +1,11 @@
 'use client'
-import { useHeaderTheme } from '@/providers/HeaderTheme'
-import React, { use, useEffect } from 'react'
+import { useEffect } from 'react'
 import { FaArrowRightLong } from 'react-icons/fa6'
 import HeroFloating from '@/heros/HeroFloating'
 
 import type { Page } from '@/payload-types'
+
+import useTheme from '@/hooks/useTheme'
 
 import { useScroll, useMotionValueEvent } from 'framer-motion'
 import { useRef } from 'react'
@@ -16,29 +17,23 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
   cta,
   mediaGroup,
 }) => {
-  const { setHeaderTheme } = useHeaderTheme()
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start end', 'end start'],
   })
 
-  useEffect(() => {
-    // setHeaderTheme('dark')
-    mediaGroup
-  })
+  const { theme, setTheme } = useTheme()
 
   useMotionValueEvent(scrollYProgress, 'change', (value) => {
-    if (value < 0.7) {
-      console.log('value is less than 0.5')
-      // update the --color-background to white
-      document.documentElement.style.setProperty('--color-background', 'var(--color-astral-100)')
-    } else {
-      console.log('value is greater than 0.5')
-      // update the --color-background to black
-      document.documentElement.style.setProperty('--color-background', 'var(--color-white)')
-    }
+    setTheme(value > 0.8 ? 'light' : 'blue')
   })
+
+  useEffect(() => {
+    return () => {
+      setTheme('blue')
+    }
+  }, [])
 
   return (
     <div
@@ -46,7 +41,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
       ref={ref}
     >
       <div className="container-wrapper grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-10">
-        <div className="flex flex-col justify-center h-full md:col-span-3 relative z-10 md:z-0 h-screen">
+        <div className="flex flex-col justify-center md:col-span-3 relative z-10 md:z-0 h-screen">
           <h1 className="md:text-sm text-xs uppercase pb-6">{preTitle}</h1>
           <h2 className="text-2xl sm:text-4xl md:text-7xl font-bold text-heading text-pretty md:pb-9 pb-4">
             {title}

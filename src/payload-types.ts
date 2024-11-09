@@ -96,8 +96,6 @@ export interface Page {
       | {
           media1: number | Media;
           media2: number | Media;
-          media3: number | Media;
-          media4: number | Media;
           id?: string | null;
         }[]
       | null;
@@ -1000,8 +998,6 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               media1?: T;
               media2?: T;
-              media3?: T;
-              media4?: T;
               id?: T;
             };
       };

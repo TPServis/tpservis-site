@@ -52,6 +52,15 @@
   --screen-xl: 1280px;
 
   --width-container: var(--screen-xl);
+
+  --animation-float: float 10s ease-in-out infinite;
+}
+
+@layer base {
+  [data-theme='blue'] {
+    --color-heading: var(--color-astral-700);
+    --color-background: var(--color-astral-100);
+  }
 }
 
 .container-spacing {
@@ -60,4 +69,15 @@
 
 .container-wrapper {
   @apply mx-auto max-w-[var(--width-container)];
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }

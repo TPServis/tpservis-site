@@ -21,19 +21,7 @@ export default function HeroFloating({ mediaGroup }: HeroFloatingProps) {
           img={mediaGroup[0].media2}
           alt="Hero"
           className=" row-start-2 animate-[float_10s_ease-in-out_1s_infinite]"
-          delay={0.1}
-        />
-        <FloatingImage
-          img={mediaGroup[0].media3}
-          alt="Hero"
-          className="animate-[float_10s_ease-in-out_2s_infinite]"
           delay={0.2}
-        />
-        <FloatingImage
-          img={mediaGroup[0].media4}
-          alt="Hero"
-          className=" animate-[float_10s_ease-in-out_3s_infinite]"
-          delay={0.3}
         />
       </div>
     </div>
@@ -51,7 +39,7 @@ const FloatingImage = (props: FloatingImageProps) => {
   return (
     <motion.div
       className={clsx(
-        'col-span-1 row-span-2 -translate-x-1/4 md:-translate-x-1/8 w-[50vw] md:w-[25vw] md:min-w-[400px] animate-float relative aspect-[2/1]',
+        'col-span-1 row-span-4 -translate-x-1/4  w-[50vw] md:w-[25vw] md:min-w-[400px] animate-float relative aspect-[3/4]',
         props.className,
       )}
       initial={{ opacity: 0 }}
@@ -62,8 +50,8 @@ const FloatingImage = (props: FloatingImageProps) => {
         src={props.img?.url ?? ''}
         alt={props.alt}
         className="w-full h-full object-cover rounded-3xl scale-105 blur-lg brightness-100 animate-pulse opacity-50"
-        quality={100}
-        sizes="100vw"
+        quality={10}
+        sizes="20vw"
         width={100}
         height={100}
       />
@@ -71,8 +59,8 @@ const FloatingImage = (props: FloatingImageProps) => {
         src={props.img?.url ?? ''}
         alt={props.alt}
         className="w-full h-full object-cover rounded-3xl absolute inset-0"
-        quality={100}
-        sizes="100vw"
+        quality={70}
+        sizes="20vw"
         width={100}
         height={100}
       />

@@ -30,7 +30,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
-      <body className="bg-background transition duration-[2s]">
+      <body className="bg-background transition duration-[1s]">
         <Providers>
           <AdminBar
             adminBarProps={{
