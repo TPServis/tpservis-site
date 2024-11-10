@@ -2,6 +2,7 @@
 
 import { cn } from '@/utilities/cn'
 import { useState } from 'react'
+import useTheme from '@/hooks/useTheme'
 
 import React from 'react'
 
@@ -66,6 +67,13 @@ type MenuWindowProps = {
 }
 
 const MenuWindow = ({ navItems, closeMenu }: MenuWindowProps) => {
+  const { setTheme } = useTheme()
+
+  const handleNavigation = () => {
+    closeMenu()
+    setTheme('light')
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
@@ -109,7 +117,7 @@ const MenuWindow = ({ navItems, closeMenu }: MenuWindowProps) => {
                   {...link}
                   appearance="link"
                   className="text-4xl md:text-6xl lg:text-6xl font-bold text-astral-950 hover:text-jaffa-400 transition duration-100 hover:!no-underline"
-                  onClick={closeMenu}
+                  onClick={handleNavigation}
                 />
               </motion.li>
             )

@@ -42,6 +42,9 @@ export const hero: Field = {
       name: 'preTitle',
       type: 'text',
       label: 'Pre Title',
+      admin: {
+        condition: (_, { type }) => type === 'highImpact',
+      },
     },
     {
       name: 'title',
@@ -90,6 +93,9 @@ export const hero: Field = {
           type: 'upload',
           relationTo: 'media',
           required: true,
+          admin: {
+            condition: (_, { type }) => type === 'highImpact',
+          },
         },
       ],
     },
