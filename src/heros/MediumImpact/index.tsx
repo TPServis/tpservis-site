@@ -7,8 +7,8 @@ export const MediumImpactHero: React.FC<Page['hero']> = ({ title, subtitle, cta,
   return (
     <div className="min-h-screen w-full container-spacing !py-0">
       <div className="container-wrapper ">
-        <div className="flex flex-col md:flex-row justify-center gap-10 items-center pt-60 pb-28 ">
-          <h2 className="text-3xl md:text-7xl font-bold text-heading text-pretty md:pb-9 pb-4 text-pretty">
+        <div className="flex flex-col md:flex-row md:justify-center gap-10 md:items-center pt-60 pb-28 ">
+          <h2 className="text-3xl md:text-7xl font-bold text-heading text-pretty md:pb-9 pb-4 text-pretty w-4/6">
             {title}
           </h2>
           <div className="flex flex-col gap-4">
