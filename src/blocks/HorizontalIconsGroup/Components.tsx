@@ -62,11 +62,11 @@ export const HorizontalIconsGroup = (props: HorizontalIconsGroupProps) => {
                 align="center"
                 icon={
                   item.icon === 'MdSupportAgent' ? (
-                    <MdSupportAgent className="w-6 h-6" />
+                    <Award className="w-6 h-6" />
                   ) : item.icon === 'BsPersonBoundingBox' ? (
-                    <BsPersonBoundingBox className="w-6 h-6" />
+                    <CircleUser className="w-6 h-6" />
                   ) : (
-                    <FaRegRectangleList className="w-6 h-6" />
+                    <Shield className="w-6 h-6" />
                   )
                 }
               />
