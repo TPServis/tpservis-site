@@ -4,12 +4,10 @@ import React from 'react'
 import { MdSupportAgent } from 'react-icons/md'
 import { BsPersonBoundingBox } from 'react-icons/bs'
 import { FaRegRectangleList } from 'react-icons/fa6'
-import Slider from 'react-slick'
+
+import useEmblaCarousel from 'embla-carousel-react'
 
 import { cn } from '@/utilities/cn'
-
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
 
 import RichText from '@/components/RichText'
 
@@ -24,6 +22,7 @@ interface HorizontalIconsGroupProps {
 }
 
 export const HorizontalIconsGroup = (props: HorizontalIconsGroupProps) => {
+  const [emblaRef] = useEmblaCarousel()
   const settings = {
     dots: true,
     infinite: true,
@@ -67,10 +66,10 @@ export const HorizontalIconsGroup = (props: HorizontalIconsGroupProps) => {
           </div>
         </div>
       </div>
-      <div className="md:hidden pb-24">
-        <Slider {...settings}>
+      <div className="md:hidden pb-24 embla overflow-hidden" ref={emblaRef}>
+        <div className="flex embla__container">
           {props.items.map((item, index) => (
-            <div key={index} className="px-8">
+            <div key={index} className="px-8 w-[100vw] embla__slide shrink-0">
               <HomeWhyUsItem
                 {...item}
                 align="center"
@@ -86,7 +85,7 @@ export const HorizontalIconsGroup = (props: HorizontalIconsGroupProps) => {
               />
             </div>
           ))}
-        </Slider>
+        </div>
       </div>
     </>
   )
