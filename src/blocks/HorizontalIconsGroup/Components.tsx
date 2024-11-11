@@ -23,17 +23,6 @@ interface HorizontalIconsGroupProps {
 
 export const HorizontalIconsGroup = (props: HorizontalIconsGroupProps) => {
   const [emblaRef] = useEmblaCarousel()
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    arrows: false,
-    dotsClass: 'slick-dots slick-dots-horizontal-icons-group',
-  }
 
   return (
     <>

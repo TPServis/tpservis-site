@@ -1,12 +1,12 @@
 'use client'
 
 import NextImage from 'next/image'
+import useEmblaCarousel from 'embla-carousel-react'
 
 import type { Media } from '@/payload-types'
 import { cn } from '@/utilities/cn'
 
 import RichText from '@/components/RichText'
-import Slider from 'react-slick'
 
 type Bento4x4Props = {
   title: string
@@ -18,14 +18,7 @@ type Bento4x4Props = {
 }
 
 export const Bento4x4 = (props: Bento4x4Props) => {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: false,
-  }
+  const [emblaRef] = useEmblaCarousel()
 
   return (
     <>
@@ -64,10 +57,10 @@ export const Bento4x4 = (props: Bento4x4Props) => {
           </div>
         </div>
       </div>
-      <div className="md:hidden pb-24">
-        <Slider {...settings}>
+      <div className="md:hidden pb-24 embla overflow-hidden" ref={emblaRef}>
+        <div className="flex embla__container">
           {props.cards.map((card, index) => (
-            <div key={index} className="px-8 h-full ">
+            <div key={index} className="px-8 h-full embla__slide shrink-0 w-[100vw]">
               <HomeDocumentsItem
                 key={index}
                 {...card}
@@ -75,7 +68,7 @@ export const Bento4x4 = (props: Bento4x4Props) => {
               />
             </div>
           ))}
-        </Slider>
+        </div>
       </div>
     </>
   )
