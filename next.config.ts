@@ -25,19 +25,19 @@ const nextConfig: NextConfig = {
     workerThreads: false,
     cpus: 1,
   },
-  // headers: async () => {
-  //   return [
-  //     {
-  //       source: '/(.*)',
-  //       headers: [
-  //         {
-  //           key: 'Cache-Control',
-  //           value: 'public, max-age=31536000, immutable',
-  //         },
-  //       ],
-  //     },
-  //   ]
-  // },
+  headers: async () => {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ]
+  },
 }
 
 export default withPayload(nextConfig)
