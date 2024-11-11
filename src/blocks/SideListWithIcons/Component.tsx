@@ -1,7 +1,7 @@
 import React from 'react'
 import NextLink from 'next/link'
 
-import { PiAirplaneTakeoff, PiBus, PiTrain } from 'react-icons/pi'
+import { PlaneTakeoff, BusFront, TrainFront } from 'lucide-react'
 import RichText from '@/components/RichText'
 
 type SideListWithIconsProps = {
@@ -44,11 +44,9 @@ export const SideListWithIcons = (props: SideListWithIconsProps) => {
           <div className="md:col-span-2">
             {props.items.map((item, index) => (
               <SideListWithIconsItem key={index} title={item.title} description={item.description}>
-                {item.icon === 'airplane' && (
-                  <PiAirplaneTakeoff className="text-jaffa-400 text-4xl" />
-                )}
-                {item.icon === 'bus' && <PiBus className="text-jaffa-400 text-4xl" />}
-                {item.icon === 'train' && <PiTrain className="text-jaffa-400 text-4xl" />}
+                {item.icon === 'airplane' && <PlaneTakeoff className="text-jaffa-400 text-4xl" />}
+                {item.icon === 'bus' && <BusFront className="text-jaffa-400 text-4xl" />}
+                {item.icon === 'train' && <TrainFront className="text-jaffa-400 text-4xl" />}
               </SideListWithIconsItem>
             ))}
           </div>

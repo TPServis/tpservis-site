@@ -1,6 +1,6 @@
 'use client'
 import { useEffect } from 'react'
-import { FaArrowRightLong } from 'react-icons/fa6'
+import { ArrowRight } from 'lucide-react'
 import HeroFloating from '@/heros/HeroFloating'
 
 import type { Page } from '@/payload-types'
@@ -55,7 +55,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
               className="items-center gap-4 group hover:gap-6 transition-all duration-300 flex"
             >
               <span className="text-xl rounded-full p-4 md:p-7 bg-jaffa-400 text-white group-hover:scale-110 transition-all duration-300">
-                <FaArrowRightLong className="-rotate-45 w-5 h-5 group-hover:rotate-0 transition-all duration-300" />
+                <ArrowRight className="-rotate-45 w-5 h-5 group-hover:rotate-0 transition-all duration-300" />
               </span>
               <span className="text-xl font-semibold text-astral-900">{cta.label}</span>
             </a>

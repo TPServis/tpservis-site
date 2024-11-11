@@ -1,9 +1,7 @@
 'use client'
 
 import React from 'react'
-import { MdSupportAgent } from 'react-icons/md'
-import { BsPersonBoundingBox } from 'react-icons/bs'
-import { FaRegRectangleList } from 'react-icons/fa6'
+import { Award, CircleUser, Shield } from 'lucide-react'
 
 import useEmblaCarousel from 'embla-carousel-react'
 
@@ -43,11 +41,11 @@ export const HorizontalIconsGroup = (props: HorizontalIconsGroupProps) => {
                   description={item.description}
                   icon={
                     item.icon === 'MdSupportAgent' ? (
-                      <MdSupportAgent className="w-6 h-6" />
+                      <Award className="w-6 h-6" />
                     ) : item.icon === 'BsPersonBoundingBox' ? (
-                      <BsPersonBoundingBox className="w-6 h-6" />
+                      <CircleUser className="w-6 h-6" />
                     ) : (
-                      <FaRegRectangleList className="w-6 h-6" />
+                      <Shield className="w-6 h-6" />
                     )
                   }
                 />

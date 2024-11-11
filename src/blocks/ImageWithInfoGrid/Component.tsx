@@ -2,7 +2,7 @@
 
 import React from 'react'
 import NextLink from 'next/link'
-import { MdChevronRight } from 'react-icons/md'
+import { ChevronRight } from 'lucide-react'
 import RichText from '@/components/RichText'
 
 import Image from 'next/image'
@@ -56,7 +56,7 @@ export const ImageWithInfoGrid = (props: ImageWithInfoGridProps) => {
             "
             >
               <span>{props.cta.label}</span>
-              <MdChevronRight className="w-7 h-7" />
+              <ChevronRight className="w-7 h-7" />
             </NextLink>
           )}
         </div>

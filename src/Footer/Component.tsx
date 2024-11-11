@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Logo } from '@/components/Logo/Logo'
 import { cn } from '@/utilities/cn'
 
-import { FaFacebook, FaInstagram } from 'react-icons/fa'
+import { Facebook, Instagram } from 'lucide-react'
 
 import type { Footer } from '@/payload-types'
 
@@ -130,7 +130,7 @@ const SocialLinks = ({ socialLinks }: SocialLinksProps) => {
           target="_blank"
           className="text-2xl hover:text-jaffa-500 transition-all duration-300"
         >
-          <FaFacebook />
+          <Facebook />
         </Link>
       )}
       {socialLinks?.instagram && (
@@ -139,7 +139,7 @@ const SocialLinks = ({ socialLinks }: SocialLinksProps) => {
           target="_blank"
           className="text-2xl hover:text-jaffa-500 transition-all duration-300"
         >
-          <FaInstagram />
+          <Instagram />
         </Link>
       )}
     </div>
