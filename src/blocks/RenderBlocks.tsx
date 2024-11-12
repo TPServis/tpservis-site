@@ -16,6 +16,7 @@ import { PopularDestinationsGallery } from '@/blocks/PopularDestinationsGallery/
 import { SideListWithIcons } from '@/blocks/SideListWithIcons/Component'
 import { Bento4x4 } from '@/blocks/Bento4x4/Component'
 import { FAQ } from '@/blocks/FAQ/Component'
+import { ServicesList } from '@/blocks/ServicesList/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -31,6 +32,7 @@ const blockComponents = {
   sideListWithIcons: SideListWithIcons,
   bento4x4: Bento4x4,
   faq: FAQ,
+  servicesList: ServicesList,
 }
 
 export const RenderBlocks: React.FC<{

@@ -114,6 +114,7 @@ export interface Page {
     | SideListWithIcons
     | Bento4X4
     | FAQ
+    | ServicesList
   )[];
   meta?: {
     title?: string | null;
@@ -822,6 +823,58 @@ export interface FAQ {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServicesList".
+ */
+export interface ServicesList {
+  title: string;
+  services?:
+    | {
+        title: string;
+        content?:
+          | (
+              | {
+                  description: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: string;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  };
+                  id?: string | null;
+                  blockName?: string | null;
+                  blockType: 'contentBlock';
+                }
+              | {
+                  media?: {
+                    image?: (number | null) | Media;
+                    f?: ('square' | 'landscape') | null;
+                    bR?: ('none' | 'small' | 'medium' | 'large') | null;
+                    w?: ('full' | 'half') | null;
+                    align?: ('left' | 'right') | null;
+                  };
+                  id?: string | null;
+                  blockName?: string | null;
+                  blockType: 'imageBlock';
+                }
+            )[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'servicesList';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1209,6 +1262,45 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     question?: T;
                     answer?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        servicesList?:
+          | T
+          | {
+              title?: T;
+              services?:
+                | T
+                | {
+                    title?: T;
+                    content?:
+                      | T
+                      | {
+                          contentBlock?:
+                            | T
+                            | {
+                                description?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          imageBlock?:
+                            | T
+                            | {
+                                media?:
+                                  | T
+                                  | {
+                                      image?: T;
+                                      f?: T;
+                                      bR?: T;
+                                      w?: T;
+                                      align?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
                     id?: T;
                   };
               id?: T;
