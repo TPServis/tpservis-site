@@ -13,7 +13,9 @@
     "ii": "cross-env NODE_OPTIONS=--no-deprecation bun --ignore-workspace install",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation next lint",
     "lint:fix": "cross-env NODE_OPTIONS=--no-deprecation next lint --fix",
-    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload",
+    "migrate": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload migrate",
+    "migrate:status": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload migrate:status",
     "reinstall": "cross-env NODE_OPTIONS=--no-deprecation rm -rf node_modules && rm bun --ignore-workspace install",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "clean": "rm -rf .next && rm -rf node_modules"
@@ -66,7 +68,7 @@
     "react-dom": "19.0.0-rc-69d4b800-20241021",
     "react-hook-form": "7.45.4",
     "sharp": "0.32.6",
-    "supabase": "^1.204.3",
+    "supabase": "^1.219.2",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "uploadthing": "^7.3.0"
