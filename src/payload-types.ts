@@ -853,6 +853,13 @@ export interface ServicesList {
                   blockType: 'contentBlock';
                 }
               | {
+                  cta?: (number | null) | Page;
+                  text: string;
+                  id?: string | null;
+                  blockName?: string | null;
+                  blockType: 'ctaBlock';
+                }
+              | {
                   media?: {
                     image?: (number | null) | Media;
                     f?: ('square' | 'landscape') | null;
@@ -1282,6 +1289,14 @@ export interface PagesSelect<T extends boolean = true> {
                             | T
                             | {
                                 description?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ctaBlock?:
+                            | T
+                            | {
+                                cta?: T;
+                                text?: T;
                                 id?: T;
                                 blockName?: T;
                               };

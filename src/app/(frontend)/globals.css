@@ -85,3 +85,35 @@
 .btn {
   @apply bg-jaffa-400 text-white px-4 py-2 rounded-md flex items-center gap-4 hover:gap-6 hover:bg-jaffa-500 transition-all duration-300 w-fit;
 }
+
+.rich-text {
+  @apply text-shark-600;
+
+  h2 {
+    @apply text-3xl font-bold text-heading pb-4;
+
+    &:not(:first-of-type) {
+      @apply pt-8;
+    }
+  }
+
+  h3 {
+    @apply text-2xl font-semibold text-heading pb-4 pt-8;
+  }
+
+  h4 {
+    @apply text-xl font-medium text-heading pb-4;
+  }
+
+  p {
+    @apply text-base text-shark-600 leading-normal pb-4;
+  }
+
+  strong {
+    @apply text-jaffa-500;
+  }
+
+  a {
+    @apply text-astral-500 hover:text-astral-600 transition-colors duration-300 underline;
+  }
+}

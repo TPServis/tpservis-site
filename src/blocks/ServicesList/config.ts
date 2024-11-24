@@ -54,6 +54,24 @@ export const ServicesList: Block = {
               ],
             },
             {
+              slug: 'ctaBlock',
+              fields: [
+                {
+                  name: 'cta',
+                  type: 'relationship',
+                  relationTo: 'pages',
+                  admin: {
+                    description: 'The page to link to',
+                  },
+                },
+                {
+                  name: 'text',
+                  type: 'text',
+                  required: true,
+                },
+              ],
+            },
+            {
               slug: 'imageBlock',
               fields: [
                 {
