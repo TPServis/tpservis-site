@@ -39,10 +39,10 @@ const SplashPageContent = () => {
           +38 (097) 530-08-60
         </SplashPageContactItem>
         <SplashPageContactItem
-          href="mailto:tpservise@ukr.net"
+          href="mailto:agencytps@gmail.com"
           icon={<IoIosMail className="mr-2 w-4 h-4  " />}
         >
-          tpservise@ukr.net
+          agencytps@gmail.com
         </SplashPageContactItem>
         <SplashPageContactItem
           href="https://maps.app.goo.gl/2RwzgQWy136z4jJp6"
