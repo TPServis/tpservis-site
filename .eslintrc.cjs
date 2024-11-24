@@ -5,4 +5,8 @@ module.exports = {
     project: ['./tsconfig.json'],
     tsconfigRootDir: __dirname,
   },
+  rules: {
+    'no-unused-vars': 'off',
+    'react/no-string-refs': 'off',
+  },
 }
