@@ -234,7 +234,6 @@ export default buildConfig({
       collections: {
         [Media.slug]: true,
       },
-      enabled: process.env.NEXT_PUBLIC_IS_DEV !== 'true',
       options: {
         // @ts-ignore
         token: process.env.UPLOADTHING_TOKEN ?? '',

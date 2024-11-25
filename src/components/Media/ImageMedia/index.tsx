@@ -1,14 +1,11 @@
 'use client'
 
 import type { StaticImageData } from 'next/image'
-
-import { cn } from 'src/utilities/cn'
 import NextImage from 'next/image'
 import React from 'react'
-
-import type { Props as MediaProps } from '../types'
-
+import { cn } from 'src/utilities/cn'
 import cssVariables from '@/cssVariables'
+import type { Props as MediaProps } from '../types'
 
 const { breakpoints } = cssVariables
 
@@ -39,22 +36,33 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
       height: fullHeight,
       url,
       width: fullWidth,
+      id,
     } = resource
+
+    console.log('Resource:', resource)
 
     width = fullWidth!
     height = fullHeight!
-    alt = altFromResource
+    alt = altFromResource || ''
 
-    // src = `${process.env.NEXT_PUBLIC_SERVER_URL}${url}`
-    src = url || ''
+    const fileId = resource._key || id
+
+    if (fileId) {
+      src = `https://utfs.io/f/${fileId}`
+    } else if (url) {
+      src = url.startsWith('http') ? url : `${process.env.NEXT_PUBLIC_SERVER_URL}${url}`
+    }
   }
 
-  // NOTE: this is used by the browser to determine which image to download at different screen sizes
+  console.log('Final src:', src)
+
   const sizes = sizeFromProps
     ? sizeFromProps
     : Object.entries(breakpoints)
         .map(([, value]) => `(max-width: ${value}px) ${value}px`)
         .join(', ')
+
+  if (!src) return null
 
   return (
     <NextImage

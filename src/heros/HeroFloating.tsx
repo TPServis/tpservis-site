@@ -36,6 +36,8 @@ interface FloatingImageProps {
 }
 
 const FloatingImage = (props: FloatingImageProps) => {
+  const src = `https://utfs.io/f/${props.img?._key}` || props.img?.url || ''
+
   return (
     <motion.div
       className={clsx(
@@ -47,7 +49,7 @@ const FloatingImage = (props: FloatingImageProps) => {
       transition={{ duration: 0.8, delay: props.delay, ease: 'easeInOut' }}
     >
       <Image
-        src={props.img?.url ?? ''}
+        src={src}
         alt={props.alt}
         className="w-full h-full object-cover rounded-3xl scale-105 blur-lg brightness-100 animate-pulse opacity-50"
         quality={10}
@@ -56,7 +58,7 @@ const FloatingImage = (props: FloatingImageProps) => {
         height={100}
       />
       <Image
-        src={props.img?.url ?? ''}
+        src={src}
         alt={props.alt}
         className="w-full h-full object-cover rounded-3xl absolute inset-0"
         quality={70}
