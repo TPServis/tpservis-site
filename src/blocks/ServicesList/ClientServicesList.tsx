@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { setClientCookie } from '@/utilities/setClientCookie'
 import type { ServiceContentType } from './ServiceContent'
 
@@ -20,14 +20,21 @@ type ServicesListProps = ServiceListType & {
 
 export default function ClientServicesList(props: ServicesListProps) {
   const [selectedService, setSelectedService] = useState<string | null>(props.selectedService)
+  const sectionRef = useRef<HTMLDivElement>(null)
 
   const handleListItemClick = (id: string) => {
     setSelectedService(id)
     setClientCookie('selectedService', id)
   }
 
+  useEffect(() => {
+    if (sectionRef.current) {
+      sectionRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [selectedService])
+
   return (
-    <div className="container-spacing z-10 relative" id="services-list">
+    <div className="container-spacing z-10 relative" id="services-list" ref={sectionRef}>
       <div className="container-wrapper">
         <h2 className="text-6xl font-bold text-heading mb-20">{props.title}</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-10">
