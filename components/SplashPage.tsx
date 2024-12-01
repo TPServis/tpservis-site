@@ -1,9 +1,9 @@
-import Background from "@/public/images/SplashPageBG.jpg";
-import Image from "next/image";
+import Background from '@/public/images/SplashPageBG.jpg'
+import Image from 'next/image'
 
-import { FaPhoneAlt } from "react-icons/fa";
-import { IoIosMail } from "react-icons/io";
-import { SiGooglemaps } from "react-icons/si";
+import { FaPhoneAlt } from 'react-icons/fa'
+import { IoIosMail } from 'react-icons/io'
+import { SiGooglemaps } from 'react-icons/si'
 
 export default function SplashPage() {
   return (
@@ -12,15 +12,10 @@ export default function SplashPage() {
         <SplashPageContent />
       </div>
       <div className="col-span-2 relative">
-        <Image
-          src={Background}
-          alt="Image of a beautiful beach"
-          fill
-          className="object-cover"
-        />
+        <Image src={Background} alt="Image of a beautiful beach" fill className="object-cover" />
       </div>
     </div>
-  );
+  )
 }
 
 const SplashPageContent = () => {
@@ -29,7 +24,9 @@ const SplashPageContent = () => {
       <div className="h-full flex flex-col items-start justify-center p-10">
         <h1 className="text-5xl font-black">TPService</h1>
         <h2 className="text-lg">Наразі наш вебсайт перебуває у процесі розробки.</h2>
-        <p className="text-sm opacity-50">Скоро ми будемо готові до запуску, тому залишайтеся з нами!</p>
+        <p className="text-sm opacity-50">
+          Скоро ми будемо готові до запуску, тому залишайтеся з нами!
+        </p>
       </div>
       <ul className="bg-gray-500/10 absolute bottom-0 left-0 w-full p-4 px-10">
         <SplashPageContactItem
@@ -52,27 +49,24 @@ const SplashPageContent = () => {
         </SplashPageContactItem>
       </ul>
     </div>
-  );
-};
+  )
+}
 
 const SplashPageContactItem = ({
   href,
   icon,
   children,
 }: {
-  href: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
+  href: string
+  icon: React.ReactNode
+  children: React.ReactNode
 }) => {
   return (
     <li>
-      <a
-        href={href}
-        className="flex items-center text-sm hover:underline"
-      >
+      <a href={href} className="flex items-center text-sm hover:underline">
         {icon}
         {children}
       </a>
     </li>
-  );
-};
+  )
+}

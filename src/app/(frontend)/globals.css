@@ -1,0 +1,135 @@
+@tailwind components;
+@tailwind utilities;
+
+@import 'tailwindcss';
+
+@theme {
+  --color-jaffa-50: #fef6ee;
+  --color-jaffa-100: #feead6;
+  --color-jaffa-200: #fbd2ad;
+  --color-jaffa-300: #f9b278;
+  --color-jaffa-400: #f5853f;
+  --color-jaffa-500: #f2661d;
+  --color-jaffa-600: #e34c13;
+  --color-jaffa-700: #bc3812;
+  --color-jaffa-800: #962e16;
+  --color-jaffa-900: #792815;
+  --color-jaffa-950: #411109;
+
+  --color-astral-50: #f0f9fb;
+  --color-astral-100: #d8eef5;
+  --color-astral-200: #b6deeb;
+  --color-astral-300: #83c4dd;
+  --color-astral-400: #4aa3c6;
+  --color-astral-500: #2e86ab;
+  --color-astral-600: #296d91;
+  --color-astral-700: #275a77;
+  --color-astral-800: #284b62;
+  --color-astral-900: #254054;
+  --color-astral-950: #142938;
+
+  --color-shark-50: #f8f7f7;
+  --color-shark-100: #f0eeee;
+  --color-shark-200: #dddada;
+  --color-shark-300: #bfbaba;
+  --color-shark-400: #9b9595;
+  --color-shark-500: #7f7879;
+  --color-shark-600: #686162;
+  --color-shark-700: #554f4f;
+  --color-shark-800: #484445;
+  --color-shark-900: #3f3b3b;
+  --color-shark-950: #252323;
+
+  --color-white: #fbfffe;
+
+  --color-heading: var(--color-astral-600);
+
+  --color-background: var(--color-white);
+
+  --screen-sm: 640px;
+  --screen-md: 768px;
+  --screen-lg: 1024px;
+  --screen-xl: 1280px;
+
+  --width-container: var(--screen-xl);
+
+  --animation-float: float 10s ease-in-out infinite;
+}
+
+@layer base {
+  [data-theme='blue'] {
+    --color-heading: var(--color-astral-700);
+    --color-background: var(--color-astral-100);
+  }
+}
+
+.container-spacing {
+  @apply px-8 py-24 lg:px-16 lg:py-24;
+}
+
+.container-wrapper {
+  @apply mx-auto max-w-[var(--width-container)];
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.btn {
+  @apply bg-jaffa-400 text-white px-4 py-2 rounded-md flex items-center gap-4 hover:gap-6 hover:bg-jaffa-500 transition-all duration-300 w-fit;
+}
+
+.rich-text {
+  @apply text-shark-600;
+
+  h2 {
+    @apply text-3xl font-bold text-heading pb-4;
+
+    &:not(:first-of-type) {
+      @apply pt-8;
+    }
+  }
+
+  h3 {
+    @apply text-2xl font-semibold text-heading pb-4 pt-8;
+  }
+
+  h4 {
+    @apply text-xl font-medium text-heading pb-4;
+  }
+
+  p {
+    @apply text-base text-shark-600 leading-normal pb-4;
+  }
+
+  strong {
+    @apply text-jaffa-500;
+  }
+
+  a {
+    @apply text-astral-500 hover:text-astral-600 transition-colors duration-300 underline;
+  }
+
+  ul {
+    @apply !list-disc !list-outside pl-6;
+
+    li {
+      @apply pb-4;
+    }
+  }
+
+  ol {
+    @apply !list-decimal !list-outside pl-6;
+
+    li {
+      @apply pb-4;
+    }
+  }
+}
