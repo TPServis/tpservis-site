@@ -118,18 +118,45 @@
   }
 
   ul {
-    @apply !list-disc !list-outside pl-6;
+    @apply !list-disc !list-outside pl-10;
 
     li {
       @apply pb-4;
+
+      &:has(ul, ol) {
+        @apply mb-0 !list-none;
+      }
+
+      ul,
+      ol {
+        li {
+          @apply pb-2;
+        }
+      }
     }
   }
 
   ol {
-    @apply !list-decimal !list-outside pl-6;
+    @apply !list-decimal !list-outside pl-10;
 
     li {
       @apply pb-4;
+
+      &:has(ul, ol) {
+        @apply mb-0 !list-none;
+      }
+
+      ul,
+      ol {
+        li {
+          @apply pb-2;
+        }
+      }
     }
+  }
+
+  ul li::marker,
+  ol li::marker {
+    @apply !text-astral-700 !text-sm;
   }
 }

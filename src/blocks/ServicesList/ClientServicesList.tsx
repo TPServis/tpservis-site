@@ -31,7 +31,7 @@ export default function ClientServicesList(props: ServicesListProps) {
       <div className="container-wrapper">
         <h2 className="text-6xl font-bold text-heading mb-20">{props.title}</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-10">
-          <div className="col-span-2 flex flex-col gap-2 sticky top-26 max-h-fit">
+          <div className="col-span-2 flex flex-col gap-2 sticky top-26 bottom-0 max-h-fit">
             {props.services.map((service) => (
               <ListItem
                 key={service.id}
