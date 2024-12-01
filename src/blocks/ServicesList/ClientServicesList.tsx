@@ -27,7 +27,7 @@ export default function ClientServicesList(props: ServicesListProps) {
   }
 
   return (
-    <div className="container-spacing z-10 relative">
+    <div className="container-spacing z-10 relative" id="services-list">
       <div className="container-wrapper">
         <h2 className="text-6xl font-bold text-heading mb-20">{props.title}</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-10">
