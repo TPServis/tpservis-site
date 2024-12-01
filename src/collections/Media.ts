@@ -14,7 +14,6 @@ import { authenticated } from '../access/authenticated'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// TODO: setup better access control
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
