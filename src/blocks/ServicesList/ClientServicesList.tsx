@@ -88,7 +88,7 @@ const ListItem = (props: ListItemProps) => {
     <button
       onClick={props.onClick}
       data-selected={props.isSelected}
-      className="flex items-center justify-start w-full data-[selected=true]:bg-astral-500 data-[selected=true]:text-astral-50 rounded-lg p-4 bg-astral-50 text-lg font-semibold text-astral-500 hover:bg-astral-100 hover:text-astral-600 transition-colors duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-astral-400 focus:ring-offset-2 first:rounded-t-2xl last:rounded-b-2xl shadow "
+      className="flex items-center justify-start text-left w-full data-[selected=true]:bg-astral-500 data-[selected=true]:text-astral-50 rounded-lg p-4 bg-astral-50 text-lg font-semibold text-astral-500 hover:bg-astral-100 hover:text-astral-600 transition-colors duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-astral-400 focus:ring-offset-2 first:rounded-t-2xl last:rounded-b-2xl shadow "
     >
       <span>{props.title}</span>
     </button>

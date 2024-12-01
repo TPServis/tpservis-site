@@ -116,4 +116,20 @@
   a {
     @apply text-astral-500 hover:text-astral-600 transition-colors duration-300 underline;
   }
+
+  ul {
+    @apply !list-disc !list-outside pl-6;
+
+    li {
+      @apply pb-4;
+    }
+  }
+
+  ol {
+    @apply !list-decimal !list-outside pl-6;
+
+    li {
+      @apply pb-4;
+    }
+  }
 }
