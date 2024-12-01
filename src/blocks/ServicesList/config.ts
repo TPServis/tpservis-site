@@ -7,6 +7,8 @@ import {
   lexicalEditor,
   BlockquoteFeature,
   BlockFields,
+  OrderedListFeature,
+  UnorderedListFeature,
 } from '@payloadcms/richtext-lexical'
 
 export const ServicesList: Block = {
@@ -47,6 +49,8 @@ export const ServicesList: Block = {
                         FixedToolbarFeature(),
                         InlineToolbarFeature(),
                         BlockquoteFeature(),
+                        OrderedListFeature(),
+                        UnorderedListFeature(),
                       ]
                     },
                   }),

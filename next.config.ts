@@ -26,8 +26,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   redirects: redirects as any,
   experimental: {
-    workerThreads: false,
-    cpus: 1,
+    reactCompiler: true,
   },
   headers: async () => {
     return [
