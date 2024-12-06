@@ -95,7 +95,7 @@ const ServicesLabelsList = (props: ServicesLabelsListProps) => {
           />
         ))}
       </div>
-      <div className="md:hidden w-full flex flex-col gap-2 sticky top-[90dvh] bottom-0 max-h-fit z-2">
+      <div className="md:hidden w-full flex flex-col gap-2 sticky top-[calc(100dvh-100px)] bottom-0 max-h-fit z-2">
         <MobileListItems
           services={props.services}
           onClick={props.handleListItemClick}
@@ -154,16 +154,16 @@ const MobileListItems = (props: MobileListItemsProps) => {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full p-4 bg-astral-50/60 text-sm md:text-lg font-semibold text-astral-500 hover:bg-astral-100/60 hover:text-astral-600 transition-colors duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-astral-400 focus:ring-offset-2 shadow-lg backdrop-blur"
+        className="flex items-center justify-between w-full p-4 bg-astral-500/80 text-sm md:text-lg font-semibold text-astral-50 hover:bg-astral-600/80 hover:text-astral-600 transition-colors duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-astral-400 focus:ring-offset-2 shadow-lg backdrop-blur"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
-        <span className="text-astral-500 text-xs font-normal mr-2">
+        <span className="text-astral-50 text-xs font-normal mr-2">
           {props.selectedService
             ? props.services.findIndex((service) => service.id === props.selectedService) + 1
             : ''}
         </span>
-        <span>
+        <span className="text-astral-50 text-normal font-bold text-pretty">
           {props.selectedService
             ? props.services.find((service) => service.id === props.selectedService)?.title
             : 'Select a service'}
