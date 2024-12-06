@@ -72,7 +72,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
           animate={{ y: isShown ? 0 : -100, opacity: isShown ? 1 : 0 }}
         >
           <Link href="/">
-            <Logo />
+            <Logo className="text-astral-600 text-xl md:text-3xl" />
           </Link>
         </motion.div>
         <HeaderNav header={header} />
