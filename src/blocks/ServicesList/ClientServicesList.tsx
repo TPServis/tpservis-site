@@ -95,7 +95,7 @@ const ServicesLabelsList = (props: ServicesLabelsListProps) => {
           />
         ))}
       </div>
-      <div className="md:hidden w-full flex flex-col gap-2 sticky top-[90vh] bottom-0 max-h-fit z-2">
+      <div className="md:hidden w-full flex flex-col gap-2 sticky top-[90dvh] bottom-0 max-h-fit z-2">
         <MobileListItems
           services={props.services}
           onClick={props.handleListItemClick}
