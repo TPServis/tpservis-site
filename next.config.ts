@@ -22,7 +22,6 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  reactCompiler: true,
   reactStrictMode: true,
   redirects: redirects as any,
   experimental: {
