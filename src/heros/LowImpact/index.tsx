@@ -20,12 +20,6 @@ export const MediumImpactHero: React.FC<Page['hero']> = ({ title, subtitle, cta,
             )}
           </div>
         </div>
-        {mediaGroup?.[0]?.media1 && (
-          <Media
-            resource={mediaGroup[0].media1}
-            className="rounded-3xl overflow-hidden w-full h-[300px] md:h-[500px] *:w-full *:h-full *:object-cover *:object-center"
-          />
-        )}
       </div>
     </div>
   )
