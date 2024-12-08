@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "tpservice",
   "version": "1.0.0",
   "description": "Website template for Payload",
   "license": "MIT",
@@ -34,7 +34,7 @@
     "@payloadcms/plugin-redirects": "3.5.0",
     "@payloadcms/plugin-search": "3.5.0",
     "@payloadcms/plugin-seo": "3.5.0",
-    "@payloadcms/richtext-lexical": "3.5.0",
+    "@payloadcms/richtext-lexical": "^3.5.0",
     "@payloadcms/storage-s3": "3.5.0",
     "@payloadcms/storage-uploadthing": "3.5.0",
     "@payloadcms/ui": "3.5.0",
