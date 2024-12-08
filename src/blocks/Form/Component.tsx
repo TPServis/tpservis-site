@@ -1,5 +1,6 @@
 'use client'
 import type { Form as FormType } from '@payloadcms/plugin-form-builder/types'
+import { Payload } from 'payload'
 
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
@@ -73,6 +74,8 @@ export const FormBlock: React.FC<
           setIsLoading(true)
         }, 1000)
 
+        console.log('dataToSend', dataToSend)
+
         try {
           const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/form-submissions`, {
             body: JSON.stringify({
@@ -86,6 +89,8 @@ export const FormBlock: React.FC<
           })
 
           const res = await req.json()
+
+          console.log('res', res)
 
           clearTimeout(loadingTimerID)
 
@@ -119,6 +124,7 @@ export const FormBlock: React.FC<
         }
       }
 
+      console.log('submitForm')
       void submitForm()
     },
     [router, formID, redirect, confirmationType],

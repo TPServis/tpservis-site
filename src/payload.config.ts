@@ -6,6 +6,7 @@ import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import { s3Storage, S3StorageOptions } from '@payloadcms/storage-s3'
+import { resendAdapter } from '@payloadcms/email-resend'
 // import { uploadthingStorage } from '@payloadcms/storage-uploadthing'
 import { uploadthingStorage } from './uploadthing'
 import {
@@ -123,6 +124,11 @@ export default buildConfig({
       ],
     },
   },
+  email: resendAdapter({
+    defaultFromAddress: 'sargon.dev@gmail.com',
+    defaultFromName: 'Sargon',
+    apiKey: process.env.RESEND_API_KEY || '',
+  }),
   // This config helps us configure global or default features that the other editors can inherit
   editor: lexicalEditor({
     features: () => {

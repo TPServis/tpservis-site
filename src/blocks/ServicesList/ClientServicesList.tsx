@@ -35,14 +35,14 @@ export default function ClientServicesList(props: ServicesListProps) {
     <div className="container-spacing z-10 relative" id="services-list" ref={sectionRef}>
       <div className="container-wrapper">
         <h2 className="text-4xl md:text-6xl font-bold text-heading mb-8 md:mb-20">{props.title}</h2>
-        <div className="md:grid md:grid-cols-4 lg:grid-cols-6 gap-10 relative">
+        <div className="lg:grid lg:grid-cols-6 gap-10 relative">
           <ServicesLabelsList
             services={props.services}
             handleListItemClick={handleListItemClick}
             selectedService={selectedService}
           />
           <AnimatePresence mode="wait">
-            <div className="col-span-4 relative z-1 pb-18">
+            <div className="lg:col-span-4 relative z-1 pb-18">
               {selectedService && (
                 <motion.div
                   initial={{ opacity: 0, y: 10, height: 'auto' }}
