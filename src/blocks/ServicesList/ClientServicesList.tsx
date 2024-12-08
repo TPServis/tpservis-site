@@ -85,7 +85,7 @@ type ServicesLabelsListProps = {
 const ServicesLabelsList = (props: ServicesLabelsListProps) => {
   return (
     <>
-      <div className="hidden md:flex w-full md:col-span-2 flex-col gap-2 sticky top-26 bottom-0 max-h-fit z-2">
+      <div className="hidden lg:flex w-full lg:col-span-2 flex-col gap-2 sticky top-26 bottom-0 max-h-fit z-2">
         {props.services.map((service) => (
           <ListItem
             key={service.id}
@@ -95,7 +95,7 @@ const ServicesLabelsList = (props: ServicesLabelsListProps) => {
           />
         ))}
       </div>
-      <div className="md:hidden w-full flex flex-col gap-2 sticky top-[calc(100dvh-100px)] bottom-0 max-h-fit z-2">
+      <div className="lg:hidden w-full flex flex-col gap-2 sticky top-[calc(100dvh-100px)] bottom-0 max-h-fit z-2">
         <MobileListItems
           services={props.services}
           onClick={props.handleListItemClick}
