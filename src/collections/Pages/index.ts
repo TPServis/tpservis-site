@@ -11,7 +11,6 @@ import { TextAside } from '../../blocks/TextAside/config'
 import { ListAside } from '../../blocks/ListAside/config'
 import { ImageWithInfoGrid } from '../../blocks/ImageWithInfoGrid/config'
 import { hero } from '@/heros/config'
-import { slugField } from '@/fields/slug'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { revalidatePage } from './hooks/revalidatePage'
@@ -20,6 +19,7 @@ import { PopularDestinationsGallery } from '@/blocks/PopularDestinationsGallery/
 import { SideListWithIcons } from '@/blocks/SideListWithIcons/config'
 import { Bento4x4 } from '@/blocks/Bento4x4/config'
 import { FAQ } from '@/blocks/FAQ/config'
+import { slugField } from '@/fields/slug'
 import { ServicesList } from '@/blocks/ServicesList/config'
 
 import {
@@ -134,7 +134,7 @@ export const Pages: CollectionConfig = {
         position: 'sidebar',
       },
     },
-    ...slugField(),
+    slugField(),
   ],
   hooks: {
     afterChange: [revalidatePage],
