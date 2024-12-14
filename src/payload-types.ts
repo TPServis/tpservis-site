@@ -96,7 +96,6 @@ export interface Page {
     mediaGroup?:
       | {
           media1: number | Media;
-          media2?: (number | null) | Media;
           id?: string | null;
         }[]
       | null;
@@ -1056,7 +1055,6 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               media1?: T;
-              media2?: T;
               id?: T;
             };
       };

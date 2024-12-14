@@ -88,15 +88,6 @@ export const hero: Field = {
           relationTo: 'media',
           required: true,
         },
-        {
-          name: 'media2',
-          type: 'upload',
-          relationTo: 'media',
-          required: true,
-          admin: {
-            condition: (_, { type }) => type === 'highImpact',
-          },
-        },
       ],
     },
   ],
