@@ -24,6 +24,10 @@ const nextConfig: NextConfig = {
 
   reactStrictMode: true,
   redirects: redirects as any,
+  compiler: {
+    styledComponents: true,
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
   experimental: {
     reactCompiler: true,
   },

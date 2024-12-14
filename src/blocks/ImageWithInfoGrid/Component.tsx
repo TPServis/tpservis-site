@@ -51,8 +51,7 @@ export const ImageWithInfoGrid = (props: ImageWithInfoGridProps) => {
           {props.cta && props.cta.url && (
             <NextLink
               href={props.cta.url}
-              className="text-xl rounded-full py-7 text-jaffa-400 transition-all duration-300 flex items-center gap-4 uppercase font-bold
-            hover:gap-6
+              className="text-xl rounded-full py-7 text-jaffa-400 transition-all duration-300 flex items-center gap-4 uppercase font-bold hover:gap-6
             "
             >
               <span>{props.cta.label}</span>
