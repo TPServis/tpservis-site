@@ -1,14 +1,14 @@
 'use client'
 
 import React from 'react'
-import NextLink from 'next/link'
+import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
 import RichText from '@/components/RichText'
 
 import Image from 'next/image'
 
 import { useRef } from 'react'
-import { useScroll, motion, useTransform, useSpring } from 'framer-motion'
+import { useScroll, motion, useTransform, useSpring } from 'motion/react'
 
 interface ImageWithInfoGridProps {
   title: string
@@ -49,14 +49,14 @@ export const ImageWithInfoGrid = (props: ImageWithInfoGridProps) => {
             className="text-lg text-shark-400 pb-6"
           />
           {props.cta && props.cta.url && (
-            <NextLink
+            <Link
               href={props.cta.url}
-              className="text-xl rounded-full py-7 text-jaffa-400 transition-all duration-300 flex items-center gap-4 uppercase font-bold hover:gap-6
-            "
+              className="text-xl rounded-full py-7 text-jaffa-400 transition-all duration-300 flex items-center gap-4 uppercase font-bold hover:gap-6"
+              prefetch={true}
             >
               <span>{props.cta.label}</span>
               <ChevronRight className="w-7 h-7" />
-            </NextLink>
+            </Link>
           )}
         </div>
       </div>

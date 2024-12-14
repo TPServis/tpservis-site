@@ -6,7 +6,7 @@ import type { ServiceContentType } from './ServiceContent'
 
 import ServiceContent from './ServiceContent'
 
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'motion/react'
 
 export type ServiceListType = {
   id: string

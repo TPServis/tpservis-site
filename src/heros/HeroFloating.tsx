@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import React from 'react'
 import Image from 'next/image'
 
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 
 import type { Media } from '@/payload-types'
 

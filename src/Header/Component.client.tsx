@@ -3,7 +3,7 @@ import { useHeaderTheme } from '@/providers/HeaderTheme'
 import Link from 'next/link.js'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 
 import { cn } from '@/utilities/cn'
 import type { Header } from '@/payload-types'

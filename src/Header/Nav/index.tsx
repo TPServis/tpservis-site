@@ -12,7 +12,7 @@ import { CMSLink } from '@/components/Link'
 
 import { Menu, X } from 'lucide-react'
 
-import { motion, AnimatePresence, delay } from 'framer-motion'
+import { motion, AnimatePresence, delay } from 'motion/react'
 
 export const HeaderNav: React.FC<{ header: HeaderType }> = ({ header }) => {
   const navItems = header?.navItems || []
@@ -111,13 +111,13 @@ const MenuWindow = ({ navItems, closeMenu }: MenuWindowProps) => {
                   filter: 'blur(10px)',
                   transition: { duration: 0.2, delay: -0.1 * i, ease: 'easeInOut' },
                 }}
+                onClick={handleNavigation}
               >
                 <CMSLink
                   key={i}
                   {...link}
                   appearance="link"
                   className="text-4xl md:text-6xl lg:text-6xl font-bold text-astral-950 hover:text-jaffa-400 transition duration-100 hover:!no-underline"
-                  onClick={handleNavigation}
                 />
               </motion.li>
             )

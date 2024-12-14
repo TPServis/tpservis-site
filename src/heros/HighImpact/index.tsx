@@ -7,7 +7,7 @@ import type { Page } from '@/payload-types'
 
 import useTheme from '@/hooks/useTheme'
 
-import { useScroll, useMotionValueEvent } from 'framer-motion'
+import { useScroll, useMotionValueEvent } from 'motion/react'
 import { useRef } from 'react'
 
 export const HighImpactHero: React.FC<Page['hero']> = ({

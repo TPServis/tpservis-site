@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
-import { useScroll } from 'framer-motion'
+import { useScroll } from 'motion/react'
 import ScrollingRow from './ScrollingRow'
 import type {
   Media,
