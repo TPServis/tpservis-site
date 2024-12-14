@@ -18,7 +18,7 @@ export default function HeroFloating({ mediaGroup }: HeroFloatingProps) {
       <div className="grid md:gap-8 gap-2 grid-rows-5 w-full grid-[repeat(2, 10vw)] scale-125 md:scale-100 ">
         <FloatingImage img={mediaGroup[0].media1} alt="Hero" className="row-start-1" delay={0} />
         <FloatingImage
-          img={mediaGroup[0].media2}
+          img={mediaGroup[1].media1}
           alt="Hero"
           className=" row-start-2 animate-[float_10s_ease-in-out_1s_infinite]"
           delay={0.2}
