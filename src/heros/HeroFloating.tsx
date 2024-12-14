@@ -9,7 +9,9 @@ import { motion } from 'framer-motion'
 import type { Media } from '@/payload-types'
 
 interface HeroFloatingProps {
-  mediaGroup: Media[] | any
+  mediaGroup: {
+    media1: Media | null
+  }[]
 }
 
 export default function HeroFloating({ mediaGroup }: HeroFloatingProps) {
