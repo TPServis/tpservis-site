@@ -61,7 +61,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
             </a>
           )}
         </div>
-        <HeroFloating mediaGroup={mediaGroup} />
+        <HeroFloating mediaGroup={mediaGroup as any} />
       </div>
     </div>
   )
