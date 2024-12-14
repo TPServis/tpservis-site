@@ -7,8 +7,7 @@ import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import { s3Storage, S3StorageOptions } from '@payloadcms/storage-s3'
 import { resendAdapter } from '@payloadcms/email-resend'
-// import { uploadthingStorage } from '@payloadcms/storage-uploadthing'
-import { uploadthingStorage } from './uploadthing'
+import { uploadthingStorage } from '@payloadcms/storage-uploadthing'
 import {
   BoldFeature,
   FixedToolbarFeature,
