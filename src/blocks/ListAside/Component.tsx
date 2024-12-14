@@ -37,7 +37,10 @@ interface ListAsideItemProps {
 
 const ListAsideItem = (props: ListAsideItemProps) => {
   return (
-    <Link href={props.item.item.url} prefetch={true}>
+    <Link
+      href={props.item.item.url && props.item.item.url !== '/' ? props.item.item.url : '/'}
+      prefetch={true}
+    >
       <li className="flex items-center justify-between gap-4 w-full border-t border-shark-200 py-4 md:py-7 group">
         <span className="md:text-2xl text-xl font-bold text-astral-900 group-hover:ml-2 transition-all duration-300">
           {props.item.item.title}
