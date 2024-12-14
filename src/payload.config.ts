@@ -124,8 +124,8 @@ export default buildConfig({
     },
   },
   email: resendAdapter({
-    defaultFromAddress: 'sargon.dev@gmail.com',
-    defaultFromName: 'Sargon',
+    defaultFromAddress: 'website@www.tpservis.com',
+    defaultFromName: 'TP Servis',
     apiKey: process.env.RESEND_API_KEY || '',
   }),
   // This config helps us configure global or default features that the other editors can inherit
@@ -201,6 +201,7 @@ export default buildConfig({
       generateURL,
     }),
     formBuilderPlugin({
+      defaultToEmail: 'sargon.dev@gmail.com',
       fields: {
         payment: false,
       },
