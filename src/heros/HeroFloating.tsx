@@ -16,13 +16,17 @@ export default function HeroFloating({ mediaGroup }: HeroFloatingProps) {
   return (
     <div className="col-span-2 flex items-center justify-center relative md:translate-y-0 -translate-y-3/4 h-[50vw] md:h-auto">
       <div className="grid md:gap-8 gap-2 grid-rows-5 w-full grid-[repeat(2, 10vw)] scale-125 md:scale-100 ">
-        <FloatingImage img={mediaGroup[0].media1} alt="Hero" className="row-start-1" delay={0} />
-        <FloatingImage
-          img={mediaGroup[1].media1}
-          alt="Hero"
-          className=" row-start-2 animate-[float_10s_ease-in-out_1s_infinite]"
-          delay={0.2}
-        />
+        {mediaGroup[0].media1 && (
+          <FloatingImage img={mediaGroup[0].media1} alt="Hero" className="row-start-1" delay={0} />
+        )}
+        {mediaGroup[1].media1 && (
+          <FloatingImage
+            img={mediaGroup[1].media1}
+            alt="Hero"
+            className=" row-start-2 animate-[float_10s_ease-in-out_1s_infinite]"
+            delay={0.2}
+          />
+        )}
       </div>
     </div>
   )
