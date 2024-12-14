@@ -1,7 +1,10 @@
+'use client'
+
 import { Button, type ButtonProps } from '@/components/ui/button'
 import { cn } from 'src/utilities/cn'
 import Link from 'next/link'
 import React from 'react'
+import { useRouter } from 'next/navigation'
 
 import type { Page, Post } from '@/payload-types'
 
@@ -22,6 +25,7 @@ type CMSLinkType = {
 }
 
 export const CMSLink: React.FC<CMSLinkType> = (props) => {
+  const router = useRouter()
   const {
     type,
     appearance = 'inline',
@@ -50,7 +54,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   /* Ensure we don't break any styles set by richText */
   if (appearance === 'inline') {
     return (
-      <Link className={cn(className)} href={href || url || '/'} {...newTabProps} onClick={onClick}>
+      <Link className={cn(className)} href={href || url || '/'} {...newTabProps} prefetch={true}>
         {label && label}
         {children && children}
       </Link>
@@ -59,13 +63,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
 
   return (
     <Button asChild className={className} size={size} variant={appearance}>
-      <Link
-        className={cn(className)}
-        href={href || url || '/'}
-        {...newTabProps}
-        onClick={onClick}
-        prefetch
-      >
+      <Link className={cn(className)} href={href || url || '/'} {...newTabProps} prefetch={true}>
         {label && label}
         {children && children}
       </Link>
