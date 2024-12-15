@@ -27,7 +27,9 @@ export const Select: React.FC<
 > = ({ name, control, errors, label, options, required, width }) => {
   return (
     <Width width={width}>
-      <Label htmlFor={name}>{label}</Label>
+      <Label htmlFor={name} className="input-label">
+        {label}
+      </Label>
       <Controller
         control={control}
         defaultValue=""
@@ -37,13 +39,13 @@ export const Select: React.FC<
 
           return (
             <SelectComponent onValueChange={(val) => onChange(val)} value={controlledValue?.value}>
-              <SelectTrigger className="w-full" id={name}>
+              <SelectTrigger className="w-full input" id={name}>
                 <SelectValue placeholder={label} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="input-select-content">
                 {options.map(({ label, value }) => {
                   return (
-                    <SelectItem key={value} value={value}>
+                    <SelectItem key={value} value={value} className="input-select-item">
                       {label}
                     </SelectItem>
                   )

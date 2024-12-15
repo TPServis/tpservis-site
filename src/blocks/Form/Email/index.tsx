@@ -21,21 +21,16 @@ export const Email: React.FC<
 > = ({ name, defaultValue, errors, label, register, required: requiredFromProps, width }) => {
   return (
     <Width width={width}>
-      <Label htmlFor={name} className="text-shark-500 font-medium text-base">
+      <Label htmlFor={name} className="input-label">
         {label}
       </Label>
       <Input
         defaultValue={defaultValue}
         id={name}
         type="text"
-        className={cn(
-          'bg-astral-50 border-astral-50 hover:bg-astral-100 focus:bg-astral-100 focus:ring-astral-400 transition-all duration-300 cursor-text invalid:ring-orange-500 caret-astral-500 placeholder:text-astral-500 text-astral-800 font-medium text-lg',
-          {
-            'bg-astral-50': !errors[name],
-            'ring-orange-500 ring-2 ring-offset-2 bg-orange-50 hover:bg-orange-100 focus:bg-orange-100 focus:ring-orange-400':
-              errors[name],
-          },
-        )}
+        className={cn('input', {
+          'input-error': errors[name],
+        })}
         {...register(name, { pattern: /^\S[^\s@]*@\S+$/, required: requiredFromProps })}
       />
 
