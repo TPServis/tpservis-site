@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/utilities/cn'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import useTheme from '@/hooks/useTheme'
 
 import React from 'react'
@@ -18,8 +18,13 @@ export const HeaderNav: React.FC<{ header: HeaderType }> = ({ header }) => {
   const navItems = header?.navItems || []
 
   const [menuIsOpen, setMenuIsOpen] = useState(false)
+  const scrollBarWidth = useRef(0)
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (!window) return
+
+    scrollBarWidth.current = window.innerWidth - document.body.clientWidth
+
     if (menuIsOpen) {
       document.body.style.overflow = 'hidden'
     } else {
