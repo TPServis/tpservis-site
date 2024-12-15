@@ -4,30 +4,6 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-jaffa-50: #fef6ee;
-  --color-jaffa-100: #feead6;
-  --color-jaffa-200: #fbd2ad;
-  --color-jaffa-300: #f9b278;
-  --color-jaffa-400: #f5853f;
-  --color-jaffa-500: #f2661d;
-  --color-jaffa-600: #e34c13;
-  --color-jaffa-700: #bc3812;
-  --color-jaffa-800: #962e16;
-  --color-jaffa-900: #792815;
-  --color-jaffa-950: #411109;
-
-  --color-astral-50: #f0f9fb;
-  --color-astral-100: #d8eef5;
-  --color-astral-200: #b6deeb;
-  --color-astral-300: #83c4dd;
-  --color-astral-400: #4aa3c6;
-  --color-astral-500: #2e86ab;
-  --color-astral-600: #296d91;
-  --color-astral-700: #275a77;
-  --color-astral-800: #284b62;
-  --color-astral-900: #254054;
-  --color-astral-950: #142938;
-
   --color-shark-50: #f8f7f7;
   --color-shark-100: #f0eeee;
   --color-shark-200: #dddada;
@@ -39,8 +15,57 @@
   --color-shark-800: #484445;
   --color-shark-900: #3f3b3b;
   --color-shark-950: #252323;
-
-  --color-white: #fbfffe;
+  --color-astral-50: #f0f9fb;
+  --color-astral-100: #d8eef5;
+  --color-astral-200: #b6deeb;
+  --color-astral-300: #83c4dd;
+  --color-astral-400: #4aa3c6;
+  --color-astral-500: #2e86ab;
+  --color-astral-600: #296d91;
+  --color-astral-700: #275a77;
+  --color-astral-800: #284b62;
+  --color-astral-900: #254054;
+  --color-astral-950: #142938;
+  --color-jaffa-50: #fef6ee;
+  --color-jaffa-100: #feead6;
+  --color-jaffa-200: #fbd2ad;
+  --color-jaffa-300: #f9b278;
+  --color-jaffa-400: #f5853f;
+  --color-jaffa-500: #f2661d;
+  --color-jaffa-600: #e34c13;
+  --color-jaffa-700: #bc3812;
+  --color-jaffa-800: #962e16;
+  --color-jaffa-900: #792815;
+  --color-jaffa-950: #411109;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-button-primary-background: var(--color-jaffa-400);
+  --color-button-primary-foreground: var(--color-jaffa-50);
+  --color-input-primary-background: var(--color-astral-50);
+  --color-input-primary-foreground: var(--color-astral-600);
+  --color-input-primary-muted: var(--color-astral-300);
+  --color-input-primary-label: var(--color-shark-700);
+  --color-input-primary-background-hover: var(--color-astral-100);
+  --color-green: #54f53f;
+  --color-background-primary: var(--color-astral-50);
+  --color-background-secondary: var(--color-astral-600);
+  --color-background-surface: var(--color-white);
+  --color-background-accent: var(--color-jaffa-400);
+  --color-background-success: var(--color-green);
+  --color-background-error: var(--color-red);
+  --color-text-primary: var(--color-shark-950);
+  --color-text-secondary: var(--color-shark-500);
+  --color-text-accent: var(--color-jaffa-400);
+  --color-text-success: var(--color-green);
+  --color-text-error: var(--color-red);
+  --color-text-heading: var(--color-astral-600);
+  --color-red: #f53f3f;
+  --color-text-muted: var(--color-shark-200);
+  --color-text-on-primary-primary: var(--color-astral-700);
+  --color-text-on-primary-secondary: var(--color-shark-400);
+  --color-text-on-accent-primary: var(--color-jaffa-50);
+  --color-text-on-secondary-primary: var(--color-astral-50);
+  --color-text-on-secondary-secondary: var(--color-astral-200);
 
   --color-heading: var(--color-astral-600);
 
@@ -79,6 +104,26 @@
 
   50% {
     transform: translateY(-10px);
+  }
+}
+
+.input {
+  @apply bg-input-primary-background border-input-primary-background hover:bg-input-primary-background-hover focus:bg-input-primary-background-hover focus:ring-input-primary-muted transition-all duration-300 cursor-text invalid:ring-orange-500 caret-input-primary-foreground placeholder:text-input-primary-foreground text-input-primary-foreground font-medium text-lg rounded-lg py-6 px-4;
+}
+
+.input-error {
+  @apply ring-orange-500 ring-2 ring-offset-2 bg-orange-50 hover:bg-orange-100 focus:bg-orange-100 focus:ring-orange-400;
+}
+
+.input-label {
+  @apply text-input-primary-label text-sm font-medium;
+}
+
+.input-select-content {
+  @apply bg-input-primary-background/80 border-input-primary-background border-t-0 rounded-b-lg rounded-t-none shadow-lg backdrop-blur-sm;
+
+  .input-select-item {
+    @apply text-input-primary-foreground text-sm font-medium py-4 px-4 hover:bg-input-primary-background-hover/80 transition-all duration-300 cursor-pointer;
   }
 }
 
