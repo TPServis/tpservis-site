@@ -21,7 +21,7 @@ import { Bento4x4 } from '@/blocks/Bento4x4/config'
 import { FAQ } from '@/blocks/FAQ/config'
 import { slugField } from '@/fields/slug'
 import { ServicesList } from '@/blocks/ServicesList/config'
-
+import { CustomFormBlock } from '@/blocks/CustomForm/config'
 import {
   MetaDescriptionField,
   MetaImageField,
@@ -92,6 +92,7 @@ export const Pages: CollectionConfig = {
                 Bento4x4,
                 FAQ,
                 ServicesList,
+                CustomFormBlock,
               ],
               required: true,
             },
