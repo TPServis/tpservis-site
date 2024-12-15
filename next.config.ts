@@ -38,7 +38,10 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value:
+              NEXT_PUBLIC_SERVER_URL === 'http://localhost:3000'
+                ? 'no-store, no-cache, must-revalidate, proxy-revalidate'
+                : 'public, max-age=31536000, immutable',
           },
         ],
       },
