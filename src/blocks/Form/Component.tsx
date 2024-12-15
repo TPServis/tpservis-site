@@ -131,8 +131,8 @@ export const FormBlock: React.FC<
   )
 
   return (
-    <div className="w-full container-spacing pt-48">
-      <div className="container lg:max-w-[48rem] pb-20 container-wrapper">
+    <div className="w-full">
+      <div className="container lg:max-w-[48rem]">
         <FormProvider {...formMethods}>
           {enableIntro && introContent && !hasSubmitted && (
             <RichText className="mb-8" content={introContent} enableGutter={false} />
