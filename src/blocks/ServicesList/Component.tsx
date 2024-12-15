@@ -6,7 +6,7 @@ import type { ServiceListType } from './ClientServicesList'
 
 export const ServicesList = async (props: ServiceListType) => {
   const cookieStore = await cookies()
-  const cookieSelectedService = cookieStore.get('selectedService')
+  const cookieSelectedService = cookieStore.get(`${props.id}-selectedService`)
 
   return (
     <ClientServicesList
