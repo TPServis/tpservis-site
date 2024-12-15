@@ -24,7 +24,7 @@ export default function ClientServicesList(props: ServicesListProps) {
 
   const handleListItemClick = (id: string) => {
     setSelectedService(id)
-    setClientCookie('selectedService', id)
+    setClientCookie(`${props.id}-selectedService`, id)
 
     if (sectionRef.current) {
       sectionRef.current.scrollIntoView({ behavior: 'smooth' })
