@@ -1,72 +1,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './tokens.css';
+
 @import 'tailwindcss';
 
 @theme {
-  --color-shark-50: #f8f7f7;
-  --color-shark-100: #f0eeee;
-  --color-shark-200: #dddada;
-  --color-shark-300: #bfbaba;
-  --color-shark-400: #9b9595;
-  --color-shark-500: #7f7879;
-  --color-shark-600: #686162;
-  --color-shark-700: #554f4f;
-  --color-shark-800: #484445;
-  --color-shark-900: #3f3b3b;
-  --color-shark-950: #252323;
-  --color-astral-50: #f0f9fb;
-  --color-astral-100: #d8eef5;
-  --color-astral-200: #b6deeb;
-  --color-astral-300: #83c4dd;
-  --color-astral-400: #4aa3c6;
-  --color-astral-500: #2e86ab;
-  --color-astral-600: #296d91;
-  --color-astral-700: #275a77;
-  --color-astral-800: #284b62;
-  --color-astral-900: #254054;
-  --color-astral-950: #142938;
-  --color-jaffa-50: #fef6ee;
-  --color-jaffa-100: #feead6;
-  --color-jaffa-200: #fbd2ad;
-  --color-jaffa-300: #f9b278;
-  --color-jaffa-400: #f5853f;
-  --color-jaffa-500: #f2661d;
-  --color-jaffa-600: #e34c13;
-  --color-jaffa-700: #bc3812;
-  --color-jaffa-800: #962e16;
-  --color-jaffa-900: #792815;
-  --color-jaffa-950: #411109;
-  --color-white: #ffffff;
-  --color-black: #000000;
-  --color-button-primary-background: var(--color-jaffa-400);
-  --color-button-primary-foreground: var(--color-jaffa-50);
-  --color-input-primary-background: var(--color-astral-50);
-  --color-input-primary-foreground: var(--color-astral-600);
-  --color-input-primary-muted: var(--color-astral-300);
-  --color-input-primary-label: var(--color-shark-700);
-  --color-input-primary-background-hover: var(--color-astral-100);
-  --color-green: #54f53f;
-  --color-background-primary: var(--color-astral-50);
-  --color-background-secondary: var(--color-astral-600);
-  --color-background-surface: var(--color-white);
-  --color-background-accent: var(--color-jaffa-400);
-  --color-background-success: var(--color-green);
-  --color-background-error: var(--color-red);
-  --color-text-primary: var(--color-shark-950);
-  --color-text-secondary: var(--color-shark-500);
-  --color-text-accent: var(--color-jaffa-400);
-  --color-text-success: var(--color-green);
-  --color-text-error: var(--color-red);
-  --color-text-heading: var(--color-astral-600);
-  --color-red: #f53f3f;
-  --color-text-muted: var(--color-shark-200);
-  --color-text-on-primary-primary: var(--color-astral-700);
-  --color-text-on-primary-secondary: var(--color-shark-400);
-  --color-text-on-accent-primary: var(--color-jaffa-50);
-  --color-text-on-secondary-primary: var(--color-astral-50);
-  --color-text-on-secondary-secondary: var(--color-astral-200);
-
   --color-heading: var(--color-astral-600);
 
   --color-background: var(--color-white);
@@ -132,10 +71,10 @@
 }
 
 .rich-text {
-  @apply text-shark-600;
+  @apply text-text-secondary;
 
   h2 {
-    @apply text-3xl font-bold text-heading pb-4;
+    @apply text-3xl font-bold text-text-heading pb-4;
 
     &:not(:first-of-type) {
       @apply pt-8;
@@ -143,23 +82,23 @@
   }
 
   h3 {
-    @apply text-2xl font-semibold text-heading pb-4 pt-8;
+    @apply text-2xl font-semibold text-text-heading pb-4 pt-8;
   }
 
   h4 {
-    @apply text-xl font-medium text-heading pb-4;
+    @apply text-xl font-medium text-text-heading pb-4;
   }
 
   p {
-    @apply text-base text-shark-600 leading-normal pb-4;
+    @apply text-base text-text-secondary leading-normal pb-4;
   }
 
   strong {
-    @apply text-jaffa-500;
+    @apply text-text-accent;
   }
 
   a {
-    @apply text-astral-500 hover:text-astral-600 transition-colors duration-300 underline;
+    @apply text-cta-primary hover:text-cta-primary/80 transition-colors duration-300 underline;
   }
 
   ul {
