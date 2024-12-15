@@ -29,6 +29,7 @@ import { Posts } from './collections/Posts'
 import Users from './collections/Users'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
+import { Contacts } from './Contacts/config'
 import { revalidateRedirects } from './hooks/revalidateRedirects'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { Page, Post } from 'src/payload-types'
@@ -169,7 +170,7 @@ export default buildConfig({
   cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   endpoints: [],
-  globals: [Header, Footer],
+  globals: [Header, Footer, Contacts],
   plugins: [
     redirectsPlugin({
       collections: ['pages', 'posts'],

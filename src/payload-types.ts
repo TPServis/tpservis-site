@@ -45,10 +45,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    contacts: Contact;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    contacts: ContactsSelect<false> | ContactsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -115,6 +117,7 @@ export interface Page {
     | Bento4X4
     | FAQ
     | ServicesList
+    | CustomFormBlock
   )[];
   meta?: {
     title?: string | null;
@@ -881,6 +884,32 @@ export interface ServicesList {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CustomFormBlock".
+ */
+export interface CustomFormBlock {
+  heading?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  formBlock: FormBlock[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'customFormBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1319,6 +1348,27 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        customFormBlock?:
+          | T
+          | {
+              heading?: T;
+              description?: T;
+              formBlock?:
+                | T
+                | {
+                    formBlock?:
+                      | T
+                      | {
+                          form?: T;
+                          enableIntro?: T;
+                          introContent?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
+              id?: T;
+              blockName?: T;
+            };
       };
   meta?:
     | T
@@ -1731,6 +1781,28 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts".
+ */
+export interface Contact {
+  id: number;
+  email?: string | null;
+  phone?: string | null;
+  address?: {
+    label?: string | null;
+    maps?: string | null;
+  };
+  social?:
+    | {
+        instagram?: string | null;
+        facebook?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1816,6 +1888,30 @@ export interface FooterSelect<T extends boolean = true> {
               label?: T;
               appearance?: T;
             };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts_select".
+ */
+export interface ContactsSelect<T extends boolean = true> {
+  email?: T;
+  phone?: T;
+  address?:
+    | T
+    | {
+        label?: T;
+        maps?: T;
+      };
+  social?:
+    | T
+    | {
+        instagram?: T;
+        facebook?: T;
         id?: T;
       };
   updatedAt?: T;
