@@ -27,6 +27,10 @@
   }
 }
 
+:root {
+  scrollbar-gutter: stable;
+}
+
 .container-spacing {
   @apply px-8 py-24 lg:px-16 lg:py-24;
 }
