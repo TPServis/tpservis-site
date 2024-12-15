@@ -7,9 +7,9 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 
-export const CustomFormBlock: Block = {
-  slug: 'customFormBlock',
-  interfaceName: 'CustomFormBlock',
+export const CustomForm: Block = {
+  slug: 'customForm',
+  interfaceName: 'CustomForm',
   fields: [
     {
       name: 'heading',
@@ -42,9 +42,6 @@ export const CustomFormBlock: Block = {
       },
     },
   ],
-  graphQL: {
-    singularName: 'CustomFormBlock',
-  },
   labels: {
     plural: 'Custom Form Blocks',
     singular: 'Custom Form Block',
