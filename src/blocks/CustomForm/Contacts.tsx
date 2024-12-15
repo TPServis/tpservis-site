@@ -18,7 +18,7 @@ export const Contacts: React.FC<ContactsProps> = (props) => {
           <p className="text-sm text-text-secondary">Електронна адреса</p>
           <a
             href={`mailto:${email}`}
-            className="text-lg text-text-primary hover:text-jaffa-400 transition-colors"
+            className="text-lg text-text-primary hover:text-jaffa-400 transition-colors font-semibold"
           >
             {email}
           </a>
@@ -28,7 +28,10 @@ export const Contacts: React.FC<ContactsProps> = (props) => {
       {phone && (
         <div className=" space-x-3">
           <p className="text-sm text-text-secondary">Телефон</p>
-          <a href={`tel:${phone}`} className="text-lg hover:text-jaffa-400 transition-colors">
+          <a
+            href={`tel:${phone}`}
+            className="text-lg hover:text-jaffa-400 transition-colors font-semibold"
+          >
             {phone}
           </a>
         </div>
@@ -41,7 +44,7 @@ export const Contacts: React.FC<ContactsProps> = (props) => {
             href={address.maps || ''}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-lg text-text-primary hover:text-jaffa-400 transition-colors"
+            className="text-lg text-text-primary hover:text-jaffa-400 transition-colors font-semibold"
           >
             <span className="text-lg">{address.label}</span>
           </a>
