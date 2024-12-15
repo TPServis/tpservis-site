@@ -117,7 +117,7 @@ export interface Page {
     | Bento4X4
     | FAQ
     | ServicesList
-    | CustomFormBlock
+    | CustomForm
   )[];
   meta?: {
     title?: string | null;
@@ -884,9 +884,9 @@ export interface ServicesList {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CustomFormBlock".
+ * via the `definition` "CustomForm".
  */
-export interface CustomFormBlock {
+export interface CustomForm {
   heading?: string | null;
   description?: {
     root: {
@@ -906,7 +906,7 @@ export interface CustomFormBlock {
   formBlock: FormBlock[];
   id?: string | null;
   blockName?: string | null;
-  blockType: 'customFormBlock';
+  blockType: 'customForm';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1348,7 +1348,7 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
-        customFormBlock?:
+        customForm?:
           | T
           | {
               heading?: T;
