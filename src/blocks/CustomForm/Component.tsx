@@ -25,7 +25,7 @@ export const CustomForm = async (props: CustomFormBlockProps) => {
   return (
     <div className="container-spacing">
       <div className="container-wrapper">
-        <section className={cn('py-10 px-4 md:py-16 md:px-6 lg:py-20')}>
+        <section>
           <div className="lg:w-2/3 lg:ml-auto lg:pl-6 mb-10">
             <h2 className="text-heading text-4xl font-bold mb-10 text-balance">{props.heading}</h2>
             <RichText
