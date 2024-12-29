@@ -38,6 +38,8 @@ export type ServiceContentType = {
 type ServiceContentProps = ServiceContentType
 
 const ServiceContent = (props: ServiceContentProps) => {
+  console.log(props)
+
   const blockRenderer = (block: ContentBlock | ImageBlock | CtaBlock) => {
     switch (block.blockType) {
       case 'contentBlock':
@@ -47,7 +49,7 @@ const ServiceContent = (props: ServiceContentProps) => {
       case 'ctaBlock':
         return <CtaContent {...block} />
       default:
-        return null
+        return <div>Block not found</div>
     }
   }
 

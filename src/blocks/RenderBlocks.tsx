@@ -18,6 +18,7 @@ import { Bento4x4 } from '@/blocks/Bento4x4/Component'
 import { FAQ } from '@/blocks/FAQ/Component'
 import { ServicesList } from '@/blocks/ServicesList/Component'
 import { CustomForm } from '@/blocks/CustomForm/Component'
+import PlusMinus from '@/blocks/PlusMinus/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -35,6 +36,7 @@ const blockComponents = {
   faq: FAQ,
   servicesList: ServicesList,
   customForm: CustomForm,
+  plusMinus: PlusMinus,
 }
 
 export const RenderBlocks: React.FC<{

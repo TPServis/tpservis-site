@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { PlusMinus } from '../PlusMinus/config'
 
 import {
   FixedToolbarFeature,
@@ -29,11 +30,11 @@ export const ServicesList: Block = {
           type: 'text',
           required: true,
         },
-        // flexible content
         {
           name: 'content',
           type: 'blocks',
           blocks: [
+            PlusMinus,
             {
               slug: 'contentBlock',
               fields: [

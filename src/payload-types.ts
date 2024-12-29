@@ -834,6 +834,7 @@ export interface ServicesList {
         title: string;
         content?:
           | (
+              | PlusMinus
               | {
                   description: {
                     root: {
@@ -881,6 +882,37 @@ export interface ServicesList {
   id?: string | null;
   blockName?: string | null;
   blockType: 'servicesList';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PlusMinus".
+ */
+export interface PlusMinus {
+  heading?: string | null;
+  card?:
+    | {
+        value: 'plus' | 'minus';
+        content: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'plusMinus';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1312,6 +1344,20 @@ export interface PagesSelect<T extends boolean = true> {
                     content?:
                       | T
                       | {
+                          plusMinus?:
+                            | T
+                            | {
+                                heading?: T;
+                                card?:
+                                  | T
+                                  | {
+                                      value?: T;
+                                      content?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
                           contentBlock?:
                             | T
                             | {
