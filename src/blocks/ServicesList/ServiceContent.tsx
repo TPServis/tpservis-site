@@ -1,5 +1,7 @@
 import RichText from '@/components/RichText'
 import Image from 'next/image'
+import type { PlusMinusBlock } from '@/blocks/PlusMinus/Component'
+import PlusMinus from '@/blocks/PlusMinus/Component'
 
 import { cn } from '@/utilities/cn'
 import { cva } from 'class-variance-authority'
@@ -32,7 +34,7 @@ type CtaBlock = {
 export type ServiceContentType = {
   id: string
   title: string
-  content: (ContentBlock | ImageBlock | CtaBlock)[]
+  content: (ContentBlock | ImageBlock | CtaBlock | PlusMinusBlock)[]
 }
 
 type ServiceContentProps = ServiceContentType
@@ -40,7 +42,9 @@ type ServiceContentProps = ServiceContentType
 const ServiceContent = (props: ServiceContentProps) => {
   console.log(props)
 
-  const blockRenderer = (block: ContentBlock | ImageBlock | CtaBlock) => {
+  const blockRenderer = (block: ContentBlock | ImageBlock | CtaBlock | PlusMinusBlock) => {
+    console.log(block)
+
     switch (block.blockType) {
       case 'contentBlock':
         return <RichText content={block.description} className="text-shark-600 prose rich-text" />
@@ -48,8 +52,10 @@ const ServiceContent = (props: ServiceContentProps) => {
         return <ImageContent {...block} />
       case 'ctaBlock':
         return <CtaContent {...block} />
+      case 'plusMinus':
+        return <PlusMinus {...block} />
       default:
-        return <div>Block not found</div>
+        return null
     }
   }
 
