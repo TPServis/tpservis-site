@@ -68,8 +68,8 @@ const DownloadableFiles = (props: DownloadableFilesBlock) => {
                   </a>
                 </div>
               ) : (
-                <div className="aspect-[4/3] w-full bg-gray-100 flex items-center justify-center rounded">
-                  <div className="text-4xl text-gray-400">{fileName.split('.')[0]}</div>
+                <div className="aspect-[4/3] w-full bg-astral-50 flex items-center justify-center rounded">
+                  <div className="text-4xl text-astral-400">{fileName.split('.')[0]}</div>
                 </div>
               )}
               <div className="p-4">
