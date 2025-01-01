@@ -2,6 +2,8 @@ import RichText from '@/components/RichText'
 import Image from 'next/image'
 import type { PlusMinusBlock } from '@/blocks/PlusMinus/Component'
 import PlusMinus from '@/blocks/PlusMinus/Component'
+import type { DownloadableFilesBlock } from '@/blocks/DownloadableFiles/Component'
+import DownloadableFiles from '@/blocks/DownloadableFiles/Component'
 
 import { cn } from '@/utilities/cn'
 import { cva } from 'class-variance-authority'
@@ -34,7 +36,7 @@ type CtaBlock = {
 export type ServiceContentType = {
   id: string
   title: string
-  content: (ContentBlock | ImageBlock | CtaBlock | PlusMinusBlock)[]
+  content: (ContentBlock | ImageBlock | CtaBlock | PlusMinusBlock | DownloadableFilesBlock)[]
 }
 
 type ServiceContentProps = ServiceContentType
@@ -42,7 +44,9 @@ type ServiceContentProps = ServiceContentType
 const ServiceContent = (props: ServiceContentProps) => {
   console.log(props)
 
-  const blockRenderer = (block: ContentBlock | ImageBlock | CtaBlock | PlusMinusBlock) => {
+  const blockRenderer = (
+    block: ContentBlock | ImageBlock | CtaBlock | PlusMinusBlock | DownloadableFilesBlock,
+  ) => {
     console.log(block)
 
     switch (block.blockType) {
@@ -54,6 +58,8 @@ const ServiceContent = (props: ServiceContentProps) => {
         return <CtaContent {...block} />
       case 'plusMinus':
         return <PlusMinus {...block} />
+      case 'downloadableFiles':
+        return <DownloadableFiles {...block} />
       default:
         return null
     }

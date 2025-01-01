@@ -1,5 +1,6 @@
 import type { Block } from 'payload'
 import { PlusMinus } from '../PlusMinus/config'
+import { DownloadableFiles } from '../DownloadableFiles/config'
 
 import {
   FixedToolbarFeature,
@@ -35,6 +36,7 @@ export const ServicesList: Block = {
           type: 'blocks',
           blocks: [
             PlusMinus,
+            DownloadableFiles,
             {
               slug: 'contentBlock',
               fields: [

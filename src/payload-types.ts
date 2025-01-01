@@ -835,6 +835,7 @@ export interface ServicesList {
         content?:
           | (
               | PlusMinus
+              | DownloadableFiles
               | {
                   description: {
                     root: {
@@ -913,6 +914,22 @@ export interface PlusMinus {
   id?: string | null;
   blockName?: string | null;
   blockType: 'plusMinus';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DownloadableFiles".
+ */
+export interface DownloadableFiles {
+  files?:
+    | {
+        file?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  buttonLabel?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'downloadableFiles';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1355,6 +1372,19 @@ export interface PagesSelect<T extends boolean = true> {
                                       content?: T;
                                       id?: T;
                                     };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          downloadableFiles?:
+                            | T
+                            | {
+                                files?:
+                                  | T
+                                  | {
+                                      file?: T;
+                                      id?: T;
+                                    };
+                                buttonLabel?: T;
                                 id?: T;
                                 blockName?: T;
                               };
