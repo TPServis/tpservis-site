@@ -71,4 +71,8 @@
   ol li::marker {
     @apply !text-astral-700 !text-sm;
   }
+
+  blockquote {
+    @apply bg-astral-50 p-4 rounded-lg border-l-4 border-astral-400;
+  }
 }
