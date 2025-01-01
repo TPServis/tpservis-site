@@ -19,6 +19,7 @@ import { FAQ } from '@/blocks/FAQ/Component'
 import { ServicesList } from '@/blocks/ServicesList/Component'
 import { CustomForm } from '@/blocks/CustomForm/Component'
 import PlusMinus from '@/blocks/PlusMinus/Component'
+import DownloadableFiles from '@/blocks/DownloadableFiles/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -37,6 +38,7 @@ const blockComponents = {
   servicesList: ServicesList,
   customForm: CustomForm,
   plusMinus: PlusMinus,
+  downloadableFiles: DownloadableFiles,
 }
 
 export const RenderBlocks: React.FC<{

@@ -118,6 +118,7 @@ export interface Page {
     | FAQ
     | ServicesList
     | CustomForm
+    | DownloadableFiles
   )[];
   meta?: {
     title?: string | null;
@@ -926,6 +927,7 @@ export interface DownloadableFiles {
         id?: string | null;
       }[]
     | null;
+  withLateralSpacing?: boolean | null;
   buttonLabel?: string | null;
   id?: string | null;
   blockName?: string | null;
@@ -1384,6 +1386,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       file?: T;
                                       id?: T;
                                     };
+                                withLateralSpacing?: T;
                                 buttonLabel?: T;
                                 id?: T;
                                 blockName?: T;
@@ -1442,6 +1445,20 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                   };
+              id?: T;
+              blockName?: T;
+            };
+        downloadableFiles?:
+          | T
+          | {
+              files?:
+                | T
+                | {
+                    file?: T;
+                    id?: T;
+                  };
+              withLateralSpacing?: T;
+              buttonLabel?: T;
               id?: T;
               blockName?: T;
             };

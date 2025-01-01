@@ -22,7 +22,7 @@ import { FAQ } from '@/blocks/FAQ/config'
 import { slugField } from '@/fields/slug'
 import { ServicesList } from '@/blocks/ServicesList/config'
 import { CustomForm } from '@/blocks/CustomForm/config'
-
+import { DownloadableFiles } from '@/blocks/DownloadableFiles/config'
 import {
   MetaDescriptionField,
   MetaImageField,
@@ -94,6 +94,7 @@ export const Pages: CollectionConfig = {
                 FAQ,
                 ServicesList,
                 CustomForm,
+                DownloadableFiles,
               ],
               required: true,
             },

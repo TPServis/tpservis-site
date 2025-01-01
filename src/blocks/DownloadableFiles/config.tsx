@@ -16,6 +16,11 @@ export const DownloadableFiles: Block = {
       ],
     },
     {
+      name: 'withLateralSpacing',
+      type: 'checkbox',
+      defaultValue: false,
+    },
+    {
       name: 'buttonLabel',
       type: 'text',
       label: 'Button Label',
