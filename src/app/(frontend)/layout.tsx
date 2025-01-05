@@ -32,11 +32,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className="bg-background transition duration-[1s]">
         <Providers>
-          <AdminBar
-            adminBarProps={{
-              preview: isEnabled,
-            }}
-          />
+          {process.env.NEXT_PUBLIC_ENABLE_ADMIN_BAR !== 'false' && (
+            <AdminBar
+              adminBarProps={{
+                preview: isEnabled,
+              }}
+            />
+          )}
           <LivePreviewListener />
 
           <Header />
