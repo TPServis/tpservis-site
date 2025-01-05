@@ -2,7 +2,7 @@
 import { useHeaderTheme } from '@/providers/HeaderTheme'
 import Link from 'next/link.js'
 import { usePathname } from 'next/navigation'
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { motion } from 'motion/react'
 
 import { cn } from '@/utilities/cn'
@@ -20,13 +20,17 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
   const [isShown, setIsShown] = useState(true)
   const pathname = usePathname()
+  const lastPathRef = useRef(pathname)
 
   useEffect(() => {
-    setHeaderTheme(null)
+    if (pathname !== lastPathRef.current) {
+      lastPathRef.current = pathname
+      setHeaderTheme(null)
+    }
   }, [pathname, setHeaderTheme])
 
   useEffect(() => {
-    if (headerTheme && headerTheme !== theme) {
+    if (headerTheme !== theme && headerTheme !== undefined) {
       setTheme(headerTheme)
     }
   }, [headerTheme, theme])
