@@ -5,7 +5,7 @@ import type { PayloadAdminBarProps } from 'payload-admin-bar'
 import { cn } from '@/utilities/cn'
 import { useSelectedLayoutSegments } from 'next/navigation'
 import { PayloadAdminBar } from 'payload-admin-bar'
-import React, { useState } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 
 import './index.scss'
@@ -37,10 +37,20 @@ export const AdminBar: React.FC<{
   const [show, setShow] = useState(false)
   const collection = collectionLabels?.[segments?.[1]] ? segments?.[1] : 'pages'
   const router = useRouter()
+  const refreshTimeout = useRef<NodeJS.Timeout | undefined>(undefined)
 
-  const onAuthChange = React.useCallback((user) => {
+  const onAuthChange = useCallback((user) => {
     setShow(user?.id)
   }, [])
+
+  const debouncedRefresh = useCallback(() => {
+    if (refreshTimeout.current) {
+      clearTimeout(refreshTimeout.current)
+    }
+    refreshTimeout.current = setTimeout(() => {
+      router.refresh()
+    }, 300)
+  }, [router])
 
   return (
     <div
@@ -66,11 +76,10 @@ export const AdminBar: React.FC<{
           }}
           logo={<Title />}
           onAuthChange={onAuthChange}
-          onPreviewExit={() => {
-            fetch('/next/exit-preview').then(() => {
-              router.push('/')
-              router.refresh()
-            })
+          onPreviewExit={async () => {
+            await fetch('/next/exit-preview')
+            router.push('/')
+            debouncedRefresh()
           }}
           style={{
             backgroundColor: 'transparent',
