@@ -200,6 +200,8 @@ const MenuWindow = React.forwardRef<HTMLDivElement, MenuWindowProps>(
   },
 )
 
+MenuWindow.displayName = 'MenuWindow'
+
 {
   /* <Link href="/search">
         <span className="sr-only">Search</span>
