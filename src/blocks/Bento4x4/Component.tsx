@@ -10,6 +10,19 @@ import { cn } from '@/utilities/cn'
 
 import RichText from '@/components/RichText'
 
+const glowKeyframes = `
+  @keyframes glow {
+    0% {
+      opacity: 0.4;
+      transform: scale(2.5) translateX(0);
+    }
+    100% {
+      opacity: 0.6;
+      transform: scale(3) translateX(5px);
+    }
+  }
+`
+
 type Bento4x4Props = {
   title: string
   cards: {
@@ -19,23 +32,94 @@ type Bento4x4Props = {
   }[]
 }
 
+type HomeDocumentsItemProps = {
+  title: string
+  description: any
+  image: Media
+  className?: string
+}
+
+const HomeDocumentsItem = (props: HomeDocumentsItemProps) => {
+  const cls = 'bg-astral-700 rounded-3xl p-5 col-span-1 row-span-2 group ' + props.className
+
+  return (
+    <div className={cls}>
+      <div className="rounded-lg overflow-hidden aspect-[2/1] mb-4">
+        <NextImage
+          src={props.image.url || ''}
+          alt={props.title}
+          width={800}
+          height={500}
+          sizes="20vw"
+          priority={false}
+          quality={60}
+          className="h-full object-cover group-hover:scale-110 transition-all duration-300"
+        />
+      </div>
+      <h3 className="text-2xl font-bold text-astral-50 pb-2">{props.title}</h3>
+      <RichText
+        className="text-lg text-astral-200 pb-2 text-balance"
+        content={props.description}
+        enableGutter={false}
+      />
+    </div>
+  )
+}
+
+const HomeDocumentsItemSmall = (props: HomeDocumentsItemProps) => {
+  const cls =
+    'bg-astral-700 rounded-3xl p-5 col-span-1 row-span-1 flex justify-between group ' +
+    props.className
+
+  return (
+    <div className={cls}>
+      <div className="">
+        <h3 className="text-2xl font-bold text-astral-50 pb-2">{props.title}</h3>
+        <RichText
+          className="text-lg text-astral-200 pb-2 text-balance"
+          content={props.description}
+          enableGutter={false}
+        />
+      </div>
+      <div className="rounded-lg h-full overflow-hidden">
+        <NextImage
+          src={props.image.url || ''}
+          alt={props.title}
+          width={200}
+          height={200}
+          sizes="20vw"
+          priority={false}
+          quality={50}
+          className="h-full object-cover group-hover:scale-110 transition-all duration-300"
+        />
+      </div>
+    </div>
+  )
+}
+
 export const Bento4x4 = (props: Bento4x4Props) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel()
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: 'start',
+    containScroll: 'trimSnaps',
+    dragFree: false,
+  })
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [canScrollPrev, setCanScrollPrev] = useState(false)
   const [canScrollNext, setCanScrollNext] = useState(false)
+  const prevIndex = useRef<number>(0)
 
   const scrollTo = useCallback((index: number) => emblaApi && emblaApi.scrollTo(index), [emblaApi])
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return
+    prevIndex.current = selectedIndex
     setSelectedIndex(emblaApi.selectedScrollSnap())
     setCanScrollPrev(emblaApi.canScrollPrev())
     setCanScrollNext(emblaApi.canScrollNext())
-  }, [emblaApi])
+  }, [emblaApi, selectedIndex])
 
   // Reset carousel when switching between mobile and desktop
   useEffect(() => {
@@ -49,6 +133,8 @@ export const Bento4x4 = (props: Bento4x4Props) => {
           if (emblaApi) {
             emblaApi.scrollTo(0)
             setSelectedIndex(0)
+            // Recompute scroll snaps after resize
+            setScrollSnaps(emblaApi.scrollSnapList())
           }
         }
       }
@@ -61,12 +147,19 @@ export const Bento4x4 = (props: Bento4x4Props) => {
   useEffect(() => {
     if (!emblaApi) return
 
+    // Initialize scroll snaps
     setScrollSnaps(emblaApi.scrollSnapList())
     emblaApi.on('select', onSelect)
+    emblaApi.on('reInit', () => {
+      setScrollSnaps(emblaApi.scrollSnapList())
+    })
     onSelect()
 
     return () => {
       emblaApi.off('select', onSelect)
+      emblaApi.off('reInit', () => {
+        setScrollSnaps(emblaApi.scrollSnapList())
+      })
     }
   }, [emblaApi, onSelect])
 
@@ -75,6 +168,7 @@ export const Bento4x4 = (props: Bento4x4Props) => {
 
   return (
     <div ref={containerRef}>
+      <style dangerouslySetInnerHTML={{ __html: glowKeyframes }} />
       <div className="container-spacing !pb-0 md:!pb-24">
         <div className="container-wrapper">
           <h2 className="text-3xl md:text-6xl font-bold text-heading pb-10">{props.title}</h2>
@@ -145,7 +239,7 @@ export const Bento4x4 = (props: Bento4x4Props) => {
           </div>
 
           {/* Dot Indicators */}
-          <div className="flex justify-center gap-2">
+          <div className="flex justify-center items-center gap-2">
             {scrollSnaps.map((_, index) => (
               <button
                 key={index}
@@ -175,71 +269,6 @@ export const Bento4x4 = (props: Bento4x4Props) => {
             </button>
           </div>
         </div>
-      </div>
-    </div>
-  )
-}
-
-type HomeDocumentsItemProps = {
-  title: string
-  description: any
-  image: Media
-  className?: string
-}
-
-function HomeDocumentsItem(props: HomeDocumentsItemProps) {
-  const cls = 'bg-astral-700 rounded-3xl p-5 col-span-1 row-span-2 group ' + props.className
-
-  return (
-    <div className={cls}>
-      <div className="rounded-lg overflow-hidden aspect-[2/1] mb-4">
-        <NextImage
-          src={props.image.url || ''}
-          alt={props.title}
-          width={800}
-          height={500}
-          sizes="20vw"
-          priority={false}
-          quality={60}
-          className=" h-full object-cover group-hover:scale-110 transition-all duration-300"
-        />
-      </div>
-      <h3 className="text-2xl font-bold text-astral-50 pb-2">{props.title}</h3>
-      <RichText
-        className="text-lg text-astral-200 pb-2 text-balance"
-        content={props.description}
-        enableGutter={false}
-      />
-    </div>
-  )
-}
-
-function HomeDocumentsItemSmall(props: HomeDocumentsItemProps) {
-  const cls =
-    'bg-astral-700 rounded-3xl p-5 col-span-1 row-span-1 flex justify-between group ' +
-    props.className
-
-  return (
-    <div className={cls}>
-      <div className="">
-        <h3 className="text-2xl font-bold text-astral-50 pb-2">{props.title}</h3>
-        <RichText
-          className="text-lg text-astral-200 pb-2 text-balance"
-          content={props.description}
-          enableGutter={false}
-        />
-      </div>
-      <div className="rounded-lg h-full overflow-hidden">
-        <NextImage
-          src={props.image.url || ''}
-          alt={props.title}
-          width={200}
-          height={200}
-          sizes="20vw"
-          priority={false}
-          quality={50}
-          className=" h-full  object-cover group-hover:scale-110 transition-all duration-300"
-        />
       </div>
     </div>
   )
