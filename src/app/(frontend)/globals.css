@@ -23,7 +23,7 @@
 @layer base {
   [data-theme='blue'] {
     --color-heading: var(--color-astral-700);
-    --color-background: var(--color-astral-100);
+    --color-background: var(--color-astral-50);
   }
 }
 
@@ -71,5 +71,5 @@
 }
 
 .btn {
-  @apply bg-jaffa-400 text-white px-4 py-2 rounded-md flex items-center gap-4 hover:gap-6 hover:bg-jaffa-500 transition-all duration-300 w-fit;
+  @apply bg-jaffa-600 text-white px-4 py-2 rounded-md flex items-center gap-4 hover:gap-6 hover:bg-jaffa-500 transition-all duration-300 w-fit;
 }

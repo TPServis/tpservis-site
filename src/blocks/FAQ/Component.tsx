@@ -23,7 +23,6 @@ export const FAQ = (props: Props) => {
     setExpandedIndex(expandedIndex === index ? null : index)
   }
 
-  // Handle keyboard navigation between FAQ items
   const handleKeyDown = (e: React.KeyboardEvent) => {
     const items = props.questions
     const currentIndex = expandedIndex ?? -1
@@ -53,16 +52,13 @@ export const FAQ = (props: Props) => {
   }
 
   return (
-    <div className="container-spacing" role="region" aria-labelledby="faq-title">
+    <div className="container-spacing">
       <div className="container-wrapper">
-        <h2 id="faq-title" className="text-3xl md:text-6xl font-bold text-heading pb-10">
-          {props.title}
-        </h2>
+        <h2 className="text-3xl md:text-6xl font-bold text-heading pb-10">{props.title}</h2>
         <div
           ref={faqRef}
           className="border border-shark-100 rounded-3xl overflow-hidden"
           onKeyDown={handleKeyDown}
-          role="presentation"
         >
           {props.questions.map((item, index) => (
             <FaqItem
@@ -94,7 +90,6 @@ const FaqItem = ({ question, answer, isExpanded, toggleAccordion, index, totalIt
   const contentRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
-  // Focus management when expanding/collapsing
   useEffect(() => {
     if (isExpanded && buttonRef.current) {
       buttonRef.current.focus()
@@ -139,11 +134,24 @@ const FaqItem = ({ question, answer, isExpanded, toggleAccordion, index, totalIt
     }
   }
 
+  const itemClasses = cn(
+    'flex flex-col gap-0 border-b border-shark-100 py-8 px-8 transition-all duration-300 overflow-hidden',
+    {
+      group: true,
+    },
+  )
+
+  const buttonClasses = cn(
+    'w-full text-left md:text-2xl text-xl font-bold text-astral-900 flex justify-between items-center',
+    'focus:outline-none focus:ring-2 focus:ring-astral-400 focus:ring-offset-2 rounded-lg p-2 -m-2',
+  )
+
+  const iconClasses = cn('w-6 h-6 transform transition-transform duration-300', {
+    'rotate-180': isExpanded,
+  })
+
   return (
-    <div
-      className="flex flex-col gap-0 border-b border-shark-100 py-8 group px-8 transition-all duration-300 overflow-hidden"
-      data-expanded={isExpanded}
-    >
+    <div className={itemClasses} data-expanded={isExpanded}>
       <h3>
         <button
           ref={buttonRef}
@@ -152,18 +160,12 @@ const FaqItem = ({ question, answer, isExpanded, toggleAccordion, index, totalIt
             toggleAccordion()
           }}
           onKeyDown={handleKeyDown}
-          className="w-full text-left md:text-2xl text-xl font-bold text-astral-900 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-astral-400 focus:ring-offset-2 rounded-lg p-2 -m-2"
+          className={buttonClasses}
           aria-expanded={isExpanded}
           aria-controls={`faq-content-${index}`}
-          id={`faq-trigger-${index}`}
         >
           <span>{question}</span>
-          <ChevronDown
-            className={cn('w-6 h-6 transform transition-transform duration-300', {
-              'rotate-180': isExpanded,
-            })}
-            aria-hidden="true"
-          />
+          <ChevronDown className={iconClasses} aria-hidden="true" />
         </button>
       </h3>
       <AnimatePresence initial={false}>
@@ -171,8 +173,6 @@ const FaqItem = ({ question, answer, isExpanded, toggleAccordion, index, totalIt
           <motion.div
             ref={contentRef}
             id={`faq-content-${index}`}
-            role="region"
-            aria-labelledby={`faq-trigger-${index}`}
             initial={{ height: 0, opacity: 0 }}
             animate={{
               height: 'auto',
