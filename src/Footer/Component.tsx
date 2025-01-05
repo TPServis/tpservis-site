@@ -116,7 +116,7 @@ const TelephoneLabel = ({ telephone, label }: TelephoneLabelProps) => {
   return (
     <a
       href={`tel:${telephone}`}
-      className="text-3xl lg:text-5xl font-bold text-jaffa-600 hover:text-jaffa-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-astral-400 focus:ring-offset-2 rounded px-1"
+      className="text-3xl lg:text-5xl font-bold text-jaffa-400 hover:text-jaffa-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-astral-400 focus:ring-offset-2 rounded px-1"
       aria-label={`Call us at ${label || telephone}`}
     >
       {label ?? telephone}
