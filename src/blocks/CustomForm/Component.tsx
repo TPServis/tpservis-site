@@ -8,12 +8,32 @@ import RichText from '@/components/RichText'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { FormBlock } from '@/payload-types'
+import { cva } from 'class-variance-authority'
 
 interface CustomFormBlockProps {
   heading: string
   description: any
   formBlock: FormBlock[]
+  orderInverted: boolean
 }
+
+const ContactsBlockVariants = cva(['lg:w-1/3'], {
+  variants: {
+    orderInverted: {
+      true: 'lg:order-1',
+      false: 'order-2 lg:order-0',
+    },
+  },
+})
+
+const FormBlockVariants = cva(['lg:w-2/3'], {
+  variants: {
+    orderInverted: {
+      true: 'lg:order-0',
+      false: 'lg:order-1',
+    },
+  },
+})
 
 export const CustomForm = async (props: CustomFormBlockProps) => {
   const payload = await getPayload({ config })
@@ -35,10 +55,10 @@ export const CustomForm = async (props: CustomFormBlockProps) => {
             />
           </div>
           <div className="flex flex-col lg:flex-row gap-10 ">
-            <div className="lg:w-1/3 order-2 lg:order-0">
+            <div className={ContactsBlockVariants({ orderInverted: props.orderInverted })}>
               <Contacts {...contacts} />
             </div>
-            <div className="lg:w-2/3 lg:order-1">
+            <div className={FormBlockVariants({ orderInverted: props.orderInverted })}>
               <RenderBlocks blocks={props.formBlock} />
             </div>
           </div>

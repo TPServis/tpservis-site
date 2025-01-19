@@ -31,6 +31,12 @@ export const CustomForm: Block = {
       }),
     },
     {
+      name: 'orderInverted',
+      type: 'checkbox',
+      label: 'Order Inverted',
+      defaultValue: false,
+    },
+    {
       name: 'formBlock',
       type: 'blocks',
       blocks: [FormBlock],

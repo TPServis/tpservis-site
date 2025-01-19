@@ -954,6 +954,7 @@ export interface CustomForm {
     };
     [k: string]: unknown;
   } | null;
+  orderInverted?: boolean | null;
   formBlock: FormBlock[];
   id?: string | null;
   blockName?: string | null;
@@ -1432,6 +1433,7 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               heading?: T;
               description?: T;
+              orderInverted?: T;
               formBlock?:
                 | T
                 | {
