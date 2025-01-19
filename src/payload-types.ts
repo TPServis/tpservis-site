@@ -119,6 +119,7 @@ export interface Page {
     | ServicesList
     | CustomForm
     | DownloadableFiles
+    | MapContacts
   )[];
   meta?: {
     title?: string | null;
@@ -962,6 +963,15 @@ export interface CustomForm {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MapContacts".
+ */
+export interface MapContacts {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mapContacts';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1461,6 +1471,12 @@ export interface PagesSelect<T extends boolean = true> {
                   };
               withLateralSpacing?: T;
               buttonLabel?: T;
+              id?: T;
+              blockName?: T;
+            };
+        mapContacts?:
+          | T
+          | {
               id?: T;
               blockName?: T;
             };

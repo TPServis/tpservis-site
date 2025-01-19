@@ -23,6 +23,8 @@ import { slugField } from '@/fields/slug'
 import { ServicesList } from '@/blocks/ServicesList/config'
 import { CustomForm } from '@/blocks/CustomForm/config'
 import { DownloadableFiles } from '@/blocks/DownloadableFiles/config'
+import { MapContacts } from '@/blocks/MapContacts/config'
+
 import {
   MetaDescriptionField,
   MetaImageField,
@@ -95,6 +97,7 @@ export const Pages: CollectionConfig = {
                 ServicesList,
                 CustomForm,
                 DownloadableFiles,
+                MapContacts,
               ],
               required: true,
             },
