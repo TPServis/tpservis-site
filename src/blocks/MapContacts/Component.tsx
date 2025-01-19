@@ -7,19 +7,23 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 
 const MapContacts = () => {
   return (
-    <div>
-      <Map
-        initialViewState={{
-          longitude: 31.890755,
-          latitude: 51.056097,
-          zoom: 14,
-        }}
-        style={{ width: 600, height: 400 }}
-        // mapStyle="https://tiles.openfreemap.org/styles/liberty"
-        mapStyle="./map-styles.json"
-      >
-        <Marker longitude={31.890755} latitude={51.056097} />
-      </Map>
+    <div className="container-spacing">
+      <div className="container-wrapper">
+        <div className="rounded-lg overflow-hidden">
+          <Map
+            initialViewState={{
+              longitude: 31.890755,
+              latitude: 51.056097,
+              zoom: 14,
+            }}
+            style={{ width: '100%', height: 400 }}
+            // mapStyle="https://tiles.openfreemap.org/styles/liberty"
+            mapStyle="./map-styles.json"
+          >
+            <Marker longitude={31.890755} latitude={51.056097} />
+          </Map>
+        </div>
+      </div>
     </div>
   )
 }
