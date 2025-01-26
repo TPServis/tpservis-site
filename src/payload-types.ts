@@ -790,6 +790,11 @@ export interface Bento4X4 {
       };
       [k: string]: unknown;
     };
+    link: {
+      type: 'page' | 'custom';
+      page?: (number | null) | Page;
+      url?: string | null;
+    };
     id?: string | null;
   }[];
   id?: string | null;
@@ -1344,6 +1349,13 @@ export interface PagesSelect<T extends boolean = true> {
                     image?: T;
                     title?: T;
                     description?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                        };
                     id?: T;
                   };
               id?: T;

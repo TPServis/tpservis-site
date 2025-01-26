@@ -39,6 +39,45 @@ export const Bento4x4: Block = {
             },
           }),
         },
+        {
+          name: 'link',
+          type: 'group',
+          fields: [
+            {
+              name: 'type',
+              type: 'radio',
+              options: [
+                {
+                  label: 'Page',
+                  value: 'page',
+                },
+                {
+                  label: 'Custom URL',
+                  value: 'custom',
+                },
+              ],
+              defaultValue: 'page',
+              required: true,
+            },
+            {
+              name: 'page',
+              type: 'relationship',
+              relationTo: 'pages',
+              required: false,
+              admin: {
+                condition: (_, siblingData) => siblingData?.type === 'page',
+              },
+            },
+            {
+              name: 'url',
+              type: 'text',
+              required: false,
+              admin: {
+                condition: (_, siblingData) => siblingData?.type === 'custom',
+              },
+            },
+          ],
+        },
       ],
     },
   ],
