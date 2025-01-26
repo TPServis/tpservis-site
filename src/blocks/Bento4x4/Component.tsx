@@ -63,7 +63,7 @@ const HomeDocumentsItem = (props: HomeDocumentsItemProps) => {
           height={500}
           sizes="20vw"
           priority={false}
-          quality={60}
+          quality={80}
           className="h-full object-cover group-hover:scale-110 transition-all duration-300"
         />
       </div>
