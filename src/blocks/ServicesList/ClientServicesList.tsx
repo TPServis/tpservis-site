@@ -31,6 +31,12 @@ export default function ClientServicesList(props: ServicesListProps) {
   const sectionRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
 
+  const scrollToSelectedService = () => {
+    if (sectionRef.current) {
+      sectionRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   const handleListItemClick = (id: string) => {
     setSelectedService(id)
     setClientCookie(`${props.id}-selectedService`, id)
@@ -42,10 +48,26 @@ export default function ClientServicesList(props: ServicesListProps) {
       }
     }, 100)
 
-    if (sectionRef.current) {
-      sectionRef.current.scrollIntoView({ behavior: 'smooth' })
+    scrollToSelectedService()
+  }
+
+  const handleNavigationWithHash = (index: number) => {
+    let service = props.services[index]
+    if (service) {
+      setSelectedService(service.id)
+      setClientCookie(`${props.id}-selectedService`, service.id)
+
+      scrollToSelectedService()
     }
   }
+
+  useEffect(() => {
+    const currentPath = window.location.href.split('#')[1]
+
+    if (currentPath != undefined && !isNaN(parseInt(currentPath))) {
+      handleNavigationWithHash(parseInt(currentPath))
+    }
+  }, [])
 
   return (
     <div
