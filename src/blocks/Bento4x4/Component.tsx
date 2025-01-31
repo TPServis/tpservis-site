@@ -51,7 +51,7 @@ type HomeDocumentsItemProps = {
 }
 
 const HomeDocumentsItem = (props: HomeDocumentsItemProps) => {
-  const cls = 'bg-astral-700 rounded-3xl p-5 col-span-1 row-span-2 group ' + props.className
+  const cls = 'bg-astral-700 rounded-3xl p-5 col-span-1 row-span-2 group block ' + props.className
 
   return (
     <Link href={props.link.url || props.link.page?.slug || ''} className={cls} prefetch={true}>
