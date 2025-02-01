@@ -7,8 +7,6 @@ type EditorialFullFrameProps = {
 }
 
 export const EditorialFullFrame = (props: EditorialFullFrameProps) => {
-  console.log(props)
-
   return (
     <div className="w-full container-spacing pt-48">
       <div className="container-wrapper grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-10">

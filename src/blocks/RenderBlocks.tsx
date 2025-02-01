@@ -22,6 +22,7 @@ import PlusMinus from '@/blocks/PlusMinus/Component'
 import DownloadableFiles from '@/blocks/DownloadableFiles/Component'
 import MapContacts from '@/blocks/MapContacts/Component'
 import { EditorialFullFrame } from '@/blocks/EditorialFullFrame/Component'
+import { EditorialExpandedListComponent as EditorialExpandedList } from '@/blocks/EditorialEcpandedList/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -43,6 +44,7 @@ const blockComponents = {
   downloadableFiles: DownloadableFiles,
   mapContacts: MapContacts,
   editorialFullFrame: EditorialFullFrame,
+  editorialExpandedList: EditorialExpandedList,
 }
 
 export const RenderBlocks: React.FC<{

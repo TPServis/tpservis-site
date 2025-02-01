@@ -39,8 +39,6 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
       id,
     } = resource
 
-    console.log('Resource:', resource)
-
     width = fullWidth!
     height = fullHeight!
     alt = altFromResource || ''
@@ -53,8 +51,6 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
       src = url.startsWith('http') ? url : `${process.env.NEXT_PUBLIC_SERVER_URL}${url}`
     }
   }
-
-  console.log('Final src:', src)
 
   const sizes = sizeFromProps
     ? sizeFromProps

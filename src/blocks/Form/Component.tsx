@@ -74,8 +74,6 @@ export const FormBlock: React.FC<
           setIsLoading(true)
         }, 1000)
 
-        console.log('dataToSend', dataToSend)
-
         try {
           const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/form-submissions`, {
             body: JSON.stringify({
@@ -89,8 +87,6 @@ export const FormBlock: React.FC<
           })
 
           const res = await req.json()
-
-          console.log('res', res)
 
           clearTimeout(loadingTimerID)
 
@@ -124,7 +120,6 @@ export const FormBlock: React.FC<
         }
       }
 
-      console.log('submitForm')
       void submitForm()
     },
     [router, formID, redirect, confirmationType],

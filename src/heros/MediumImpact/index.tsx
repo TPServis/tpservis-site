@@ -2,8 +2,6 @@ import { Media } from '@/components/Media'
 import type { Page } from '@/payload-types'
 
 export const MediumImpactHero: React.FC<Page['hero']> = ({ title, subtitle, cta, mediaGroup }) => {
-  console.log(mediaGroup?.[0])
-
   return (
     <div className="w-full container-spacing !py-0">
       <div className="container-wrapper">

@@ -25,7 +25,7 @@ import { CustomForm } from '@/blocks/CustomForm/config'
 import { DownloadableFiles } from '@/blocks/DownloadableFiles/config'
 import { MapContacts } from '@/blocks/MapContacts/config'
 import { EditorialFullFrame } from '@/blocks/EditorialFullFrame/config'
-
+import { EditorialExpandedList } from '@/blocks/EditorialEcpandedList/config'
 import {
   MetaDescriptionField,
   MetaImageField,
@@ -100,6 +100,7 @@ export const Pages: CollectionConfig = {
                 DownloadableFiles,
                 MapContacts,
                 EditorialFullFrame,
+                EditorialExpandedList,
               ],
               required: true,
             },

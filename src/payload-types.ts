@@ -124,6 +124,7 @@ export interface Page {
     | DownloadableFiles
     | MapContacts
     | EditorialFullFrame
+    | EditorialExpandedList
   )[];
   meta?: {
     title?: string | null;
@@ -1060,6 +1061,57 @@ export interface EditorialFullFrame {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EditorialExpandedList".
+ */
+export interface EditorialExpandedList {
+  list: {
+    title: string;
+    icon: 'plane' | 'train' | 'bus' | 'shuffle';
+    elements?:
+      | (
+          | {
+              content: {
+                root: {
+                  type: string;
+                  children: {
+                    type: string;
+                    version: number;
+                    [k: string]: unknown;
+                  }[];
+                  direction: ('ltr' | 'rtl') | null;
+                  format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                  indent: number;
+                  version: number;
+                };
+                [k: string]: unknown;
+              };
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'richTextElement';
+            }
+          | {
+              image: number | Media;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'imageElement';
+            }
+          | {
+              label?: string | null;
+              url?: string | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'ctaElement';
+            }
+        )[]
+      | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'editorialExpandedList';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1263,6 +1315,7 @@ export interface PagesSelect<T extends boolean = true> {
         downloadableFiles?: T | DownloadableFilesSelect<T>;
         mapContacts?: T | MapContactsSelect<T>;
         editorialFullFrame?: T | EditorialFullFrameSelect<T>;
+        editorialExpandedList?: T | EditorialExpandedListSelect<T>;
       };
   meta?:
     | T
@@ -1636,6 +1689,47 @@ export interface EditorialFullFrameSelect<T extends boolean = true> {
   title?: T;
   content1?: T;
   content2?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EditorialExpandedList_select".
+ */
+export interface EditorialExpandedListSelect<T extends boolean = true> {
+  list?:
+    | T
+    | {
+        title?: T;
+        icon?: T;
+        elements?:
+          | T
+          | {
+              richTextElement?:
+                | T
+                | {
+                    content?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              imageElement?:
+                | T
+                | {
+                    image?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              ctaElement?:
+                | T
+                | {
+                    label?: T;
+                    url?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+            };
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

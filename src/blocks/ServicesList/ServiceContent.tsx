@@ -42,13 +42,9 @@ export type ServiceContentType = {
 type ServiceContentProps = ServiceContentType
 
 const ServiceContent = (props: ServiceContentProps) => {
-  console.log(props)
-
   const blockRenderer = (
     block: ContentBlock | ImageBlock | CtaBlock | PlusMinusBlock | DownloadableFilesBlock,
   ) => {
-    console.log(block)
-
     switch (block.blockType) {
       case 'contentBlock':
         return <RichText content={block.description} className="text-shark-600 prose rich-text" />
