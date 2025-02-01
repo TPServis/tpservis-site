@@ -24,6 +24,7 @@ import { ServicesList } from '@/blocks/ServicesList/config'
 import { CustomForm } from '@/blocks/CustomForm/config'
 import { DownloadableFiles } from '@/blocks/DownloadableFiles/config'
 import { MapContacts } from '@/blocks/MapContacts/config'
+import { EditorialFullFrame } from '@/blocks/EditorialFullFrame/config'
 
 import {
   MetaDescriptionField,
@@ -98,6 +99,7 @@ export const Pages: CollectionConfig = {
                 CustomForm,
                 DownloadableFiles,
                 MapContacts,
+                EditorialFullFrame,
               ],
               required: true,
             },

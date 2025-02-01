@@ -95,6 +95,9 @@ export interface Page {
       label?: string | null;
       url?: string | null;
     };
+    /**
+     * Add up to 4 images to the hero. The first image will be used for the floating image, the second image will be used for the background image, and the third and fourth images will be used for the additional images.
+     */
     mediaGroup?:
       | {
           media1: number | Media;
@@ -120,9 +123,13 @@ export interface Page {
     | CustomForm
     | DownloadableFiles
     | MapContacts
+    | EditorialFullFrame
   )[];
   meta?: {
     title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
     image?: (number | null) | Media;
     description?: string | null;
   };
@@ -198,6 +205,9 @@ export interface CallToActionBlock {
           } | null;
           url?: string | null;
           label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
           appearance?: ('default' | 'outline') | null;
         };
         id?: string | null;
@@ -240,6 +250,9 @@ export interface ContentBlock {
           } | null;
           url?: string | null;
           label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
           appearance?: ('default' | 'outline') | null;
         };
         id?: string | null;
@@ -339,6 +352,9 @@ export interface Post {
   categories?: (number | Category)[] | null;
   meta?: {
     title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
     image?: (number | null) | Media;
     description?: string | null;
   };
@@ -515,6 +531,9 @@ export interface Form {
       )[]
     | null;
   submitButtonLabel?: string | null;
+  /**
+   * Choose whether to display an on-page message or redirect to a different page after they submit the form.
+   */
   confirmationType?: ('message' | 'redirect') | null;
   confirmationMessage?: {
     root: {
@@ -534,6 +553,9 @@ export interface Form {
   redirect?: {
     url: string;
   };
+  /**
+   * Send custom emails when the form submits. Use comma separated lists to send the same email to multiple recipients. To reference a value from this form, wrap that field's name with double curly brackets, i.e. {{firstName}}. You can use a wildcard {{*}} to output all data and {{*:table}} to format it as an HTML table in the email.
+   */
   emails?:
     | {
         emailTo?: string | null;
@@ -542,6 +564,9 @@ export interface Form {
         replyTo?: string | null;
         emailFrom?: string | null;
         subject: string;
+        /**
+         * Enter the message that should be sent in this email.
+         */
         message?: {
           root: {
             type: string;
@@ -864,6 +889,9 @@ export interface ServicesList {
                   blockType: 'contentBlock';
                 }
               | {
+                  /**
+                   * The page to link to
+                   */
                   cta?: (number | null) | Page;
                   text: string;
                   id?: string | null;
@@ -872,10 +900,25 @@ export interface ServicesList {
                 }
               | {
                   media?: {
+                    /**
+                     * The image of the service
+                     */
                     image?: (number | null) | Media;
+                    /**
+                     * The format of the media
+                     */
                     f?: ('square' | 'landscape') | null;
+                    /**
+                     * The border radius of the media
+                     */
                     bR?: ('none' | 'small' | 'medium' | 'large') | null;
+                    /**
+                     * The width of the media
+                     */
                     w?: ('full' | 'half') | null;
+                    /**
+                     * The alignment of the media
+                     */
                     align?: ('left' | 'right') | null;
                   };
                   id?: string | null;
@@ -977,10 +1020,53 @@ export interface MapContacts {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EditorialFullFrame".
+ */
+export interface EditorialFullFrame {
+  title: string;
+  'content-1': {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  'content-2': {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'editorialFullFrame';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
   id: number;
+  /**
+   * You will need to rebuild the website when changing this field.
+   */
   from: string;
   to?: {
     type?: ('reference' | 'custom') | null;
@@ -1016,6 +1102,8 @@ export interface FormSubmission {
   createdAt: string;
 }
 /**
+ * This is a collection of automatically created search results. These results are used by the global site search and will be updated automatically as documents in the CMS are created or updated.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "search".
  */
@@ -1157,341 +1245,24 @@ export interface PagesSelect<T extends boolean = true> {
   layout?:
     | T
     | {
-        cta?:
-          | T
-          | {
-              richText?: T;
-              links?:
-                | T
-                | {
-                    link?:
-                      | T
-                      | {
-                          type?: T;
-                          newTab?: T;
-                          reference?: T;
-                          url?: T;
-                          label?: T;
-                          appearance?: T;
-                        };
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        content?:
-          | T
-          | {
-              columns?:
-                | T
-                | {
-                    size?: T;
-                    richText?: T;
-                    enableLink?: T;
-                    link?:
-                      | T
-                      | {
-                          type?: T;
-                          newTab?: T;
-                          reference?: T;
-                          url?: T;
-                          label?: T;
-                          appearance?: T;
-                        };
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        mediaBlock?:
-          | T
-          | {
-              position?: T;
-              media?: T;
-              id?: T;
-              blockName?: T;
-            };
-        archive?:
-          | T
-          | {
-              introContent?: T;
-              populateBy?: T;
-              relationTo?: T;
-              categories?: T;
-              limit?: T;
-              selectedDocs?: T;
-              id?: T;
-              blockName?: T;
-            };
-        formBlock?:
-          | T
-          | {
-              form?: T;
-              enableIntro?: T;
-              introContent?: T;
-              id?: T;
-              blockName?: T;
-            };
-        textAside?:
-          | T
-          | {
-              title?: T;
-              subtitle?: T;
-              content?: T;
-              id?: T;
-              blockName?: T;
-            };
-        listAside?:
-          | T
-          | {
-              title?: T;
-              list?:
-                | T
-                | {
-                    item?:
-                      | T
-                      | {
-                          title?: T;
-                          url?: T;
-                        };
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        imageWithInfoGrid?:
-          | T
-          | {
-              title?: T;
-              subtitle?: T;
-              cta?:
-                | T
-                | {
-                    url?: T;
-                    label?: T;
-                  };
-              image?: T;
-              items?:
-                | T
-                | {
-                    title?: T;
-                    description?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        horizontalIconsGroup?:
-          | T
-          | {
-              pretitle?: T;
-              title?: T;
-              items?:
-                | T
-                | {
-                    icon?: T;
-                    title?: T;
-                    description?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        popularDestinationsGallery?:
-          | T
-          | {
-              title?: T;
-              rows?:
-                | T
-                | {
-                    items?:
-                      | T
-                      | {
-                          image?: T;
-                          title?: T;
-                          id?: T;
-                        };
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        sideListWithIcons?:
-          | T
-          | {
-              pretitle?: T;
-              title?: T;
-              subtitle?: T;
-              cta?:
-                | T
-                | {
-                    url?: T;
-                    label?: T;
-                  };
-              items?:
-                | T
-                | {
-                    icon?: T;
-                    title?: T;
-                    description?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        bento4x4?:
-          | T
-          | {
-              title?: T;
-              cards?:
-                | T
-                | {
-                    image?: T;
-                    title?: T;
-                    description?: T;
-                    link?:
-                      | T
-                      | {
-                          type?: T;
-                          page?: T;
-                          url?: T;
-                        };
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        faq?:
-          | T
-          | {
-              title?: T;
-              questions?:
-                | T
-                | {
-                    question?: T;
-                    answer?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        servicesList?:
-          | T
-          | {
-              title?: T;
-              services?:
-                | T
-                | {
-                    title?: T;
-                    content?:
-                      | T
-                      | {
-                          plusMinus?:
-                            | T
-                            | {
-                                heading?: T;
-                                card?:
-                                  | T
-                                  | {
-                                      value?: T;
-                                      content?: T;
-                                      id?: T;
-                                    };
-                                id?: T;
-                                blockName?: T;
-                              };
-                          downloadableFiles?:
-                            | T
-                            | {
-                                files?:
-                                  | T
-                                  | {
-                                      file?: T;
-                                      id?: T;
-                                    };
-                                withLateralSpacing?: T;
-                                buttonLabel?: T;
-                                id?: T;
-                                blockName?: T;
-                              };
-                          contentBlock?:
-                            | T
-                            | {
-                                description?: T;
-                                id?: T;
-                                blockName?: T;
-                              };
-                          ctaBlock?:
-                            | T
-                            | {
-                                cta?: T;
-                                text?: T;
-                                id?: T;
-                                blockName?: T;
-                              };
-                          imageBlock?:
-                            | T
-                            | {
-                                media?:
-                                  | T
-                                  | {
-                                      image?: T;
-                                      f?: T;
-                                      bR?: T;
-                                      w?: T;
-                                      align?: T;
-                                    };
-                                id?: T;
-                                blockName?: T;
-                              };
-                        };
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        customForm?:
-          | T
-          | {
-              heading?: T;
-              description?: T;
-              orderInverted?: T;
-              formBlock?:
-                | T
-                | {
-                    formBlock?:
-                      | T
-                      | {
-                          form?: T;
-                          enableIntro?: T;
-                          introContent?: T;
-                          id?: T;
-                          blockName?: T;
-                        };
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        downloadableFiles?:
-          | T
-          | {
-              files?:
-                | T
-                | {
-                    file?: T;
-                    id?: T;
-                  };
-              withLateralSpacing?: T;
-              buttonLabel?: T;
-              id?: T;
-              blockName?: T;
-            };
-        mapContacts?:
-          | T
-          | {
-              id?: T;
-              blockName?: T;
-            };
+        cta?: T | CallToActionBlockSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
+        archive?: T | ArchiveBlockSelect<T>;
+        formBlock?: T | FormBlockSelect<T>;
+        textAside?: T | TextAsideSelect<T>;
+        listAside?: T | ListAsideSelect<T>;
+        imageWithInfoGrid?: T | ImageWithInfoGridSelect<T>;
+        horizontalIconsGroup?: T | HorizontalIconsGroupSelect<T>;
+        popularDestinationsGallery?: T | PopularDestinationsGallerySelect<T>;
+        sideListWithIcons?: T | SideListWithIconsSelect<T>;
+        bento4x4?: T | Bento4X4Select<T>;
+        faq?: T | FAQSelect<T>;
+        servicesList?: T | ServicesListSelect<T>;
+        customForm?: T | CustomFormSelect<T>;
+        downloadableFiles?: T | DownloadableFilesSelect<T>;
+        mapContacts?: T | MapContactsSelect<T>;
+        editorialFullFrame?: T | EditorialFullFrameSelect<T>;
       };
   meta?:
     | T
@@ -1505,6 +1276,368 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CallToActionBlock_select".
+ */
+export interface CallToActionBlockSelect<T extends boolean = true> {
+  richText?: T;
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlock_select".
+ */
+export interface ContentBlockSelect<T extends boolean = true> {
+  columns?:
+    | T
+    | {
+        size?: T;
+        richText?: T;
+        enableLink?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaBlock_select".
+ */
+export interface MediaBlockSelect<T extends boolean = true> {
+  position?: T;
+  media?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArchiveBlock_select".
+ */
+export interface ArchiveBlockSelect<T extends boolean = true> {
+  introContent?: T;
+  populateBy?: T;
+  relationTo?: T;
+  categories?: T;
+  limit?: T;
+  selectedDocs?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormBlock_select".
+ */
+export interface FormBlockSelect<T extends boolean = true> {
+  form?: T;
+  enableIntro?: T;
+  introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextAside_select".
+ */
+export interface TextAsideSelect<T extends boolean = true> {
+  title?: T;
+  subtitle?: T;
+  content?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ListAside_select".
+ */
+export interface ListAsideSelect<T extends boolean = true> {
+  title?: T;
+  list?:
+    | T
+    | {
+        item?:
+          | T
+          | {
+              title?: T;
+              url?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImageWithInfoGrid_select".
+ */
+export interface ImageWithInfoGridSelect<T extends boolean = true> {
+  title?: T;
+  subtitle?: T;
+  cta?:
+    | T
+    | {
+        url?: T;
+        label?: T;
+      };
+  image?: T;
+  items?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HorizontalIconsGroup_select".
+ */
+export interface HorizontalIconsGroupSelect<T extends boolean = true> {
+  pretitle?: T;
+  title?: T;
+  items?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PopularDestinationsGallery_select".
+ */
+export interface PopularDestinationsGallerySelect<T extends boolean = true> {
+  title?: T;
+  rows?:
+    | T
+    | {
+        items?:
+          | T
+          | {
+              image?: T;
+              title?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SideListWithIcons_select".
+ */
+export interface SideListWithIconsSelect<T extends boolean = true> {
+  pretitle?: T;
+  title?: T;
+  subtitle?: T;
+  cta?:
+    | T
+    | {
+        url?: T;
+        label?: T;
+      };
+  items?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Bento4x4_select".
+ */
+export interface Bento4X4Select<T extends boolean = true> {
+  title?: T;
+  cards?:
+    | T
+    | {
+        image?: T;
+        title?: T;
+        description?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              page?: T;
+              url?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FAQ_select".
+ */
+export interface FAQSelect<T extends boolean = true> {
+  title?: T;
+  questions?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServicesList_select".
+ */
+export interface ServicesListSelect<T extends boolean = true> {
+  title?: T;
+  services?:
+    | T
+    | {
+        title?: T;
+        content?:
+          | T
+          | {
+              plusMinus?: T | PlusMinusSelect<T>;
+              downloadableFiles?: T | DownloadableFilesSelect<T>;
+              contentBlock?:
+                | T
+                | {
+                    description?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              ctaBlock?:
+                | T
+                | {
+                    cta?: T;
+                    text?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              imageBlock?:
+                | T
+                | {
+                    media?:
+                      | T
+                      | {
+                          image?: T;
+                          f?: T;
+                          bR?: T;
+                          w?: T;
+                          align?: T;
+                        };
+                    id?: T;
+                    blockName?: T;
+                  };
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PlusMinus_select".
+ */
+export interface PlusMinusSelect<T extends boolean = true> {
+  heading?: T;
+  card?:
+    | T
+    | {
+        value?: T;
+        content?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DownloadableFiles_select".
+ */
+export interface DownloadableFilesSelect<T extends boolean = true> {
+  files?:
+    | T
+    | {
+        file?: T;
+        id?: T;
+      };
+  withLateralSpacing?: T;
+  buttonLabel?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CustomForm_select".
+ */
+export interface CustomFormSelect<T extends boolean = true> {
+  heading?: T;
+  description?: T;
+  orderInverted?: T;
+  formBlock?:
+    | T
+    | {
+        formBlock?: T | FormBlockSelect<T>;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MapContacts_select".
+ */
+export interface MapContactsSelect<T extends boolean = true> {
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EditorialFullFrame_select".
+ */
+export interface EditorialFullFrameSelect<T extends boolean = true> {
+  title?: T;
+  'content-1'?: T;
+  'content-2'?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1878,6 +2011,9 @@ export interface Footer {
     };
     email?: string | null;
   };
+  /**
+   * Add links to your social media profiles here.
+   */
   socialLinks?: {
     facebook?: string | null;
     instagram?: string | null;
@@ -1894,6 +2030,9 @@ export interface Footer {
           } | null;
           url?: string | null;
           label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
           appearance?: ('default' | 'outline') | null;
         };
         id?: string | null;

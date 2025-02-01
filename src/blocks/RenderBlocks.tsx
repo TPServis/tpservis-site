@@ -21,6 +21,7 @@ import { CustomForm } from '@/blocks/CustomForm/Component'
 import PlusMinus from '@/blocks/PlusMinus/Component'
 import DownloadableFiles from '@/blocks/DownloadableFiles/Component'
 import MapContacts from '@/blocks/MapContacts/Component'
+import { EditorialFullFrame } from '@/blocks/EditorialFullFrame/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -41,6 +42,7 @@ const blockComponents = {
   plusMinus: PlusMinus,
   downloadableFiles: DownloadableFiles,
   mapContacts: MapContacts,
+  editorialFullFrame: EditorialFullFrame,
 }
 
 export const RenderBlocks: React.FC<{
