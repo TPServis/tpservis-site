@@ -46,7 +46,10 @@ export const EditorialExpandedListComponent = (props: EditorialExpandedListProps
                     case 'richTextElement':
                       return (
                         <div key={idx} className="mb-4">
-                          <RichText content={element.content} className="text-lg text-secondary" />
+                          <RichText
+                            content={element.content}
+                            className="text-base md:text-lg text-secondary mx-0"
+                          />
                         </div>
                       )
                     case 'imageElement':
