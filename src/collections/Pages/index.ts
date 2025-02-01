@@ -25,7 +25,7 @@ import { CustomForm } from '@/blocks/CustomForm/config'
 import { DownloadableFiles } from '@/blocks/DownloadableFiles/config'
 import { MapContacts } from '@/blocks/MapContacts/config'
 import { EditorialFullFrame } from '@/blocks/EditorialFullFrame/config'
-import { EditorialExpandedList } from '@/blocks/EditorialEcpandedList/config'
+import { EditorialExpandedList } from '@/blocks/EditorialExpandedList/config'
 import {
   MetaDescriptionField,
   MetaImageField,

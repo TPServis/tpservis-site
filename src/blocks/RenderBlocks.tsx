@@ -22,7 +22,7 @@ import PlusMinus from '@/blocks/PlusMinus/Component'
 import DownloadableFiles from '@/blocks/DownloadableFiles/Component'
 import MapContacts from '@/blocks/MapContacts/Component'
 import { EditorialFullFrame } from '@/blocks/EditorialFullFrame/Component'
-import { EditorialExpandedListComponent as EditorialExpandedList } from '@/blocks/EditorialEcpandedList/Component'
+import { EditorialExpandedListComponent as EditorialExpandedList } from '@/blocks/EditorialExpandedList/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,

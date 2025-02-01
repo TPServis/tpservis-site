@@ -10,7 +10,7 @@ export const EditorialFullFrame = (props: EditorialFullFrameProps) => {
   return (
     <div className="w-full container-spacing pt-48">
       <div className="container-wrapper grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-10">
-        <div className="col-span-6">
+        <div className="col-span-5">
           <h2 className="text-3xl md:text-6xl font-semibold text-heading pb-10">{props.title}</h2>
         </div>
         <div className="col-span-2">
