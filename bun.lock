@@ -25,6 +25,8 @@
         "@radix-ui/react-slot": "^1.1.1",
         "@supabase/supabase-js": "^2.48.1",
         "@tailwindcss/postcss": "^4.0.3",
+        "@vercel/analytics": "^1.4.1",
+        "@vercel/speed-insights": "^1.1.0",
         "@vis.gl/react-maplibre": "^1.0.0-alpha.4",
         "babel-plugin-react-compiler": "19.0.0-beta-8a03594-20241020",
         "class-variance-authority": "^0.7.1",
@@ -842,6 +844,10 @@
     "@uploadthing/mime-types": ["@uploadthing/mime-types@0.3.4", "", {}, "sha512-EB0o0a4y++UJFMLqS8LDVhSQgXUllG6t5fwl5cbmOM0Uay8YY5Nc/JjFwzJ8wccdIKz4oYwQW7EOSfUyaMPbfw=="],
 
     "@uploadthing/shared": ["@uploadthing/shared@7.1.5", "", { "dependencies": { "@uploadthing/mime-types": "0.3.4", "effect": "3.11.5", "sqids": "^0.3.0" } }, "sha512-5ePSiR2CPA5a8gfPqsHpE/uPwGG9iPqhxcFpeLGnEuExPqIi5ZY7upZgpc+6T1gMxwfbP0O5X4043TTNk3q/pA=="],
+
+    "@vercel/analytics": ["@vercel/analytics@1.4.1", "", { "peerDependencies": { "@remix-run/react": "^2", "@sveltejs/kit": "^1 || ^2", "next": ">= 13", "react": "^18 || ^19 || ^19.0.0-rc", "svelte": ">= 4", "vue": "^3", "vue-router": "^4" }, "optionalPeers": ["@remix-run/react", "@sveltejs/kit", "next", "react", "svelte", "vue", "vue-router"] }, "sha512-ekpL4ReX2TH3LnrRZTUKjHHNpNy9S1I7QmS+g/RQXoSUQ8ienzosuX7T9djZ/s8zPhBx1mpHP/Rw5875N+zQIQ=="],
+
+    "@vercel/speed-insights": ["@vercel/speed-insights@1.1.0", "", { "peerDependencies": { "@sveltejs/kit": "^1 || ^2", "next": ">= 13", "react": "^18 || ^19 || ^19.0.0-rc", "svelte": ">= 4", "vue": "^3", "vue-router": "^4" }, "optionalPeers": ["@sveltejs/kit", "next", "react", "svelte", "vue", "vue-router"] }, "sha512-rAXxuhhO4mlRGC9noa5F7HLMtGg8YF1zAN6Pjd1Ny4pII4cerhtwSG4vympbCl+pWkH7nBS9kVXRD4FAn54dlg=="],
 
     "@vis.gl/react-maplibre": ["@vis.gl/react-maplibre@1.0.0-alpha.4", "", { "dependencies": { "@maplibre/maplibre-gl-style-spec": "^19.2.1" }, "peerDependencies": { "maplibre-gl": ">=4.0.0", "react": ">=16.3.0", "react-dom": ">=16.3.0" } }, "sha512-MWz0lNaSJVHQYgZDZv72GdtHly6ySg2UhqW4JkluH7dtUZ//MFMzd3mfcxZvlwG9mNhnxjL+wfYTXKEaDub3Gw=="],
 

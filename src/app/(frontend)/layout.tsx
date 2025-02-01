@@ -4,6 +4,9 @@ import { cn } from 'src/utilities/cn'
 import { Inter } from 'next/font/google'
 import React from 'react'
 
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+
 import { AdminBar } from '@/components/AdminBar'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
@@ -30,6 +33,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
+
       <body className="bg-background transition duration-[1s]">
         <Providers>
           {process.env.NEXT_PUBLIC_ENABLE_ADMIN_BAR !== 'false' && (
@@ -45,6 +49,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {children}
           <Footer />
         </Providers>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
