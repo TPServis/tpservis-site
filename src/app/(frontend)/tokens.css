@@ -63,4 +63,12 @@
   --color-text-on-accent-primary: var(--color-jaffa-50);
   --color-text-on-secondary-primary: var(--color-astral-50);
   --color-text-on-secondary-secondary: var(--color-astral-200);
+
+  --text-color-primary: var(--color-shark-950);
+  --text-color-secondary: var(--color-shark-500);
+  --text-color-muted: var(--color-shark-200);
+  --text-color-accent: var(--color-jaffa-400);
+  --text-color-success: var(--color-green);
+  --text-color-error: var(--color-red);
+  --text-color-heading: var(--color-astral-600);
 }

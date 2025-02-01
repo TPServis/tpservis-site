@@ -16,7 +16,7 @@ export const EditorialFullFrame: Block = {
       required: true,
     },
     {
-      name: 'content-1',
+      name: 'content1',
       type: 'richText',
       editor: lexicalEditor({
         features: ({ rootFeatures }) => {
@@ -26,7 +26,7 @@ export const EditorialFullFrame: Block = {
       required: true,
     },
     {
-      name: 'content-2',
+      name: 'content2',
       type: 'richText',
       editor: lexicalEditor({
         features: ({ rootFeatures }) => {

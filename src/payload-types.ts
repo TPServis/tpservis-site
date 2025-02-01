@@ -1024,7 +1024,7 @@ export interface MapContacts {
  */
 export interface EditorialFullFrame {
   title: string;
-  'content-1': {
+  content1: {
     root: {
       type: string;
       children: {
@@ -1039,7 +1039,7 @@ export interface EditorialFullFrame {
     };
     [k: string]: unknown;
   };
-  'content-2': {
+  content2: {
     root: {
       type: string;
       children: {
@@ -1634,8 +1634,8 @@ export interface MapContactsSelect<T extends boolean = true> {
  */
 export interface EditorialFullFrameSelect<T extends boolean = true> {
   title?: T;
-  'content-1'?: T;
-  'content-2'?: T;
+  content1?: T;
+  content2?: T;
   id?: T;
   blockName?: T;
 }

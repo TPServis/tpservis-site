@@ -7,22 +7,26 @@ type EditorialFullFrameProps = {
 }
 
 export const EditorialFullFrame = (props: EditorialFullFrameProps) => {
+  console.log(props)
+
   return (
     <div className="w-full container-spacing pt-48">
       <div className="container-wrapper grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-10">
-        <div className="md:col-span-3 row-span-1 md:w-[80%]">
-          <h2 className="md:text-6xl text-3xl font-bold text-heading">{props.title}</h2>
+        <div className="col-span-6">
+          <h2 className="text-3xl md:text-6xl font-semibold text-heading pb-10">{props.title}</h2>
         </div>
-        <div className="md:col-span-2 row-span-1">
+        <div className="col-span-2">
           <RichText
             content={props.content1}
             enableGutter={false}
-            className="text-lg text-shark-400 pb-6"
+            className="text-lg text-secondary"
           />
+        </div>
+        <div className="col-span-3">
           <RichText
             content={props.content2}
             enableGutter={false}
-            className="text-lg text-shark-400 pb-6"
+            className="text-lg text-secondary"
           />
         </div>
       </div>
