@@ -26,6 +26,8 @@ import { DownloadableFiles } from '@/blocks/DownloadableFiles/config'
 import { MapContacts } from '@/blocks/MapContacts/config'
 import { EditorialFullFrame } from '@/blocks/EditorialFullFrame/config'
 import { EditorialExpandedList } from '@/blocks/EditorialExpandedList/config'
+import { TourSearchModule } from '@/blocks/TourSearchModule/config'
+
 import {
   MetaDescriptionField,
   MetaImageField,
@@ -101,6 +103,7 @@ export const Pages: CollectionConfig = {
                 MapContacts,
                 EditorialFullFrame,
                 EditorialExpandedList,
+                TourSearchModule,
               ],
               required: true,
             },

@@ -125,6 +125,11 @@ export interface Page {
     | MapContacts
     | EditorialFullFrame
     | EditorialExpandedList
+    | {
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'tourSearchModule';
+      }
   )[];
   meta?: {
     title?: string | null;
@@ -1316,6 +1321,12 @@ export interface PagesSelect<T extends boolean = true> {
         mapContacts?: T | MapContactsSelect<T>;
         editorialFullFrame?: T | EditorialFullFrameSelect<T>;
         editorialExpandedList?: T | EditorialExpandedListSelect<T>;
+        tourSearchModule?:
+          | T
+          | {
+              id?: T;
+              blockName?: T;
+            };
       };
   meta?:
     | T

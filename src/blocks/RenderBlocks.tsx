@@ -23,6 +23,7 @@ import DownloadableFiles from '@/blocks/DownloadableFiles/Component'
 import MapContacts from '@/blocks/MapContacts/Component'
 import { EditorialFullFrame } from '@/blocks/EditorialFullFrame/Component'
 import { EditorialExpandedListComponent as EditorialExpandedList } from '@/blocks/EditorialExpandedList/Component'
+import { TourSearchModuleComponent as TourSearchModule } from '@/blocks/TourSearchModule/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -45,6 +46,7 @@ const blockComponents = {
   mapContacts: MapContacts,
   editorialFullFrame: EditorialFullFrame,
   editorialExpandedList: EditorialExpandedList,
+  tourSearchModule: TourSearchModule,
 }
 
 export const RenderBlocks: React.FC<{
