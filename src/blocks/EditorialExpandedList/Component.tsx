@@ -59,6 +59,7 @@ export const EditorialExpandedListComponent = (props: EditorialExpandedListProps
                           <Media
                             resource={element.image}
                             className="rounded-3xl overflow-hidden w-full h-[300px] md:h-[500px] *:w-full *:h-full *:object-cover *:object-center"
+                            size="500px"
                           />
                         </div>
                       )

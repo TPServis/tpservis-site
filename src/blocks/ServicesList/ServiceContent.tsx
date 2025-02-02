@@ -10,6 +10,7 @@ import { cva } from 'class-variance-authority'
 
 import type { Media as MediaType, Page as PageType } from '@/payload-types'
 import Link from 'next/link'
+import { Media } from '@/components/Media'
 
 type ContentBlock = {
   blockType: 'contentBlock'
@@ -73,7 +74,7 @@ const ServiceContent = (props: ServiceContentProps) => {
 export default ServiceContent
 
 const ImageContent = (props: ImageBlock) => {
-  const imageVariants = cva('relative', {
+  const imageVariants = cva('relative overflow-hidden', {
     variants: {
       f: {
         square: 'aspect-square',
@@ -98,17 +99,16 @@ const ImageContent = (props: ImageBlock) => {
 
   return (
     <div className="relative w-full">
-      <Image
+      <Media
+        resource={props.media.image}
         className={imageVariants({
           f: props.media.f,
           bR: props.media.bR,
           w: props.media.w,
           align: props.media.align,
         })}
-        src={props.media.image?.url ?? ''}
         alt={props.media.image?.alt ?? ''}
-        width={props.media.image?.width ?? 0}
-        height={props.media.image?.height ?? 0}
+        size={props.media.w === 'full' ? '100%' : '50%'}
       />
     </div>
   )
