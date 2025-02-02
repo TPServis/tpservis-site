@@ -72,6 +72,7 @@ const HomeDocumentsItem = (props: HomeDocumentsItemProps) => {
           <Media
             resource={props.image}
             className="h-full object-cover group-hover:scale-110 transition-all duration-300 *:w-full *:h-auto *:object-cover *:object-center"
+            size="250px"
           />
         </div>
       </div>
@@ -114,6 +115,7 @@ const HomeDocumentsItemSmall = (props: HomeDocumentsItemProps) => {
         <Media
           resource={props.image}
           className="h-full object-cover group-hover:scale-110 transition-all duration-300 *:w-auto *:h-full *:object-cover *:object-center"
+          size="150px"
         />
       </div>
     </Link>
