@@ -4,6 +4,7 @@ import NextLink from 'next/link'
 import RichText from '@/components/RichText'
 
 import { PlaneIcon, TrainFront, BusFront, Shuffle } from 'lucide-react'
+import { Media } from '@/components/Media'
 
 type EditorialExpandedListProps = {
   list: {
@@ -55,12 +56,9 @@ export const EditorialExpandedListComponent = (props: EditorialExpandedListProps
                     case 'imageElement':
                       return (
                         <div key={idx} className="mb-4 w-full overflow-hidden rounded-lg">
-                          <NextImage
-                            src={element.image?.url || ''}
-                            alt={element.image?.alt || 'Image'}
-                            width={500}
-                            height={300}
-                            className="object-cover w-full h-full"
+                          <Media
+                            resource={element.image}
+                            className="rounded-3xl overflow-hidden w-full h-[300px] md:h-[500px] *:w-full *:h-full *:object-cover *:object-center"
                           />
                         </div>
                       )
