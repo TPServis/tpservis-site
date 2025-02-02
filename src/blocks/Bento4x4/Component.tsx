@@ -5,8 +5,9 @@ import { useCallback, useEffect, useState, useRef } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import useEmblaCarousel from 'embla-carousel-react'
 import Link from 'next/link'
+import { Media } from '@/components/Media'
 
-import type { Media, Page } from '@/payload-types'
+import type { Media as MediaType, Page } from '@/payload-types'
 import { cn } from '@/utilities/cn'
 
 import RichText from '@/components/RichText'
@@ -27,7 +28,7 @@ const glowKeyframes = `
 type Bento4x4Props = {
   title: string
   cards: {
-    image: Media
+    image: MediaType
     title: string
     description: any
     link: {
@@ -41,7 +42,7 @@ type Bento4x4Props = {
 type HomeDocumentsItemProps = {
   title: string
   description: any
-  image: Media
+  image: MediaType
   className?: string
   link: {
     type: 'page' | 'custom'
@@ -56,7 +57,7 @@ const HomeDocumentsItem = (props: HomeDocumentsItemProps) => {
   return (
     <Link href={props.link.url || props.link.page?.slug || ''} className={cls} prefetch={true}>
       <div className="rounded-lg overflow-hidden aspect-[2/1] mb-4">
-        <NextImage
+        {/* <NextImage
           src={props.image.url || ''}
           alt={props.title}
           width={800}
@@ -65,7 +66,14 @@ const HomeDocumentsItem = (props: HomeDocumentsItemProps) => {
           priority={false}
           quality={80}
           className="h-full object-cover group-hover:scale-110 transition-all duration-300"
-        />
+        /> */}
+
+        <div className="h-full w-full overflow-hidden">
+          <Media
+            resource={props.image}
+            className="h-full object-cover group-hover:scale-110 transition-all duration-300 *:w-full *:h-auto *:object-cover *:object-center"
+          />
+        </div>
       </div>
       <h3 className="text-2xl font-bold text-astral-50 pb-2">{props.title}</h3>
       <RichText
@@ -79,7 +87,7 @@ const HomeDocumentsItem = (props: HomeDocumentsItemProps) => {
 
 const HomeDocumentsItemSmall = (props: HomeDocumentsItemProps) => {
   const cls =
-    'bg-astral-700 rounded-3xl p-5 col-span-1 row-span-1 flex justify-between group ' +
+    'bg-astral-700 rounded-3xl p-5 col-span-1 row-span-1 flex justify-between group gap-4 ' +
     props.className
 
   return (
@@ -92,8 +100,8 @@ const HomeDocumentsItemSmall = (props: HomeDocumentsItemProps) => {
           enableGutter={false}
         />
       </div>
-      <div className="rounded-lg h-full overflow-hidden">
-        <NextImage
+      <div className="rounded-lg h-full overflow-hidden w-1/2">
+        {/* <NextImage
           src={props.image.url || ''}
           alt={props.title}
           width={200}
@@ -102,6 +110,10 @@ const HomeDocumentsItemSmall = (props: HomeDocumentsItemProps) => {
           priority={false}
           quality={50}
           className="h-full object-cover group-hover:scale-110 transition-all duration-300"
+        /> */}
+        <Media
+          resource={props.image}
+          className="h-full object-cover group-hover:scale-110 transition-all duration-300 *:w-auto *:h-full *:object-cover *:object-center"
         />
       </div>
     </Link>
