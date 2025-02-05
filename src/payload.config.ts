@@ -243,7 +243,7 @@ export default buildConfig({
         media: true,
       },
       options: {
-        token: process.env.UPLOADTHING_TOKEN,
+        token: process.env.UPLOADTHING_SECRET,
         acl: 'public-read',
         logLevel: 'All',
         // fetch: (url, options) => {
