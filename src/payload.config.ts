@@ -167,8 +167,9 @@ export default buildConfig({
     },
   }),
   collections: [Pages, Posts, Media, Categories, Users],
-  cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
-  csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
+  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
+  cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL].filter(Boolean) as string[],
+  csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL].filter(Boolean) as string[],
   endpoints: [],
   globals: [Header, Footer, Contacts],
   plugins: [
