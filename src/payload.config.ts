@@ -239,12 +239,10 @@ export default buildConfig({
     }),
     uploadthingStorage({
       collections: {
-        [Media.slug]: true,
         media: true,
       },
       options: {
-        // @ts-ignore
-        token: process.env.UPLOADTHING_TOKEN ?? '',
+        token: process.env.UPLOADTHING_TOKEN,
         acl: 'public-read',
       },
     }),

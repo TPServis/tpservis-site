@@ -41,32 +41,5 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     disableLocalStorage: true,
-    // staticDir: path.resolve(dirname, '../../public/media'),
-    // handlers: [
-    //   async (req, { file, data }: any) => {
-    //     const { payload } = req
-    //     const { filename, mimetype, buffer } = file
-    //     // Upload to UploadThing
-    //     const upload = await (payload as any).cloudStorage.upload({
-    //       filename,
-    //       mimetype,
-    //       buffer,
-    //       collection: 'media',
-    //     })
-    //     const responsePayload = {
-    //       ...data,
-    //       url: upload.url,
-    //       filename: upload.filename,
-    //       mimeType: upload.mimeType,
-    //       filesize: upload.filesize,
-    //       width: upload.width,
-    //       height: upload.height,
-    //     }
-    //     return new Response(JSON.stringify(responsePayload), {
-    //       headers: { 'Content-Type': 'application/json' },
-    //     })
-    //   },
-    // ],
-    // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
   },
 }
