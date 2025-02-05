@@ -41,5 +41,8 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     disableLocalStorage: true,
+    adminThumbnail: ({ doc }) => {
+      return `https://utfs.io/f/${doc.filename}`
+    },
   },
 }
