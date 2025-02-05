@@ -240,6 +240,7 @@ export default buildConfig({
     uploadthingStorage({
       collections: {
         [Media.slug]: true,
+        media: true,
       },
       options: {
         // @ts-ignore
