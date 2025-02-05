@@ -41,8 +41,9 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     disableLocalStorage: true,
-    adminThumbnail: ({ doc }) => {
-      return `https://utfs.io/f/${doc.filename}`
-    },
+    // adminThumbnail: ({ doc }) => {
+    //   if (!doc.key) return '/fallback-image.jpg'
+    //   return `https://utfs.io/f/${doc.key}`
+    // },
   },
 }

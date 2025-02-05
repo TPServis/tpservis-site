@@ -245,17 +245,17 @@ export default buildConfig({
         token: process.env.UPLOADTHING_TOKEN,
         acl: 'public-read',
         logLevel: 'All',
-        fetch: (url, options) => {
-          return fetch(url, {
-            ...options,
-            headers: {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-              'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-            },
-          })
-        },
+        // fetch: (url, options) => {
+        //   return fetch(url, {
+        //     ...options,
+        //     headers: {
+        //       'Content-Type': 'application/json',
+        //       'Access-Control-Allow-Origin': '*',
+        //       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        //       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        //     },
+        //   })
+        // },
       },
     }),
   ],
