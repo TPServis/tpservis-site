@@ -40,10 +40,10 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    disableLocalStorage: true,
-    // adminThumbnail: ({ doc }) => {
-    //   if (!doc.key) return '/fallback-image.jpg'
-    //   return `https://utfs.io/f/${doc.key}`
-    // },
+    staticDir: '/media',
+    mimeTypes: ['image/*', 'video/*'],
+    disableLocalStorage: false,
+    adapter: 'uploadthingStorage',
+    adminThumbnail: 'thumbnail',
   },
 }
