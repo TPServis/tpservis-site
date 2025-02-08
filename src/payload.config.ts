@@ -240,9 +240,7 @@ export default buildConfig({
     }),
     uploadthingStorage({
       collections: {
-        media: {
-          disablePayloadAccessControl: true,
-        },
+        media: true,
       },
 
       options: {
