@@ -84,16 +84,6 @@ const s3Config: S3StorageOptions = {
 //   ],
 // })
 
-const uploadthingStorageConfig = {
-  collections: {
-    ['media']: true,
-  },
-  options: {
-    apiKey: process.env.UPLOADTHING_SECRET,
-    acl: 'public-read',
-  },
-}
-
 export default buildConfig({
   admin: {
     components: {},
@@ -244,7 +234,7 @@ export default buildConfig({
       },
 
       options: {
-        token: process.env.UPLOADTHING_TOKEN,
+        token: process.env.UPLOADTHING_TOKEN || '',
         acl: 'public-read',
         logLevel: 'All',
       },

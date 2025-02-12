@@ -40,22 +40,21 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    staticDir: '/media',
-    mimeTypes: ['image/*', 'video/*'],
     disableLocalStorage: true,
+    mimeTypes: ['image/*', 'video/*'],
     adapter: 'uploadthingStorage',
     adminThumbnail: 'thumbnail',
   },
-  hooks: {
-    // beforeRead: [
-    //   ({ doc }) => {
-    //     console.log(doc)
-    //   },
-    // ],
-    beforeChange: [
-      ({ data }) => {
-        console.log(data)
-      },
-    ],
-  },
+  // hooks: {
+  //   // beforeRead: [
+  //   //   ({ doc }) => {
+  //   //     console.log(doc)
+  //   //   },
+  //   // ],
+  //   beforeChange: [
+  //     ({ data }) => {
+  //       console.log(data)
+  //     },
+  //   ],
+  // },
 }

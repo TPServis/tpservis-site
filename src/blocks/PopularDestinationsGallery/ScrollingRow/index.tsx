@@ -3,12 +3,12 @@ import { motion, useSpring, useTransform } from 'motion/react'
 import type { MotionValue } from 'motion/react'
 import { useRef } from 'react'
 
-import type { Media } from '@/payload-types'
-import Image from 'next/image'
+import type { Media as MediaType } from '@/payload-types'
+import { Media } from '@/components/Media'
 
 interface ScrollingRowProps {
   items: {
-    image: Media
+    image: MediaType
     title: string
   }[]
   scrollYProgress: MotionValue<number>
@@ -42,19 +42,16 @@ export default function ScrollingRow(props: ScrollingRowProps) {
 
 type ScrollingRowItem = {
   title: string
-  image: Media
+  image: MediaType
 }
 
 const ScrollingRowItem = (props: ScrollingRowItem) => {
   return (
     <div className="min-w-[300px] aspect-video rounded-3xl overflow-hidden col-span-1 relative">
-      <Image
-        src={props.image.url || ''}
-        alt={props.title}
-        className="w-full h-full object-cover"
-        sizes="33vw"
-        width={0}
-        height={0}
+      <Media
+        resource={props.image}
+        className="w-full h-full object-cover *:w-full *:h-auto *:object-cover *:object-center"
+        size="33vw"
         quality={70}
       />
       <div className="absolute bottom-4 left-4 p-2 px-6 bg-white/80 rounded-lg backdrop-blur-sm">

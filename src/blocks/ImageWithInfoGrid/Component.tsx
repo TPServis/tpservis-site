@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
 import RichText from '@/components/RichText'
 
-import Image from 'next/image'
+import { Media } from '@/components/Media'
 
 import { useRef } from 'react'
 import { useScroll, motion, useTransform, useSpring } from 'motion/react'
@@ -69,13 +69,10 @@ export const ImageWithInfoGrid = (props: ImageWithInfoGridProps) => {
             style={{ y: ySpring }}
             className="absolute w-full h-auto top-1/2 -translate-y-1/2"
           >
-            <Image
-              src={props.image.url}
-              alt={props.image.alt}
-              className="w-full h-full object-cover"
-              sizes="100vw"
-              width={2000}
-              height={2000}
+            <Media
+              resource={props.image.url}
+              className="w-full h-full object-cover *:w-full *:h-auto *:object-cover *:object-center"
+              size="100vw"
               priority
               quality={80}
             />
