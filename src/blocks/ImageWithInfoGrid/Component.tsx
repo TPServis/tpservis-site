@@ -70,7 +70,7 @@ export const ImageWithInfoGrid = (props: ImageWithInfoGridProps) => {
             className="absolute w-full h-auto top-1/2 -translate-y-1/2"
           >
             <Media
-              resource={props.image}
+              resource={props.image as any}
               className="w-full h-full object-cover *:w-full *:h-auto *:object-cover *:object-center"
               size="100vw"
               priority
