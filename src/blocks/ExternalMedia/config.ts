@@ -42,7 +42,7 @@ export const ExternalMedia: Block = {
     {
       name: 'size',
       type: 'select',
-      defaultValue: 'medium',
+      defaultValue: 'full',
       options: [
         { label: 'Small', value: 'small' },
         { label: 'Medium', value: 'medium' },

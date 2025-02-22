@@ -12,8 +12,10 @@ export type ExternalMediaType = {
   blockType: 'externalMedia'
 }
 
+const DEFAULT_IMAGE_STYLING = 'mx-auto rounded-2xl'
+
 const mediaVariants = tv({
-  base: 'mx-auto',
+  base: DEFAULT_IMAGE_STYLING,
   variants: {
     size: {
       small: 'max-w-[400px]',
@@ -29,7 +31,6 @@ const mediaVariants = tv({
 
 export const ExternalMedia: React.FC<ExternalMediaType> = (props) => {
   const { url, alt = '', size = 'medium', className, priority = true, quality = 75 } = props
-  console.log('url', url)
 
   if (!url) {
     throw new Error('URL is required')
@@ -41,15 +42,20 @@ export const ExternalMedia: React.FC<ExternalMediaType> = (props) => {
     throw new Error('Invalid URL')
   }
 
+  const relativeSize =
+    size === 'small' ? '400px' : size === 'medium' ? '800px' : size === 'large' ? '1200px' : '100vw'
+
   return (
-    <Image
-      src={url}
-      alt={alt}
-      width={1000}
-      height={1000}
-      className={cn(mediaVariants({ size }), className)}
-      priority={priority}
-      quality={quality}
-    />
+    <div className="relative w-full">
+      <Image
+        src={url}
+        alt={alt}
+        fill
+        sizes={`(max-width: 768px) 100vw, ${relativeSize}`}
+        className={cn(mediaVariants({ size }), className)}
+        priority={priority}
+        quality={quality}
+      />
+    </div>
   )
 }
