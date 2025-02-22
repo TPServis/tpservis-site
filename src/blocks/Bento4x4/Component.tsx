@@ -1,6 +1,4 @@
 'use client'
-
-import NextImage from 'next/image'
 import { useCallback, useEffect, useState, useRef } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import useEmblaCarousel from 'embla-carousel-react'
@@ -57,16 +55,11 @@ const HomeDocumentsItem = (props: HomeDocumentsItemProps) => {
   return (
     <Link href={props.link.url || props.link.page?.slug || ''} className={cls} prefetch={true}>
       <div className="rounded-lg overflow-hidden aspect-[2/1] mb-4">
-        {/* <NextImage
-          src={props.image.url || ''}
-          alt={props.title}
-          width={800}
-          height={500}
-          sizes="20vw"
-          priority={false}
-          quality={80}
-          className="h-full object-cover group-hover:scale-110 transition-all duration-300"
-        /> */}
+        <Media
+          resource={props.image}
+          className="h-full object-cover group-hover:scale-110 transition-all duration-300 *:w-full *:h-auto *:object-cover *:object-center"
+          size="250px"
+        />
 
         <div className="h-full w-full overflow-hidden">
           <Media
@@ -102,16 +95,6 @@ const HomeDocumentsItemSmall = (props: HomeDocumentsItemProps) => {
         />
       </div>
       <div className="rounded-lg h-full overflow-hidden w-1/2">
-        {/* <NextImage
-          src={props.image.url || ''}
-          alt={props.title}
-          width={200}
-          height={200}
-          sizes="20vw"
-          priority={false}
-          quality={50}
-          className="h-full object-cover group-hover:scale-110 transition-all duration-300"
-        /> */}
         <Media
           resource={props.image}
           className="h-full object-cover group-hover:scale-110 transition-all duration-300 *:w-auto *:h-full *:object-cover *:object-center"
@@ -146,7 +129,6 @@ export const Bento4x4 = (props: Bento4x4Props) => {
     setCanScrollNext(emblaApi.canScrollNext())
   }, [emblaApi, selectedIndex])
 
-  // Reset carousel when switching between mobile and desktop
   useEffect(() => {
     if (!containerRef.current) return
 
@@ -158,7 +140,6 @@ export const Bento4x4 = (props: Bento4x4Props) => {
           if (emblaApi) {
             emblaApi.scrollTo(0)
             setSelectedIndex(0)
-            // Recompute scroll snaps after resize
             setScrollSnaps(emblaApi.scrollSnapList())
           }
         }
@@ -172,7 +153,6 @@ export const Bento4x4 = (props: Bento4x4Props) => {
   useEffect(() => {
     if (!emblaApi) return
 
-    // Initialize scroll snaps
     setScrollSnaps(emblaApi.scrollSnapList())
     emblaApi.on('select', onSelect)
     emblaApi.on('reInit', () => {
@@ -194,7 +174,8 @@ export const Bento4x4 = (props: Bento4x4Props) => {
   return (
     <div ref={containerRef}>
       <style dangerouslySetInnerHTML={{ __html: glowKeyframes }} />
-      <div className="container-spacing !pb-0 md:!pb-24">
+      {/* Desktop Layout */}
+      <div className="container-spacing !pb-0 md:!pb-24 hidden md:block">
         <div className="container-wrapper">
           <h2 className="text-3xl md:text-6xl font-bold text-heading pb-10">{props.title}</h2>
           <div className="grid md:grid-cols-2 grid-rows-3 gap-2 md:gap-8 md:grid">
@@ -231,70 +212,81 @@ export const Bento4x4 = (props: Bento4x4Props) => {
           </div>
         </div>
       </div>
-      <div className="md:hidden pb-24 relative">
-        <div className="embla overflow-hidden" ref={emblaRef}>
-          <div className="flex embla__container">
-            {props.cards.map((card, index) => (
-              <div key={index} className="px-8 h-full embla__slide shrink-0 w-[100vw]">
-                <HomeDocumentsItem
-                  key={index}
-                  {...card}
-                  className="!h-full min-h-[400px] mb-8 shadow-lg"
-                  link={card.link}
-                />
-              </div>
-            ))}
+
+      {/* Mobile Layout */}
+      <div className="block md:hidden">
+        <div className="container-spacing !pb-0">
+          <div className="container-wrapper">
+            <h2 className="text-3xl md:text-6xl font-bold text-heading pb-10">{props.title}</h2>
           </div>
         </div>
-
-        {/* Navigation Buttons and Dots Container */}
-        <div className="flex items-center justify-center gap-8 mt-6">
-          {/* Previous Button */}
-          <div
-            className={cn(
-              'transition-all duration-300',
-              canScrollPrev
-                ? 'opacity-100 translate-x-0'
-                : 'opacity-0 -translate-x-4 pointer-events-none',
-            )}
-          >
-            <button
-              className="bg-white rounded-full p-2 shadow-lg hover:bg-gray-50 transition-colors"
-              onClick={scrollPrev}
-            >
-              <ChevronLeft className="w-6 h-6 text-shark-500" />
-            </button>
+        <div className="pb-24 relative">
+          <div className="embla overflow-hidden" ref={emblaRef}>
+            <div className="flex embla__container">
+              {props.cards.map((card, index) => (
+                <div key={index} className="px-8 h-full embla__slide shrink-0 w-[100vw]">
+                  <HomeDocumentsItem
+                    key={index}
+                    {...card}
+                    className="!h-full min-h-[400px] mb-8 shadow-lg"
+                    link={card.link}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Dot Indicators */}
-          <div className="flex justify-center items-center gap-2">
-            {scrollSnaps.map((_, index) => (
+          {/* Navigation Buttons and Dots Container */}
+          <div className="flex items-center justify-center gap-8 mt-6">
+            {/* Previous Button */}
+            <div
+              className={cn(
+                'transition-all duration-300',
+                canScrollPrev
+                  ? 'opacity-100 translate-x-0'
+                  : 'opacity-0 -translate-x-4 pointer-events-none',
+              )}
+            >
               <button
-                key={index}
-                className={cn(
-                  'w-2 h-2 rounded-full transition-all duration-300',
-                  index === selectedIndex ? 'bg-jaffa-400 w-6' : 'bg-shark-200 hover:bg-shark-300',
-                )}
-                onClick={() => scrollTo(index)}
-              />
-            ))}
-          </div>
+                className="bg-white rounded-full p-2 shadow-lg hover:bg-gray-50 transition-colors"
+                onClick={scrollPrev}
+              >
+                <ChevronLeft className="w-6 h-6 text-shark-500" />
+              </button>
+            </div>
 
-          {/* Next Button */}
-          <div
-            className={cn(
-              'transition-all duration-300',
-              canScrollNext
-                ? 'opacity-100 translate-x-0'
-                : 'opacity-0 translate-x-4 pointer-events-none',
-            )}
-          >
-            <button
-              className="bg-white rounded-full p-2 shadow-lg hover:bg-gray-50 transition-colors"
-              onClick={scrollNext}
+            {/* Dot Indicators */}
+            <div className="flex justify-center items-center gap-2">
+              {scrollSnaps.map((_, index) => (
+                <button
+                  key={index}
+                  className={cn(
+                    'w-2 h-2 rounded-full transition-all duration-300',
+                    index === selectedIndex
+                      ? 'bg-jaffa-400 w-6'
+                      : 'bg-shark-200 hover:bg-shark-300',
+                  )}
+                  onClick={() => scrollTo(index)}
+                />
+              ))}
+            </div>
+
+            {/* Next Button */}
+            <div
+              className={cn(
+                'transition-all duration-300',
+                canScrollNext
+                  ? 'opacity-100 translate-x-0'
+                  : 'opacity-0 translate-x-4 pointer-events-none',
+              )}
             >
-              <ChevronRight className="w-6 h-6 text-shark-500" />
-            </button>
+              <button
+                className="bg-white rounded-full p-2 shadow-lg hover:bg-gray-50 transition-colors"
+                onClick={scrollNext}
+              >
+                <ChevronRight className="w-6 h-6 text-shark-500" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
