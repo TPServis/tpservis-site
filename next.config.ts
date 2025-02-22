@@ -20,6 +20,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
       },
       {
+        hostname: 'o0z4coknhf.ufs.sh',
+        protocol: 'https',
+      },
+      {
         hostname: 'localhost',
         protocol: 'http',
       },

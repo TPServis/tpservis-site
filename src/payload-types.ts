@@ -130,6 +130,7 @@ export interface Page {
         blockName?: string | null;
         blockType: 'tourSearchModule';
       }
+    | ExternalMedia
   )[];
   meta?: {
     title?: string | null;
@@ -874,6 +875,7 @@ export interface ServicesList {
           | (
               | PlusMinus
               | DownloadableFiles
+              | ExternalMedia
               | {
                   description: {
                     root: {
@@ -987,6 +989,30 @@ export interface DownloadableFiles {
   id?: string | null;
   blockName?: string | null;
   blockType: 'downloadableFiles';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ExternalMedia".
+ */
+export interface ExternalMedia {
+  url: string;
+  /**
+   * Describe the image for accessibility
+   */
+  alt?: string | null;
+  priority?: boolean | null;
+  /**
+   * Add custom Tailwind classes to the image
+   */
+  className?: string | null;
+  /**
+   * Quality of the image
+   */
+  quality?: number | null;
+  size?: ('small' | 'medium' | 'large' | 'full') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'externalMedia';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1327,6 +1353,7 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        externalMedia?: T | ExternalMediaSelect<T>;
       };
   meta?:
     | T
@@ -1600,6 +1627,7 @@ export interface ServicesListSelect<T extends boolean = true> {
           | {
               plusMinus?: T | PlusMinusSelect<T>;
               downloadableFiles?: T | DownloadableFilesSelect<T>;
+              externalMedia?: T | ExternalMediaSelect<T>;
               contentBlock?:
                 | T
                 | {
@@ -1665,6 +1693,20 @@ export interface DownloadableFilesSelect<T extends boolean = true> {
       };
   withLateralSpacing?: T;
   buttonLabel?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ExternalMedia_select".
+ */
+export interface ExternalMediaSelect<T extends boolean = true> {
+  url?: T;
+  alt?: T;
+  priority?: T;
+  className?: T;
+  quality?: T;
+  size?: T;
   id?: T;
   blockName?: T;
 }
