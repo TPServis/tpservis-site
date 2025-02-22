@@ -42,18 +42,22 @@ export const useCarousel = (options: EmblaOptionsType = {}) => {
         updateCarouselState()
       }
     }
-  }, [emblaApi, state.isMobile, updateCarouselState])
+  }, [state.isMobile, updateCarouselState])
 
   useEffect(() => {
-    if (!containerRef.current) return
+    const element = containerRef.current
+    if (!element) return
 
     const observer = new ResizeObserver(() => {
       handleResize()
     })
 
-    observer.observe(containerRef.current)
+    observer.observe(element)
+
+    handleResize()
+
     return () => observer.disconnect()
-  }, [handleResize]) // Now handleResize has stable dependencies
+  }, [handleResize])
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return
@@ -66,31 +70,26 @@ export const useCarousel = (options: EmblaOptionsType = {}) => {
     }))
   }, [emblaApi])
 
-  useEffect(() => {
+  const handleReInit = () => {
     if (!emblaApi) return
-
     setState((prev) => ({
       ...prev,
       scrollSnaps: emblaApi.scrollSnapList(),
     }))
+  }
+
+  useEffect(() => {
+    if (!emblaApi) return
 
     emblaApi.on('select', onSelect)
-    emblaApi.on('reInit', () => {
-      setState((prev) => ({
-        ...prev,
-        scrollSnaps: emblaApi.scrollSnapList(),
-      }))
-    })
+    emblaApi.on('reInit', handleReInit)
+
     onSelect()
+    handleReInit()
 
     return () => {
       emblaApi.off('select', onSelect)
-      emblaApi.off('reInit', () => {
-        setState((prev) => ({
-          ...prev,
-          scrollSnaps: emblaApi.scrollSnapList(),
-        }))
-      })
+      emblaApi.off('reInit', handleReInit)
     }
   }, [emblaApi, onSelect])
 
