@@ -8,6 +8,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 import { cn } from '@/utilities/cn'
 
 import RichText from '@/components/RichText'
+import { useCarousel } from '@/hooks/useCarousel'
 
 interface HorizontalIconsGroupProps {
   pretitle: string
@@ -20,58 +21,18 @@ interface HorizontalIconsGroupProps {
 }
 
 export const HorizontalIconsGroup = (props: HorizontalIconsGroupProps) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel()
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const [scrollSnaps, setScrollSnaps] = useState<number[]>([])
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [isMobile, setIsMobile] = useState(false)
-  const [canScrollPrev, setCanScrollPrev] = useState(false)
-  const [canScrollNext, setCanScrollNext] = useState(false)
-
-  const scrollTo = useCallback((index: number) => emblaApi && emblaApi.scrollTo(index), [emblaApi])
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return
-    setSelectedIndex(emblaApi.selectedScrollSnap())
-    setCanScrollPrev(emblaApi.canScrollPrev())
-    setCanScrollNext(emblaApi.canScrollNext())
-  }, [emblaApi])
-
-  // Reset carousel when switching between mobile and desktop
-  useEffect(() => {
-    if (!containerRef.current) return
-
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const isCurrentlyMobile = window.matchMedia('(max-width: 768px)').matches
-        if (isCurrentlyMobile !== isMobile) {
-          setIsMobile(isCurrentlyMobile)
-          if (emblaApi) {
-            emblaApi.scrollTo(0)
-            setSelectedIndex(0)
-          }
-        }
-      }
-    })
-
-    observer.observe(containerRef.current)
-    return () => observer.disconnect()
-  }, [emblaApi, isMobile])
-
-  useEffect(() => {
-    if (!emblaApi) return
-
-    setScrollSnaps(emblaApi.scrollSnapList())
-    emblaApi.on('select', onSelect)
-    onSelect()
-
-    return () => {
-      emblaApi.off('select', onSelect)
-    }
-  }, [emblaApi, onSelect])
-
-  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi])
-  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi])
+  const {
+    emblaRef,
+    containerRef,
+    selectedIndex,
+    scrollSnaps,
+    canScrollPrev,
+    canScrollNext,
+    isMobile,
+    scrollTo,
+    scrollPrev,
+    scrollNext,
+  } = useCarousel()
 
   return (
     <div ref={containerRef}>

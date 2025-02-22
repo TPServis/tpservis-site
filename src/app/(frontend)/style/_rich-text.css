@@ -1,8 +1,16 @@
+/* Base rich text styles */
 .rich-text {
   @apply text-text-secondary;
 
+  /* Headings */
+  h2,
+  h3,
+  h4 {
+    @apply text-text-heading font-bold;
+  }
+
   h2 {
-    @apply text-3xl font-bold text-text-heading pb-4;
+    @apply text-3xl pb-4;
 
     &:not(:first-of-type) {
       @apply pt-8;
@@ -10,69 +18,136 @@
   }
 
   h3 {
-    @apply text-2xl font-semibold text-text-heading pb-4 pt-8;
+    @apply text-2xl pb-4 pt-8;
   }
 
   h4 {
-    @apply text-xl font-medium text-text-heading pb-4;
+    @apply text-xl pb-4 pt-6;
   }
 
+  /* Text elements */
   p {
-    @apply text-base text-text-secondary leading-normal pb-4;
+    @apply text-base text-text-secondary leading-relaxed pb-4;
   }
 
   strong {
-    @apply text-text-accent;
+    @apply text-text-accent font-semibold;
   }
 
+  /* Links */
   a {
-    @apply text-cta-primary hover:text-cta-primary/80 transition-colors duration-300 underline;
+    @apply text-cta-primary underline;
+    @apply transition-colors duration-200 ease-in-out;
+    @apply hover:text-cta-primary/80 hover:underline-offset-2;
+  }
+
+  /* Lists */
+  ul,
+  ol {
+    @apply pl-10 space-y-2 mb-4;
   }
 
   ul {
-    @apply !list-disc !list-outside pl-10;
-
-    li {
-      @apply pb-4;
-
-      &:has(ul, ol) {
-        @apply mb-0 !list-none;
-      }
-
-      ul,
-      ol {
-        li {
-          @apply pb-2;
-        }
-      }
-    }
+    @apply !list-disc !list-outside;
   }
 
   ol {
-    @apply !list-decimal !list-outside pl-10;
+    @apply !list-decimal !list-outside;
+  }
 
-    li {
-      @apply pb-4;
+  /* List items */
+  li {
+    @apply pb-4;
 
-      &:has(ul, ol) {
-        @apply mb-0 !list-none;
-      }
+    /* Nested lists */
+    &:has(ul, ol) {
+      @apply mb-0 !list-none;
+    }
 
-      ul,
-      ol {
-        li {
-          @apply pb-2;
-        }
+    ul,
+    ol {
+      @apply mt-2;
+
+      li {
+        @apply pb-2;
       }
     }
   }
 
+  /* List markers */
   ul li::marker,
   ol li::marker {
     @apply !text-astral-700 !text-sm;
   }
 
+  /* Blockquotes */
   blockquote {
-    @apply bg-astral-50 p-4 rounded-lg border-l-4 border-astral-400;
+    @apply bg-astral-50 p-6 rounded-lg;
+    @apply border-l-4 border-astral-400;
+    @apply my-6 italic;
+  }
+
+  /* Spacing utilities */
+  * + * {
+    @apply mt-0;
+  }
+
+  /* Code blocks */
+  pre,
+  code {
+    @apply font-mono bg-gray-100 rounded;
+  }
+
+  pre {
+    @apply p-4 overflow-x-auto;
+  }
+
+  code {
+    @apply px-1.5 py-0.5;
+  }
+
+  /* Tables */
+  table {
+    @apply w-full border-collapse mb-4;
+  }
+
+  th,
+  td {
+    @apply border border-gray-200 p-2;
+  }
+
+  th {
+    @apply bg-gray-50 font-semibold;
+  }
+
+  /* Images */
+  img {
+    @apply rounded-lg max-w-full h-auto;
+    @apply my-6;
+  }
+
+  /* Horizontal rule */
+  hr {
+    @apply my-8 border-t border-gray-200;
+  }
+}
+
+/* Dark mode overrides */
+[data-theme='dark'] .rich-text {
+  blockquote {
+    @apply bg-astral-900/20 border-astral-600;
+  }
+
+  pre,
+  code {
+    @apply bg-gray-800;
+  }
+
+  th {
+    @apply bg-gray-800;
+  }
+
+  hr {
+    @apply border-gray-700;
   }
 }
