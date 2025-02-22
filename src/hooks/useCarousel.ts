@@ -11,13 +11,14 @@ interface CarouselState {
   isMobile: boolean
 }
 
-/**
- * The default mobile breakpoint for the carousel.
- *
- * This constant defines the width at which the carousel is considered to be on a mobile device.
- * It is used to determine if the carousel should be displayed in a mobile-friendly mode.
- */
 const MOBILE_WIDTH = 768
+const INITIAL_CAROUSEL_STATE: CarouselState = {
+  selectedIndex: 0,
+  scrollSnaps: [],
+  canScrollPrev: false,
+  canScrollNext: false,
+  isMobile: false,
+}
 
 interface UseCarouselOptions extends EmblaOptionsType {
   mobileBreakpoint?: number
@@ -36,13 +37,7 @@ export const useCarousel = (options: UseCarouselOptions = {}) => {
   const { mobileBreakpoint = MOBILE_WIDTH, ...emblaOptions } = options
   const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions)
   const containerRef = useRef<HTMLDivElement>(null)
-  const [state, setState] = useState<CarouselState>({
-    selectedIndex: 0,
-    scrollSnaps: [],
-    canScrollPrev: false,
-    canScrollNext: false,
-    isMobile: false,
-  })
+  const [state, setState] = useState<CarouselState>(INITIAL_CAROUSEL_STATE)
 
   /**
    * Resets the carousel to a specific index.
@@ -56,14 +51,23 @@ export const useCarousel = (options: UseCarouselOptions = {}) => {
     (resetIndex: number = 0) => {
       if (!emblaApi) return
 
-      emblaApi.scrollTo(resetIndex)
-      setState((prev) => ({
-        ...prev,
-        selectedIndex: resetIndex,
-        scrollSnaps: emblaApi.scrollSnapList(),
-        canScrollPrev: emblaApi.canScrollPrev(),
-        canScrollNext: emblaApi.canScrollNext(),
-      }))
+      try {
+        if (resetIndex < 0) {
+          console.warn('resetIndex is less than 0, resetting to 0')
+          resetIndex = 0
+        }
+
+        emblaApi.scrollTo(resetIndex)
+        setState((prev) => ({
+          ...prev,
+          selectedIndex: resetIndex,
+          scrollSnaps: emblaApi.scrollSnapList(),
+          canScrollPrev: emblaApi.canScrollPrev(),
+          canScrollNext: emblaApi.canScrollNext(),
+        }))
+      } catch (error) {
+        console.error('Error resetting carousel state:', error)
+      }
     },
     [emblaApi],
   )
@@ -176,9 +180,20 @@ export const useCarousel = (options: UseCarouselOptions = {}) => {
    */
   const scrollTo = useCallback(
     (index: number) => {
-      if (index < 0 || index >= state.scrollSnaps.length) return
+      if (index < 0 || index >= state.scrollSnaps.length) {
+        console.warn(
+          `index is out of range, index: ${index}, scrollSnaps: ${state.scrollSnaps.length}`,
+        )
+        return
+      }
+
       if (!emblaApi) return
-      emblaApi.scrollTo(index)
+
+      try {
+        emblaApi.scrollTo(index)
+      } catch (error) {
+        console.error('Error scrolling to index:', error)
+      }
     },
     [emblaApi, state.scrollSnaps],
   )
@@ -188,14 +203,28 @@ export const useCarousel = (options: UseCarouselOptions = {}) => {
    *
    * This function scrolls the carousel to the previous slide if the carousel API is available.
    */
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi])
+  const scrollPrev = useCallback(() => {
+    if (!emblaApi) return
+    try {
+      emblaApi.scrollPrev()
+    } catch (error) {
+      console.error('Error scrolling to previous slide:', error)
+    }
+  }, [emblaApi])
 
   /**
    * Scrolls to the next slide in the carousel.
    *
    * This function scrolls the carousel to the next slide if the carousel API is available.
    */
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi])
+  const scrollNext = useCallback(() => {
+    if (!emblaApi) return
+    try {
+      emblaApi.scrollNext()
+    } catch (error) {
+      console.error('Error scrolling to next slide:', error)
+    }
+  }, [emblaApi])
 
   return {
     emblaRef,
