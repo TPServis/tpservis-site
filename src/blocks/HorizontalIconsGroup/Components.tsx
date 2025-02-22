@@ -49,6 +49,10 @@ export const HorizontalIconsGroup = (props: HorizontalIconsGroupProps) => {
           if (emblaApi) {
             emblaApi.scrollTo(0)
             setSelectedIndex(0)
+            setScrollSnaps(emblaApi.scrollSnapList())
+            // Add these lines to update the scroll buttons visibility
+            setCanScrollPrev(emblaApi.canScrollPrev())
+            setCanScrollNext(emblaApi.canScrollNext())
           }
         }
       }
@@ -63,10 +67,16 @@ export const HorizontalIconsGroup = (props: HorizontalIconsGroupProps) => {
 
     setScrollSnaps(emblaApi.scrollSnapList())
     emblaApi.on('select', onSelect)
+    emblaApi.on('reInit', () => {
+      setScrollSnaps(emblaApi.scrollSnapList())
+    })
     onSelect()
 
     return () => {
       emblaApi.off('select', onSelect)
+      emblaApi.off('reInit', () => {
+        setScrollSnaps(emblaApi.scrollSnapList())
+      })
     }
   }, [emblaApi, onSelect])
 

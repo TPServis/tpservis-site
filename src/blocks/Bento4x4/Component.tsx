@@ -141,6 +141,9 @@ export const Bento4x4 = (props: Bento4x4Props) => {
             emblaApi.scrollTo(0)
             setSelectedIndex(0)
             setScrollSnaps(emblaApi.scrollSnapList())
+            // Add these lines to update the scroll buttons visibility
+            setCanScrollPrev(emblaApi.canScrollPrev())
+            setCanScrollNext(emblaApi.canScrollNext())
           }
         }
       }
