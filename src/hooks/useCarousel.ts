@@ -1,6 +1,6 @@
+import { useCallback, useEffect, useState, useRef } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import type { EmblaOptionsType } from 'embla-carousel'
-import { useCallback, useEffect, useState, useRef } from 'react'
 
 interface CarouselState {
   selectedIndex: number
@@ -21,6 +21,40 @@ export const useCarousel = (options: EmblaOptionsType = {}) => {
     isMobile: false,
   })
 
+  const updateCarouselState = useCallback(() => {
+    if (!emblaApi) return
+
+    emblaApi.scrollTo(0)
+    setState((prev) => ({
+      ...prev,
+      selectedIndex: 0,
+      scrollSnaps: emblaApi.scrollSnapList(),
+      canScrollPrev: emblaApi.canScrollPrev(),
+      canScrollNext: emblaApi.canScrollNext(),
+    }))
+  }, [emblaApi])
+
+  const handleResize = useCallback(() => {
+    const isCurrentlyMobile = window.matchMedia('(max-width: 768px)').matches
+    if (isCurrentlyMobile !== state.isMobile) {
+      setState((prev) => ({ ...prev, isMobile: isCurrentlyMobile }))
+      if (emblaApi) {
+        updateCarouselState()
+      }
+    }
+  }, [emblaApi, state.isMobile, updateCarouselState])
+
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    const observer = new ResizeObserver(() => {
+      handleResize()
+    })
+
+    observer.observe(containerRef.current)
+    return () => observer.disconnect()
+  }, [handleResize]) // Now handleResize has stable dependencies
+
   const onSelect = useCallback(() => {
     if (!emblaApi) return
     setState((prev) => ({
@@ -31,32 +65,6 @@ export const useCarousel = (options: EmblaOptionsType = {}) => {
       canScrollNext: emblaApi.canScrollNext(),
     }))
   }, [emblaApi])
-
-  useEffect(() => {
-    if (!containerRef.current) return
-
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const isCurrentlyMobile = window.matchMedia('(max-width: 768px)').matches
-        if (isCurrentlyMobile !== state.isMobile) {
-          setState((prev) => ({ ...prev, isMobile: isCurrentlyMobile }))
-          if (emblaApi) {
-            emblaApi.scrollTo(0)
-            setState((prev) => ({
-              ...prev,
-              selectedIndex: 0,
-              scrollSnaps: emblaApi.scrollSnapList(),
-              canScrollPrev: emblaApi.canScrollPrev(),
-              canScrollNext: emblaApi.canScrollNext(),
-            }))
-          }
-        }
-      }
-    })
-
-    observer.observe(containerRef.current)
-    return () => observer.disconnect()
-  }, [emblaApi, state.isMobile])
 
   useEffect(() => {
     if (!emblaApi) return
