@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, useRef } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import type { EmblaOptionsType } from 'embla-carousel'
+import debounce from 'lodash/debounce'
 
 interface CarouselState {
   selectedIndex: number
@@ -9,6 +10,8 @@ interface CarouselState {
   canScrollNext: boolean
   isMobile: boolean
 }
+
+const MOBILE_WIDTH = 768
 
 export const useCarousel = (options: EmblaOptionsType = {}) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
@@ -21,42 +24,50 @@ export const useCarousel = (options: EmblaOptionsType = {}) => {
     isMobile: false,
   })
 
-  const updateCarouselState = useCallback(() => {
-    if (!emblaApi) return
+  const resetCarouselState = useCallback(
+    (resetIndex: number = 0) => {
+      if (!emblaApi) return
 
-    emblaApi.scrollTo(0)
-    setState((prev) => ({
-      ...prev,
-      selectedIndex: 0,
-      scrollSnaps: emblaApi.scrollSnapList(),
-      canScrollPrev: emblaApi.canScrollPrev(),
-      canScrollNext: emblaApi.canScrollNext(),
-    }))
-  }, [emblaApi])
+      emblaApi.scrollTo(resetIndex)
+      setState((prev) => ({
+        ...prev,
+        selectedIndex: resetIndex,
+        scrollSnaps: emblaApi.scrollSnapList(),
+        canScrollPrev: emblaApi.canScrollPrev(),
+        canScrollNext: emblaApi.canScrollNext(),
+      }))
+    },
+    [emblaApi],
+  )
 
   const handleResize = useCallback(() => {
-    const isCurrentlyMobile = window.matchMedia('(max-width: 768px)').matches
+    const isCurrentlyMobile = window.matchMedia(`(max-width: ${MOBILE_WIDTH}px)`).matches
     if (isCurrentlyMobile !== state.isMobile) {
       setState((prev) => ({ ...prev, isMobile: isCurrentlyMobile }))
       if (emblaApi) {
-        updateCarouselState()
+        resetCarouselState()
       }
     }
-  }, [state.isMobile, updateCarouselState])
+  }, [state.isMobile, resetCarouselState])
 
   useEffect(() => {
     const element = containerRef.current
     if (!element) return
 
+    const debouncedHandleResize = debounce(handleResize, 250)
+
     const observer = new ResizeObserver(() => {
-      handleResize()
+      debouncedHandleResize()
     })
 
     observer.observe(element)
 
     handleResize()
 
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      debouncedHandleResize.cancel()
+    }
   }, [handleResize])
 
   const onSelect = useCallback(() => {
@@ -70,13 +81,13 @@ export const useCarousel = (options: EmblaOptionsType = {}) => {
     }))
   }, [emblaApi])
 
-  const handleReInit = () => {
+  const handleReInit = useCallback(() => {
     if (!emblaApi) return
     setState((prev) => ({
       ...prev,
       scrollSnaps: emblaApi.scrollSnapList(),
     }))
-  }
+  }, [emblaApi])
 
   useEffect(() => {
     if (!emblaApi) return
@@ -91,9 +102,16 @@ export const useCarousel = (options: EmblaOptionsType = {}) => {
       emblaApi.off('select', onSelect)
       emblaApi.off('reInit', handleReInit)
     }
-  }, [emblaApi, onSelect])
+  }, [emblaApi, onSelect, handleReInit])
 
-  const scrollTo = useCallback((index: number) => emblaApi && emblaApi.scrollTo(index), [emblaApi])
+  const scrollTo = useCallback(
+    (index: number) => {
+      if (index < 0 || index >= state.scrollSnaps.length) return
+      if (!emblaApi) return
+      emblaApi.scrollTo(index)
+    },
+    [emblaApi, state.scrollSnaps],
+  )
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi])
 
