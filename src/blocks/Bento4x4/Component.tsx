@@ -9,7 +9,7 @@ import type { Media as MediaType, Page } from '@/payload-types'
 import { cn } from '@/utilities/cn'
 
 import RichText from '@/components/RichText'
-
+import { useCarousel } from '@/hooks/useCarousel'
 const glowKeyframes = `
   @keyframes glow {
     0% {
@@ -59,15 +59,9 @@ const HomeDocumentsItem = (props: HomeDocumentsItemProps) => {
           resource={props.image}
           className="h-full object-cover group-hover:scale-110 transition-all duration-300 *:w-full *:h-auto *:object-cover *:object-center"
           size="250px"
+          priority={false}
+          quality={75}
         />
-
-        <div className="h-full w-full overflow-hidden">
-          <Media
-            resource={props.image}
-            className="h-full object-cover group-hover:scale-110 transition-all duration-300 *:w-full *:h-auto *:object-cover *:object-center"
-            size="250px"
-          />
-        </div>
       </div>
       <h3 className="text-2xl font-bold text-astral-50 pb-2">{props.title}</h3>
       <RichText
@@ -99,6 +93,8 @@ const HomeDocumentsItemSmall = (props: HomeDocumentsItemProps) => {
           resource={props.image}
           className="h-full object-cover group-hover:scale-110 transition-all duration-300 *:w-auto *:h-full *:object-cover *:object-center"
           size="150px"
+          priority={false}
+          quality={75}
         />
       </div>
     </Link>
@@ -106,73 +102,22 @@ const HomeDocumentsItemSmall = (props: HomeDocumentsItemProps) => {
 }
 
 export const Bento4x4 = (props: Bento4x4Props) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
+  const {
+    emblaRef,
+    containerRef,
+    selectedIndex,
+    scrollSnaps,
+    canScrollPrev,
+    canScrollNext,
+    isMobile,
+    scrollTo,
+    scrollPrev,
+    scrollNext,
+  } = useCarousel({
     align: 'start',
     containScroll: 'trimSnaps',
     dragFree: false,
   })
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const [scrollSnaps, setScrollSnaps] = useState<number[]>([])
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [isMobile, setIsMobile] = useState(false)
-  const [canScrollPrev, setCanScrollPrev] = useState(false)
-  const [canScrollNext, setCanScrollNext] = useState(false)
-  const prevIndex = useRef<number>(0)
-
-  const scrollTo = useCallback((index: number) => emblaApi && emblaApi.scrollTo(index), [emblaApi])
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return
-    prevIndex.current = selectedIndex
-    setSelectedIndex(emblaApi.selectedScrollSnap())
-    setCanScrollPrev(emblaApi.canScrollPrev())
-    setCanScrollNext(emblaApi.canScrollNext())
-  }, [emblaApi, selectedIndex])
-
-  useEffect(() => {
-    if (!containerRef.current) return
-
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const isCurrentlyMobile = window.matchMedia('(max-width: 768px)').matches
-        if (isCurrentlyMobile !== isMobile) {
-          setIsMobile(isCurrentlyMobile)
-          if (emblaApi) {
-            emblaApi.scrollTo(0)
-            setSelectedIndex(0)
-            setScrollSnaps(emblaApi.scrollSnapList())
-            // Add these lines to update the scroll buttons visibility
-            setCanScrollPrev(emblaApi.canScrollPrev())
-            setCanScrollNext(emblaApi.canScrollNext())
-          }
-        }
-      }
-    })
-
-    observer.observe(containerRef.current)
-    return () => observer.disconnect()
-  }, [emblaApi, isMobile])
-
-  useEffect(() => {
-    if (!emblaApi) return
-
-    setScrollSnaps(emblaApi.scrollSnapList())
-    emblaApi.on('select', onSelect)
-    emblaApi.on('reInit', () => {
-      setScrollSnaps(emblaApi.scrollSnapList())
-    })
-    onSelect()
-
-    return () => {
-      emblaApi.off('select', onSelect)
-      emblaApi.off('reInit', () => {
-        setScrollSnaps(emblaApi.scrollSnapList())
-      })
-    }
-  }, [emblaApi, onSelect])
-
-  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi])
-  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi])
 
   return (
     <div ref={containerRef}>
