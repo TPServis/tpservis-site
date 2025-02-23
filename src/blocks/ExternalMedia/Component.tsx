@@ -10,11 +10,12 @@ export type ExternalMediaType = {
   priority?: boolean
   quality?: number
   blockType: 'externalMedia'
-  aspectRatio?: '1/1' | '16/9' | '9/16' | '4/3' | '3/4' | '1/2' | '2/1' | 'custom' | any
+  aspectRatio?: '1/1' | '16/9' | '9/16' | '4/3' | '3/4' | '1/2' | '2/1' | 'custom'
   customAspectRatio?: string
 }
 
 const DEFAULT_IMAGE_STYLING = 'mx-auto rounded-2xl relative overflow-hidden'
+const DEFAULT_IMAGE_ASPECT_RATIO = '16/9'
 
 const containerVariants = tv({
   base: DEFAULT_IMAGE_STYLING,
@@ -31,6 +32,22 @@ const containerVariants = tv({
   },
 })
 
+const validateAspectRatio = (ratio: string): { width: number; height: number } | null => {
+  if (!ratio) return null
+
+  const parts = ratio.trim().split('/')
+  if (parts.length !== 2) return null
+
+  const [width, height] = parts.map((part) => {
+    const num = parseInt(part.trim(), 10)
+    return Number.isInteger(num) && num > 0 ? num : null
+  })
+
+  if (!width || !height) return null
+
+  return { width, height }
+}
+
 export const ExternalMedia: React.FC<ExternalMediaType> = (props) => {
   const {
     url,
@@ -39,7 +56,7 @@ export const ExternalMedia: React.FC<ExternalMediaType> = (props) => {
     className,
     priority = true,
     quality = 75,
-    aspectRatio = '16/9',
+    aspectRatio = DEFAULT_IMAGE_ASPECT_RATIO,
     customAspectRatio,
   } = props
 
@@ -56,32 +73,25 @@ export const ExternalMedia: React.FC<ExternalMediaType> = (props) => {
   const relativeSize =
     size === 'small' ? '400px' : size === 'medium' ? '800px' : size === 'large' ? '1200px' : '100vw'
 
-  let aspectRatioStyle = { aspectRatio: '16/9' }
+  let aspectRatioStyle = { aspectRatio: DEFAULT_IMAGE_ASPECT_RATIO }
 
   if (aspectRatio === 'custom') {
     if (!customAspectRatio) {
-      throw new Error('Custom aspect ratio is required')
+      throw new Error('Custom aspect ratio is required when aspectRatio is set to "custom"')
+    }
+
+    const validRatio = validateAspectRatio(customAspectRatio)
+
+    if (!validRatio) {
+      console.error(
+        `Invalid aspect ratio "${customAspectRatio}". Expected format: "width/height" with positive integers. Defaulting to ${DEFAULT_IMAGE_ASPECT_RATIO}`,
+      )
+      aspectRatioStyle = { aspectRatio: DEFAULT_IMAGE_ASPECT_RATIO }
     } else {
-      try {
-        const ratio = customAspectRatio.split('/')
-        if (
-          ratio.length !== 2 ||
-          !Number.isInteger(parseInt(ratio[0])) ||
-          !Number.isInteger(parseInt(ratio[1]))
-        ) {
-          throw new Error('Invalid custom aspect ratio')
-        }
-        aspectRatioStyle = {
-          aspectRatio: `${ratio[0]}/${ratio[1]}`,
-        }
-      } catch (error) {
-        throw new Error('Invalid custom aspect ratio')
-      }
+      aspectRatioStyle = { aspectRatio: `${validRatio.width}/${validRatio.height}` }
     }
   } else {
-    aspectRatioStyle = {
-      aspectRatio: aspectRatio,
-    }
+    aspectRatioStyle = { aspectRatio }
   }
 
   const containerClassName = containerVariants({ size, className })

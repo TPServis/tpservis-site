@@ -58,8 +58,29 @@ export const ExternalMedia: Block = {
       name: 'customAspectRatio',
       type: 'text',
       admin: {
-        description: 'Enter a custom aspect ratio',
+        description: 'Enter a custom aspect ratio (e.g. 16/9)',
         condition: (data, siblingData) => siblingData?.aspectRatio === 'custom',
+        placeholder: '16/9',
+      },
+      validate: (value) => {
+        if (!value) return true // Optional unless aspectRatio is 'custom'
+
+        const parts = value.trim().split('/')
+        if (parts.length !== 2) {
+          return 'Aspect ratio must be in format "width/height" (e.g. 16/9)'
+        }
+
+        const [width, height] = parts.map((part) => parseInt(part.trim(), 10))
+
+        if (!Number.isInteger(width) || width <= 0) {
+          return 'Width must be a positive integer'
+        }
+
+        if (!Number.isInteger(height) || height <= 0) {
+          return 'Height must be a positive integer'
+        }
+
+        return true
       },
     },
     {
@@ -67,9 +88,9 @@ export const ExternalMedia: Block = {
       type: 'select',
       defaultValue: 'full',
       options: [
-        { label: 'Small', value: 'small' },
-        { label: 'Medium', value: 'medium' },
-        { label: 'Large', value: 'large' },
+        { label: 'Small (400px)', value: 'small' },
+        { label: 'Medium (800px)', value: 'medium' },
+        { label: 'Large (1200px)', value: 'large' },
         { label: 'Full', value: 'full' },
       ],
     },

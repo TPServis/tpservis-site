@@ -1011,7 +1011,7 @@ export interface ExternalMedia {
   quality?: number | null;
   aspectRatio?: ('1/1' | '16/9' | '9/16' | '4/3' | '3/4' | '1/2' | '2/1' | 'custom') | null;
   /**
-   * Enter a custom aspect ratio
+   * Enter a custom aspect ratio (e.g. 16/9)
    */
   customAspectRatio?: string | null;
   size?: ('small' | 'medium' | 'large' | 'full') | null;
