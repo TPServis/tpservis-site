@@ -82,7 +82,11 @@ export const EditorialExpandedListComponent = (props: EditorialExpandedListProps
                         </div>
                       )
                     case 'externalMedia':
-                      return <ExternalMedia {...element} />
+                      return (
+                        <div key={idx}>
+                          <ExternalMedia {...element} />
+                        </div>
+                      )
                     default:
                       return null
                   }
