@@ -131,23 +131,3 @@
     @apply my-8 border-t border-gray-200;
   }
 }
-
-/* Dark mode overrides */
-[data-theme='dark'] .rich-text {
-  blockquote {
-    @apply bg-astral-900/20 border-astral-600;
-  }
-
-  pre,
-  code {
-    @apply bg-gray-800;
-  }
-
-  th {
-    @apply bg-gray-800;
-  }
-
-  hr {
-    @apply border-gray-700;
-  }
-}
