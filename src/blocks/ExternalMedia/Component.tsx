@@ -12,13 +12,14 @@ export type ExternalMediaType = {
   blockType: 'externalMedia'
   aspectRatio?: '1/1' | '16/9' | '9/16' | '4/3' | '3/4' | '1/2' | '2/1' | 'custom'
   customAspectRatio?: string
+  container?: 'none' | 'horizontal' | 'vertical' | 'full'
 }
 
-const DEFAULT_IMAGE_STYLING = 'mx-auto rounded-2xl relative overflow-hidden'
+const DEFAULT_IMAGE_STYLING = 'mx-auto rounded-2xl relative overflow-hidden h-full max-w-full'
 const DEFAULT_IMAGE_ASPECT_RATIO = '16/9'
 
 const containerVariants = tv({
-  base: DEFAULT_IMAGE_STYLING,
+  base: '',
   variants: {
     size: {
       small: 'max-w-[400px]',
@@ -26,9 +27,27 @@ const containerVariants = tv({
       large: 'max-w-[1200px]',
       full: 'w-full',
     },
+    container: {
+      none: '',
+      horizontal: 'container-spacing !py-0',
+      vertical: 'container-spacing !px-0',
+      full: 'container-spacing',
+    },
   },
   defaultVariants: {
     size: 'full',
+  },
+})
+
+const wrapperVariants = tv({
+  base: DEFAULT_IMAGE_STYLING,
+  variants: {
+    container: {
+      none: '',
+      horizontal: 'container-wrapper',
+      vertical: '',
+      full: 'container-wrapper',
+    },
   },
 })
 
@@ -58,6 +77,7 @@ export const ExternalMedia: React.FC<ExternalMediaType> = (props) => {
     quality = 75,
     aspectRatio = DEFAULT_IMAGE_ASPECT_RATIO,
     customAspectRatio,
+    container = 'none',
   } = props
 
   if (!url) {
@@ -94,19 +114,21 @@ export const ExternalMedia: React.FC<ExternalMediaType> = (props) => {
     aspectRatioStyle = { aspectRatio }
   }
 
-  const containerClassName = containerVariants({ size, className })
+  const containerClassName = containerVariants({ size, container })
 
   return (
-    <div className={containerClassName} style={aspectRatioStyle}>
-      <Image
-        src={url}
-        alt={alt}
-        fill
-        sizes={`(max-width: 768px) 100vw, ${relativeSize}`}
-        priority={priority}
-        quality={quality}
-        className="object-cover object-center"
-      />
+    <div className={containerClassName}>
+      <div className={wrapperVariants({ container, className })} style={aspectRatioStyle}>
+        <Image
+          src={url}
+          alt={alt}
+          fill
+          sizes={`(max-width: 768px) 100vw, ${relativeSize}`}
+          priority={priority}
+          quality={quality}
+          className="object-cover object-center"
+        />
+      </div>
     </div>
   )
 }
