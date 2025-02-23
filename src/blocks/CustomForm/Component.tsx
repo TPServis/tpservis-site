@@ -18,7 +18,7 @@ interface CustomFormBlockProps {
 }
 
 const ContactsBlockVariants = tv({
-  base: 'md:col-span-1 md:row-span-1 md:row-start-1',
+  base: 'md:col-span-1 md:row-span-1 md:row-start-1 order-2',
   variants: {
     orderInverted: {
       true: 'md:col-start-3',
@@ -28,7 +28,7 @@ const ContactsBlockVariants = tv({
 })
 
 const FormBlockVariants = tv({
-  base: 'md:col-span-2 md:row-span-1 md:row-start-1',
+  base: 'md:col-span-2 md:row-span-1 md:row-start-1 order-1',
   variants: {
     orderInverted: {
       true: 'md:col-start-1',
@@ -56,7 +56,7 @@ export const CustomForm = async (props: CustomFormBlockProps) => {
               className="rich-text text-pretty"
             />
           </div>
-          <div className="flex flex-col md:grid md:grid-cols-3 md:grid-rows-1 md:gap-10 ">
+          <div className="flex flex-col md:grid md:grid-cols-3 md:grid-rows-1 gap-10 ">
             <div className={ContactsBlockVariants({ orderInverted: props.orderInverted })}>
               <Contacts {...contacts} />
             </div>
