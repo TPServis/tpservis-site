@@ -234,10 +234,10 @@ export const TourSearchModuleComponent = () => {
                                   padding: 0.5rem;
                                   font-size: 16px !important;
                                   color: var(--text-color-accent) !important;
-                                  min-height: 3rem !important;
+                                  min-height: 2.5rem !important;
 
                                   &#region_list {
-                                    min-height: 10rem !important;
+                                    height: 5rem !important;
                                     & > option {
                                       font-size: 14px !important;
                                       color: var(--text-color-secondary) !important;
@@ -365,11 +365,33 @@ export const TourSearchModuleComponent = () => {
                               height: auto !important;
 
                               & label {
-                                font-size: 16px !important;
-                                font-weight: 600 !important;
-                                color: var(--color-astral-500) !important;
+                                margin: 0 !important;
                               }
+
+                              & .txt {
+                                width: 0px !important;
+                                margin: 0 !important;
+                                margin-top: -22px !important;
+                              }
+
                               & .date-select {
+                                width: 100% !important;
+                                display: flex !important;
+                                height: auto !important;
+                                padding: 0 !important;
+                                padding-top: 1.5rem !important;
+                                gap: 0rem !important;
+
+                                & input[type='text'] {
+                                  width: 100% !important;
+                                  max-width: none !important;
+                                  margin: 0 !important;
+                                  margin-right: 0.5rem !important;
+                                }
+
+                                & .unit {
+                                  max-width: 75px !important;
+                                }
                               }
                             }
                           }
@@ -381,6 +403,36 @@ export const TourSearchModuleComponent = () => {
                             gap: 0.5rem !important;
                             height: auto !important;
                             padding: 0 !important;
+
+                            & label {
+                              margin: 0 !important;
+                            }
+
+                            & .txt {
+                              width: 0px !important;
+                              margin: 0 !important;
+                              margin-top: -22px !important;
+                            }
+
+                            & .date-select {
+                              width: 100% !important;
+                              display: flex !important;
+                              height: auto !important;
+                              padding: 0 !important;
+                              padding-top: 1.5rem !important;
+                              gap: 0rem !important;
+
+                              & input[type='text'] {
+                                width: 100% !important;
+                                max-width: none !important;
+                                margin: 0 !important;
+                                margin-right: 0.5rem !important;
+                              }
+
+                              & .unit {
+                                max-width: 75px !important;
+                              }
+                            }
                           }
 
                           & .itt_price {
@@ -424,7 +476,7 @@ export const TourSearchModuleComponent = () => {
 
                           & .fly_from_box {
                             padding: 0 !important;
-                            margin-top: 3rem !important;
+                            margin-top: 0rem !important;
                           }
 
                           & .pager-sub {
@@ -561,7 +613,7 @@ export const TourSearchModuleComponent = () => {
               border-radius: 0.5rem;
               font-size: 16px !important;
               color: var(--text-color-accent) !important;
-              min-height: 3rem !important;
+              min-height: 2.5rem !important;
               padding: 0.5rem !important;
               background-color: var(--color-astral-100) !important;
               border-style: solid !important;
@@ -591,7 +643,7 @@ export const TourSearchModuleComponent = () => {
               font-size: 16px !important;
               color: var(--text-color-accent) !important;
               font-weight: 600 !important;
-              min-height: 3rem !important;
+              min-height: 2.5rem !important;
               background-color: var(--color-astral-100) !important;
 
               border-style: solid !important;
@@ -607,7 +659,7 @@ export const TourSearchModuleComponent = () => {
               &#itt_nutrition_select {
                 width: 100% !important;
                 height: auto !important;
-                min-height: 10rem !important;
+                height: 5rem !important;
                 & > option {
                   font-size: 14px !important;
                   color: var(--text-color-secondary) !important;

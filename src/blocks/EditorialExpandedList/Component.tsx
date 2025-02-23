@@ -2,6 +2,9 @@ import React from 'react'
 import NextImage from 'next/image'
 import NextLink from 'next/link'
 import RichText from '@/components/RichText'
+import type { ExternalMediaType } from '../ExternalMedia/Component'
+
+import { ExternalMedia } from '../ExternalMedia/Component'
 
 import { PlaneIcon, TrainFront, BusFront, Shuffle } from 'lucide-react'
 import { Media } from '@/components/Media'
@@ -10,10 +13,12 @@ type EditorialExpandedListProps = {
   list: {
     title: string
     icon: string
-    elements: {
-      blockType: string
-      content: string
-    }[]
+    elements:
+      | {
+          blockType: string
+          content: string
+        }[]
+      | ExternalMediaType[]
   }[]
 }
 
@@ -76,6 +81,8 @@ export const EditorialExpandedListComponent = (props: EditorialExpandedListProps
                           )}
                         </div>
                       )
+                    case 'externalMedia':
+                      return <ExternalMedia {...element} />
                     default:
                       return null
                   }

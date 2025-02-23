@@ -1,5 +1,7 @@
 import type { Block } from 'payload'
 
+import { ExternalMedia } from '../ExternalMedia/config'
+
 import {
   FixedToolbarFeature,
   InlineToolbarFeature,
@@ -48,6 +50,7 @@ export const EditorialExpandedList: Block = {
           type: 'blocks',
           label: 'Content Elements',
           blocks: [
+            ExternalMedia,
             {
               slug: 'richTextElement',
               labels: {
