@@ -1,6 +1,7 @@
 import type { Block } from 'payload'
 import { PlusMinus } from '../PlusMinus/config'
 import { DownloadableFiles } from '../DownloadableFiles/config'
+import { ExternalMedia } from '../ExternalMedia/config'
 
 import {
   FixedToolbarFeature,
@@ -8,7 +9,6 @@ import {
   InlineToolbarFeature,
   lexicalEditor,
   BlockquoteFeature,
-  BlockFields,
   OrderedListFeature,
   UnorderedListFeature,
 } from '@payloadcms/richtext-lexical'
@@ -37,6 +37,7 @@ export const ServicesList: Block = {
           blocks: [
             PlusMinus,
             DownloadableFiles,
+            ExternalMedia,
             {
               slug: 'contentBlock',
               fields: [

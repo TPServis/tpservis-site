@@ -4,6 +4,8 @@ import type { PlusMinusBlock } from '@/blocks/PlusMinus/Component'
 import PlusMinus from '@/blocks/PlusMinus/Component'
 import type { DownloadableFilesBlock } from '@/blocks/DownloadableFiles/Component'
 import DownloadableFiles from '@/blocks/DownloadableFiles/Component'
+import type { ExternalMediaType } from '@/blocks/ExternalMedia/Component'
+import { ExternalMedia } from '@/blocks/ExternalMedia/Component'
 
 import { cn } from '@/utilities/cn'
 import { cva } from 'class-variance-authority'
@@ -37,14 +39,27 @@ type CtaBlock = {
 export type ServiceContentType = {
   id: string
   title: string
-  content: (ContentBlock | ImageBlock | CtaBlock | PlusMinusBlock | DownloadableFilesBlock)[]
+  content: (
+    | ContentBlock
+    | ImageBlock
+    | CtaBlock
+    | PlusMinusBlock
+    | DownloadableFilesBlock
+    | ExternalMediaType
+  )[]
 }
 
 type ServiceContentProps = ServiceContentType
 
 const ServiceContent = (props: ServiceContentProps) => {
   const blockRenderer = (
-    block: ContentBlock | ImageBlock | CtaBlock | PlusMinusBlock | DownloadableFilesBlock,
+    block:
+      | ContentBlock
+      | ImageBlock
+      | CtaBlock
+      | PlusMinusBlock
+      | DownloadableFilesBlock
+      | ExternalMediaType,
   ) => {
     switch (block.blockType) {
       case 'contentBlock':
@@ -57,6 +72,8 @@ const ServiceContent = (props: ServiceContentProps) => {
         return <PlusMinus {...block} />
       case 'downloadableFiles':
         return <DownloadableFiles {...block} />
+      case 'externalMedia':
+        return <ExternalMedia {...block} />
       default:
         return null
     }

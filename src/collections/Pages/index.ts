@@ -27,6 +27,7 @@ import { MapContacts } from '@/blocks/MapContacts/config'
 import { EditorialFullFrame } from '@/blocks/EditorialFullFrame/config'
 import { EditorialExpandedList } from '@/blocks/EditorialExpandedList/config'
 import { TourSearchModule } from '@/blocks/TourSearchModule/config'
+import { ExternalMedia } from '@/blocks/ExternalMedia/config'
 
 import {
   MetaDescriptionField,
@@ -104,6 +105,7 @@ export const Pages: CollectionConfig = {
                 EditorialFullFrame,
                 EditorialExpandedList,
                 TourSearchModule,
+                ExternalMedia,
               ],
               required: true,
             },
