@@ -1002,6 +1002,10 @@ export interface ExternalMedia {
   alt?: string | null;
   priority?: boolean | null;
   /**
+   * Align the image with the rest of the content
+   */
+  container?: ('none' | 'horizontal' | 'vertical' | 'full') | null;
+  /**
    * Add custom Tailwind classes to the image
    */
   className?: string | null;
@@ -1709,6 +1713,7 @@ export interface ExternalMediaSelect<T extends boolean = true> {
   url?: T;
   alt?: T;
   priority?: T;
+  container?: T;
   className?: T;
   quality?: T;
   aspectRatio?: T;

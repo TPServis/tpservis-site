@@ -25,6 +25,20 @@ export const ExternalMedia: Block = {
       defaultValue: true,
     },
     {
+      name: 'container',
+      type: 'select',
+      defaultValue: 'none',
+      options: [
+        { label: 'None (No Container)', value: 'none' },
+        { label: 'Horizontal (Left & Right Spacing)', value: 'horizontal' },
+        { label: 'Vertical (Top & Bottom Spacing)', value: 'vertical' },
+        { label: 'Full (All around spacing)', value: 'full' },
+      ],
+      admin: {
+        description: 'Align the image with the rest of the content',
+      },
+    },
+    {
       name: 'className',
       type: 'text',
       admin: {
