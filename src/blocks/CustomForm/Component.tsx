@@ -8,7 +8,7 @@ import RichText from '@/components/RichText'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { FormBlock } from '@/payload-types'
-import { cva } from 'class-variance-authority'
+import { tv } from 'tailwind-variants'
 
 interface CustomFormBlockProps {
   heading: string
@@ -17,20 +17,22 @@ interface CustomFormBlockProps {
   orderInverted: boolean
 }
 
-const ContactsBlockVariants = cva(['lg:w-1/3'], {
+const ContactsBlockVariants = tv({
+  base: 'md:col-span-1 md:row-span-1 md:row-start-1 order-2',
   variants: {
     orderInverted: {
-      true: 'lg:order-1',
-      false: 'order-2 lg:order-0',
+      true: 'md:col-start-3',
+      false: 'md:col-start-1',
     },
   },
 })
 
-const FormBlockVariants = cva(['lg:w-2/3'], {
+const FormBlockVariants = tv({
+  base: 'md:col-span-2 md:row-span-1 md:row-start-1 order-1',
   variants: {
     orderInverted: {
-      true: 'lg:order-0',
-      false: 'lg:order-1',
+      true: 'md:col-start-1',
+      false: 'md:col-start-2',
     },
   },
 })
@@ -46,15 +48,15 @@ export const CustomForm = async (props: CustomFormBlockProps) => {
     <div className="container-spacing">
       <div className="container-wrapper">
         <section>
-          <div className="lg:w-2/3 lg:ml-auto lg:pl-6 mb-10">
-            <h2 className="text-heading text-4xl font-bold mb-10 text-balance">{props.heading}</h2>
+          <div className="mb-10">
+            <h2 className="text-heading text-4xl font-bold text-balance">{props.heading}</h2>
             <RichText
               content={props.description}
               enableGutter={false}
               className="rich-text text-pretty"
             />
           </div>
-          <div className="flex flex-col lg:flex-row gap-10 ">
+          <div className="flex flex-col md:grid md:grid-cols-3 md:grid-rows-1 gap-10 ">
             <div className={ContactsBlockVariants({ orderInverted: props.orderInverted })}>
               <Contacts {...contacts} />
             </div>
