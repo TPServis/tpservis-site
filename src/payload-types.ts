@@ -1009,6 +1009,11 @@ export interface ExternalMedia {
    * Quality of the image
    */
   quality?: number | null;
+  aspectRatio?: ('1/1' | '16/9' | '9/16' | '4/3' | '3/4' | '1/2' | '2/1' | 'custom') | null;
+  /**
+   * Enter a custom aspect ratio
+   */
+  customAspectRatio?: string | null;
   size?: ('small' | 'medium' | 'large' | 'full') | null;
   id?: string | null;
   blockName?: string | null;
@@ -1706,6 +1711,8 @@ export interface ExternalMediaSelect<T extends boolean = true> {
   priority?: T;
   className?: T;
   quality?: T;
+  aspectRatio?: T;
+  customAspectRatio?: T;
   size?: T;
   id?: T;
   blockName?: T;
