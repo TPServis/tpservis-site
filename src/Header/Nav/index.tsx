@@ -159,11 +159,8 @@ const MenuWindow = React.forwardRef<HTMLDivElement, MenuWindowProps>(
         }}
         className="fixed top-0 pt-[100px] left-0 w-full h-full bg-white/90 backdrop-blur-lg -z-10 container-spacing"
       >
-        <div className="container-wrapper grid grid-cols-5 h-full">
-          <ul
-            className="col-span-3 flex flex-col md:gap-12 gap-4 justify-center h-full"
-            role="menu"
-          >
+        <div className="container-wrapper grid grid-cols-5 h-full overflow-y-auto">
+          <ul className="col-span-3 flex flex-col md:gap-8 gap-4 justify-center h-full" role="menu">
             {navItems?.map(({ link }, i) => {
               return (
                 <motion.li
@@ -188,7 +185,7 @@ const MenuWindow = React.forwardRef<HTMLDivElement, MenuWindowProps>(
                     key={i}
                     {...link}
                     appearance="link"
-                    className="text-4xl md:text-6xl lg:text-6xl font-bold text-astral-950 hover:text-jaffa-400 transition duration-100 hover:!no-underline"
+                    className="text-4xl md:text-5xl font-bold text-astral-950 hover:text-jaffa-400 transition duration-100 hover:!no-underline"
                   />
                 </motion.li>
               )
