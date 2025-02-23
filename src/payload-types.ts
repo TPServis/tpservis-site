@@ -1109,6 +1109,7 @@ export interface EditorialExpandedList {
     icon: 'plane' | 'train' | 'bus' | 'shuffle';
     elements?:
       | (
+          | ExternalMedia
           | {
               content: {
                 root: {
@@ -1770,6 +1771,7 @@ export interface EditorialExpandedListSelect<T extends boolean = true> {
         elements?:
           | T
           | {
+              externalMedia?: T | ExternalMediaSelect<T>;
               richTextElement?:
                 | T
                 | {
