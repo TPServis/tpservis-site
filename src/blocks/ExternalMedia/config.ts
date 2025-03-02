@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { validateAspectRatio } from './utils'
 
 export const ExternalMedia: Block = {
   slug: 'externalMedia',
@@ -58,13 +59,13 @@ export const ExternalMedia: Block = {
       type: 'select',
       defaultValue: '16/9',
       options: [
-        { label: '1:1', value: '1/1' },
-        { label: '16:9', value: '16/9' },
-        { label: '9:16', value: '9/16' },
-        { label: '4:3', value: '4/3' },
-        { label: '3:4', value: '3/4' },
-        { label: '1:2', value: '1/2' },
-        { label: '2:1', value: '2/1' },
+        { label: '1/1', value: '1/1' },
+        { label: '16/9', value: '16/9' },
+        { label: '9/16', value: '9/16' },
+        { label: '4/3', value: '4/3' },
+        { label: '3/4', value: '3/4' },
+        { label: '1/2', value: '1/2' },
+        { label: '2/1', value: '2/1' },
         { label: 'Custom', value: 'custom' },
       ],
     },
@@ -73,29 +74,10 @@ export const ExternalMedia: Block = {
       type: 'text',
       admin: {
         description: 'Enter a custom aspect ratio (e.g. 16/9)',
-        condition: (data, siblingData) => siblingData?.aspectRatio === 'custom',
+        condition: (_, { aspectRatio }) => aspectRatio === 'custom',
         placeholder: '16/9',
       },
-      validate: (value) => {
-        if (!value) return true // Optional unless aspectRatio is 'custom'
-
-        const parts = value.trim().split('/')
-        if (parts.length !== 2) {
-          return 'Aspect ratio must be in format "width/height" (e.g. 16/9)'
-        }
-
-        const [width, height] = parts.map((part) => parseInt(part.trim(), 10))
-
-        if (!Number.isInteger(width) || width <= 0) {
-          return 'Width must be a positive integer'
-        }
-
-        if (!Number.isInteger(height) || height <= 0) {
-          return 'Height must be a positive integer'
-        }
-
-        return true
-      },
+      validate: validateAspectRatio,
     },
     {
       name: 'size',

@@ -1,21 +1,10 @@
-import React from 'react'
-import { cn } from '@/utilities/cn'
+'use client'
 import { tv } from 'tailwind-variants'
 import Image from 'next/image'
-export type ExternalMediaType = {
-  url: string
-  alt?: string
-  size?: 'small' | 'medium' | 'large' | 'full'
-  className?: string
-  priority?: boolean
-  quality?: number
-  blockType: 'externalMedia'
-  aspectRatio?: '1/1' | '16/9' | '9/16' | '4/3' | '3/4' | '1/2' | '2/1' | 'custom'
-  customAspectRatio?: string
-  container?: 'none' | 'horizontal' | 'vertical' | 'full'
-}
-
-const DEFAULT_IMAGE_STYLING = 'mx-auto rounded-2xl relative overflow-hidden h-full max-w-full'
+import type { ExternalMediaType } from './types'
+import { getValidAspectRatio } from './utils'
+const DEFAULT_IMAGE_STYLING =
+  'mx-auto rounded-2xl relative overflow-hidden h-full max-w-full custom-aspect-ratio-12'
 const DEFAULT_IMAGE_ASPECT_RATIO = '16/9'
 
 const containerVariants = tv({
@@ -51,22 +40,6 @@ const wrapperVariants = tv({
   },
 })
 
-const validateAspectRatio = (ratio: string): { width: number; height: number } | null => {
-  if (!ratio) return null
-
-  const parts = ratio.trim().split('/')
-  if (parts.length !== 2) return null
-
-  const [width, height] = parts.map((part) => {
-    const num = parseInt(part.trim(), 10)
-    return Number.isInteger(num) && num > 0 ? num : null
-  })
-
-  if (!width || !height) return null
-
-  return { width, height }
-}
-
 export const ExternalMedia: React.FC<ExternalMediaType> = (props) => {
   const {
     url,
@@ -100,7 +73,7 @@ export const ExternalMedia: React.FC<ExternalMediaType> = (props) => {
       throw new Error('Custom aspect ratio is required when aspectRatio is set to "custom"')
     }
 
-    const validRatio = validateAspectRatio(customAspectRatio)
+    const validRatio = getValidAspectRatio(customAspectRatio)
 
     if (!validRatio) {
       console.error(
@@ -114,11 +87,21 @@ export const ExternalMedia: React.FC<ExternalMediaType> = (props) => {
     aspectRatioStyle = { aspectRatio }
   }
 
+  console.log(aspectRatioStyle)
+
   const containerClassName = containerVariants({ size, container })
 
   return (
     <div className={containerClassName}>
-      <div className={wrapperVariants({ container, className })} style={aspectRatioStyle}>
+      <style>
+        {`
+          .custom-aspect-ratio-12 {
+            aspect-ratio: ${aspectRatioStyle.aspectRatio}
+          }
+
+        `}
+      </style>
+      <div className={wrapperVariants({ container, className })}>
         <Image
           src={url}
           alt={alt}

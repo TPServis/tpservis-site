@@ -1,5 +1,4 @@
 import React from 'react'
-import NextImage from 'next/image'
 import NextLink from 'next/link'
 import RichText from '@/components/RichText'
 import type { ExternalMediaType } from '../ExternalMedia/Component'
@@ -24,7 +23,6 @@ type EditorialExpandedListProps = {
 
 export const EditorialExpandedListComponent = (props: EditorialExpandedListProps) => {
   console.log(props)
-  // If "data" is not provided, simply render nothing.
   if (!props) return null
 
   // data.list is expected to be the array of list items from your block
