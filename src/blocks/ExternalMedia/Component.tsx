@@ -87,8 +87,6 @@ export const ExternalMedia: React.FC<ExternalMediaType> = (props) => {
     aspectRatioStyle = { aspectRatio }
   }
 
-  console.log(aspectRatioStyle)
-
   const containerClassName = containerVariants({ size, container })
 
   return (

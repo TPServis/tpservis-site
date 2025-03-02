@@ -45,16 +45,4 @@ export const Media: CollectionConfig = {
     adapter: 'uploadthingStorage',
     adminThumbnail: 'thumbnail',
   },
-  // hooks: {
-  //   // beforeRead: [
-  //   //   ({ doc }) => {
-  //   //     console.log(doc)
-  //   //   },
-  //   // ],
-  //   beforeChange: [
-  //     ({ data }) => {
-  //       console.log(data)
-  //     },
-  //   ],
-  // },
 }
