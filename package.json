@@ -19,7 +19,8 @@
     "reinstall": "cross-env NODE_OPTIONS=--no-deprecation rm -rf node_modules && rm bun --ignore-workspace install",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "clean": "rm -rf .next && rm -rf node_modules",
-    "generate-types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types"
+    "generate-types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.22.0",
