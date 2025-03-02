@@ -4,7 +4,6 @@ import Script from 'next/script'
 
 export const TourSearchModuleComponent = () => {
   const handleLoad = () => {
-    console.log('handleLoad')
     const file_version = '59'
 
     const timeout = setTimeout(() => {
@@ -39,19 +38,12 @@ export const TourSearchModuleComponent = () => {
       ;(window as any).load_js('orbit')
       ;(window as any).load_js('tour_seach_form')
       ;(window as any).load_js('prepare_form')
-
-      // hike_search_form_submit(\'extended\', false);"
-      // ;(window as any).hike_search_form_submit = function (type: string, is_extended: boolean) {
-      //   console.log('hike_search_form_submit', type, is_extended)
-      // }
     }
   }
 
   const updateSelectAvia = () => {
     const selectAvia = document.querySelector('#transport_type') as HTMLSelectElement
     if (selectAvia) {
-      console.log('selectAvia', selectAvia)
-
       // Simulate a user clicking the select element
       selectAvia.selectedIndex = 2
       const event = new Event('change', { bubbles: true, cancelable: true })

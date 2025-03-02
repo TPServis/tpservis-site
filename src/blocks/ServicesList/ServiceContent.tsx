@@ -4,10 +4,9 @@ import type { PlusMinusBlock } from '@/blocks/PlusMinus/Component'
 import PlusMinus from '@/blocks/PlusMinus/Component'
 import type { DownloadableFilesBlock } from '@/blocks/DownloadableFiles/Component'
 import DownloadableFiles from '@/blocks/DownloadableFiles/Component'
-import type { ExternalMediaType } from '@/blocks/ExternalMedia/Component'
+import type { ExternalMediaType } from '@/blocks/ExternalMedia/types'
 import { ExternalMedia } from '@/blocks/ExternalMedia/Component'
 
-import { cn } from '@/utilities/cn'
 import { cva } from 'class-variance-authority'
 
 import type { Media as MediaType, Page as PageType } from '@/payload-types'

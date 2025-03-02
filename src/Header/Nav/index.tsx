@@ -12,7 +12,7 @@ import { CMSLink } from '@/components/Link'
 
 import { Menu, X } from 'lucide-react'
 
-import { motion, AnimatePresence, delay } from 'motion/react'
+import { motion, AnimatePresence } from 'motion/react'
 
 // Utility function to get all focusable elements within a container
 function getFocusableElements(container: HTMLElement): HTMLElement[] {
@@ -44,7 +44,7 @@ export const HeaderNav: React.FC<{ header: HeaderType }> = ({ header }) => {
         if (menuRef.current) {
           const focusableElements = getFocusableElements(menuRef.current)
           if (focusableElements.length > 0) {
-            focusableElements[0].focus()
+            focusableElements[0]?.focus()
           }
         }
       }, 100)
@@ -52,7 +52,7 @@ export const HeaderNav: React.FC<{ header: HeaderType }> = ({ header }) => {
       document.body.style.overflow = 'auto'
       // Return focus to the menu button when closing
       if (lastActiveElement.current) {
-        lastActiveElement.current.focus()
+        lastActiveElement.current?.focus()
       }
     }
 
@@ -79,13 +79,13 @@ export const HeaderNav: React.FC<{ header: HeaderType }> = ({ header }) => {
         // If shift + tab and on first element, move to last element
         if (document.activeElement === firstElement) {
           e.preventDefault()
-          lastElement.focus()
+          lastElement?.focus()
         }
       } else {
         // If tab and on last element, move to first element
         if (document.activeElement === lastElement) {
           e.preventDefault()
-          firstElement.focus()
+          firstElement?.focus()
         }
       }
     }
