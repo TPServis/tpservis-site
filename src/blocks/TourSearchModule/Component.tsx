@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
 import Script from 'next/script'
-
+import { makeITTourRequest, parseITTourResponse } from './utils'
 export const TourSearchModuleComponent = () => {
   const handleLoad = () => {
     console.log('handleLoad')
@@ -39,11 +39,6 @@ export const TourSearchModuleComponent = () => {
       ;(window as any).load_js('orbit')
       ;(window as any).load_js('tour_seach_form')
       ;(window as any).load_js('prepare_form')
-
-      // hike_search_form_submit(\'extended\', false);"
-      // ;(window as any).hike_search_form_submit = function (type: string, is_extended: boolean) {
-      //   console.log('hike_search_form_submit', type, is_extended)
-      // }
     }
   }
 
@@ -66,17 +61,98 @@ export const TourSearchModuleComponent = () => {
     }
   }
 
+  const forceRemoveStyles = (element: HTMLElement) => {
+    // Force override with !important
+    const styleReset = `
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      transform: none !important;
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    `
+    element.style.cssText = styleReset
+    // Also try to remove the style attribute completely
+    element.removeAttribute('style')
+    // Then reapply our styles
+    element.style.cssText = styleReset
+  }
+
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350047&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-f33af08145db2441a65b3aedcbbb3b1b&sharding_rule_id=&_=1741030363394
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350049&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-dfdd67c6b7607347a5a9dc3c822b5e84&sharding_rule_id=&_=1741030479830
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery17108821699837300099_1741034930151&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-1a1318631d4d6aec8ef22cbbec2eeac1&sharding_rule_id=&_=1741036767165
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery4375644823069742_1741031012487&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-840a980ca207ef2b2df684eeb0027aa8&sharding_rule_id=&_=1741031012487'
+
+  // 03-08-840a980ca207ef2b2df684eeb0027aa8
+
+  // useEffect(() => {
+  //   // Create a MutationObserver to watch for #tour_order element
+  //   const observer = new MutationObserver((mutations) => {
+  //     mutations.forEach(() => {
+  //       const tourOrder = document.querySelector('#tour_order') as HTMLElement
+  //       if (tourOrder) {
+  //         // Immediate override
+  //         // forceRemoveStyles(tourOrder)
+  //         // // Additional override after a small delay to catch any re-applied styles
+  //         // const timeout = setTimeout(() => {
+  //         //   forceRemoveStyles(tourOrder)
+  //         // }, 100)
+  //         // return () => clearTimeout(timeout)
+  //       }
+  //     })
+  //   })
+
+  //   // Start observing the document with the configured parameters
+  //   observer.observe(document.body, {
+  //     childList: true,
+  //     subtree: true,
+  //     attributes: true,
+  //     attributeFilter: ['style'],
+  //   })
+
+  //   // Also try to find and override the element on mount
+  //   const initialTourOrder = document.querySelector('#tour_order') as HTMLElement
+  //   // if (initialTourOrder) {
+  //   //   forceRemoveStyles(initialTourOrder)
+  //   // }
+
+  //   // Cleanup observer on component unmount
+  //   return () => observer.disconnect()
+  // }, [])
+
+  const fetchITTour = async () => {
+    try {
+      const response = await makeITTourRequest('1a1318631d4d6aec8ef22cbbec2eeac1')
+      const parsedResponse = parseITTourResponse(response)
+      console.log('✅response', parsedResponse)
+    } catch (error) {
+      console.error('❌error', error)
+    }
+  }
+
+  const handleLoadData = () => {
+    fetchITTour()
+  }
+
   return (
     <div className="w-full container-spacing">
-      <div className="container-wrapper">
-        {/* <div id="itTourWidgetWrapper" data-agency-id="16227"></div>
-        <script
-          id="itTourWidgetScriptJsx"
-          {...customAttrs}
-          src="https://www.ittour.com.ua/tour_search.jsx?id=919219D3754G97N415113874&ver=3"
-        ></script> */}
+      <div className="container-wrapper min-h-[300px] relative">
+        <div className="flex justify-center items-center">
+          <button
+            className="bg-astral-500 text-white px-4 py-2 rounded-md"
+            onClick={handleLoadData}
+          >
+            load data
+          </button>
+        </div>
 
-        <div id="tour_search_module"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="bg-astral-500 h-full rounded-full w-1/4 absolute top-0 animate-run"></div>
+        </div>
+
+        <div id="tour_search_module" className="relative z-10 hidden"></div>
         <Script
           src="https://code.jquery.com/jquery-1.7.1.min.js"
           strategy="beforeInteractive"
@@ -565,7 +641,6 @@ export const TourSearchModuleComponent = () => {
                 table {
                   display: block !important;
                   max-width: calc(100vw - 4rem) !important;
-                  width: 100% !important;
                   overflow: scroll !important;
 
                   & > tbody {
@@ -576,6 +651,11 @@ export const TourSearchModuleComponent = () => {
                         font-size: 16px !important;
                         font-weight: 600 !important;
                         text-align: left !important;
+
+                        &:nth-child(4),
+                        &:nth-child(6) {
+                          width: 20% !important;
+                        }
                       }
 
                       &.itt_even {
@@ -679,6 +759,77 @@ export const TourSearchModuleComponent = () => {
                   &:selected {
                     background-color: var(--color-background-primary) !important;
                     color: var(--text-color-primary) !important;
+                  }
+                }
+              }
+            }
+          }
+
+          table#isolated {
+            display: block !important;
+            background-color: var(--color-astral-50) !important;
+            position: fixed !important;
+            width: 90vw !important;
+            height: 90vh !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            z-index: 10000 !important;
+            overflow: scroll !important;
+
+            tbody {
+              tr {
+                &:nth-child(2) {
+                  .left,
+                  .right {
+                    display: none !important;
+                  }
+
+                  #isolate {
+                    width: 100% !important;
+                    display: block !important;
+
+                    #tour_order {
+                      .ittour_order_block_tour_info {
+                        .ittour_order_block_content_box {
+                          .it_box_padding {
+                            display: flex !important;
+                            width: 100% !important;
+                            gap: 1rem !important;
+
+                            @media (max-width: 1024px) {
+                              flex-direction: column !important;
+                            }
+
+                            .ittour_order_block_content_box_left_frame {
+                              width: 100% !important;
+                              order: 1 !important;
+                            }
+
+                            .ittour_order_block_content_box_right_frame {
+                              width: 100% !important;
+                              order: 0 !important;
+
+                              & > div {
+                                width: 100% !important;
+                                overflow: hidden !important;
+                                border-radius: 0.5rem !important;
+
+                                img {
+                                  width: 100% !important;
+                                  height: 100% !important;
+                                  object-fit: cover !important;
+                                }
+
+                                .ittour_order_block_content_box_filter {
+                                  display: none !important;
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
