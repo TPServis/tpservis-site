@@ -7,16 +7,20 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { format } from 'date-fns'
-import { CalendarIcon } from 'lucide-react'
+import { CalendarIcon, Plane, MapPin } from 'lucide-react'
 import { cn } from '@/utilities/cn'
 import { DateRange } from 'react-day-picker'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import PeopleSelector from './PeopleSelector'
 import NightsSelector from './NightsSelector'
+import TransportSelector from './TransportSelector'
 
 export const TourSearchModuleComponent = () => {
+  const [transportType, setTransportType] = useState<string>('2')
   const [countries, setCountries] = useState<any>([])
+  const [isLoadingCountries, setIsLoadingCountries] = useState<boolean>(false)
   const [departureCities, setDepartureCities] = useState<any>([])
+  const [isLoadingDepartureCities, setIsLoadingDepartureCities] = useState<boolean>(false)
   const [date, setDate] = useState<DateRange | undefined>({
     from: undefined,
     to: undefined,
@@ -132,6 +136,7 @@ export const TourSearchModuleComponent = () => {
         country: selectedCountry,
         night_from: nights[0].toString(),
         night_till: nights[1].toString(),
+        transport_type: transportType,
         _: timestamp.toString()
       });
 
@@ -146,10 +151,10 @@ export const TourSearchModuleComponent = () => {
 
   const getDepartureCities = async (): Promise<void> => {
     try {
-      const response = await fetchDepartureCities(selectedCountry ?? COUNTRY)
+      setIsLoadingDepartureCities(true)
+      const response = await fetchDepartureCities(selectedCountry ?? COUNTRY, HOTEL_RATING, transportType)
       if (response.departure_city) {
         const cities = parseDepartureCities(response.departure_city)
-        console.log('✅cities', cities)
         // Optionally set first city as default
         if (cities.status === '200' && cities.cities.length > 0) {
           setDepartureCities(cities.cities)
@@ -157,9 +162,11 @@ export const TourSearchModuleComponent = () => {
           if (!selectedDepartureCity || !cities.cities.find((city: any) => city.id === selectedDepartureCity)) {
             setSelectedDepartureCity(getDefaultCity(cities))
           }
+
         } else {
           console.error('Error fetching departure cities:', response.error)
         }
+        setIsLoadingDepartureCities(false)
       }
     } catch (error) {
       console.error('Failed to load departure cities:', error)
@@ -177,8 +184,9 @@ export const TourSearchModuleComponent = () => {
   }
 
 
-  const init = async () => {
-    fetchCountries().then((response) => {
+  const getCountries = async () => {
+    setIsLoadingCountries(true)
+    fetchCountries(HOTEL_RATING, transportType).then((response) => {
       const parsedResponse = parseSearchBilderResponse(response)
       if (
         parsedResponse.status === '200' &&
@@ -186,21 +194,37 @@ export const TourSearchModuleComponent = () => {
         parsedResponse.countries.length > 0
       ) {
         setCountries(parsedResponse.countries)
-        setSelectedCountry(parsedResponse.countries[0].id)
+        if (!selectedCountry || !parsedResponse.countries.find((country: any) => country.id === selectedCountry)) {
+          setSelectedCountry(getDefaultCountry(parsedResponse.countries))
+        }
       } else {
         console.error('Error fetching countries:', parsedResponse.status)
       }
+      setIsLoadingCountries(false)
     })
 
     getDepartureCities()
   }
 
-  useEffect(() : void => {
-    getDepartureCities()
-  }, [selectedCountry])
+  const getDefaultCountry = (countries: any) => {
+    let defaultCountry = countries.find((country: any) => country.title === 'Туреччина')
+    if (!defaultCountry) {
+      defaultCountry = countries[0]
+    }
+
+    return defaultCountry.id
+  }
 
   useEffect(() : void => {
-    init()
+    getCountries()
+  }, [transportType])
+
+  useEffect(() : void => {
+    getDepartureCities()
+  }, [selectedCountry, transportType])
+
+  useEffect(() : void => {
+    getCountries()
   }, [])
 
   return (
@@ -215,9 +239,13 @@ export const TourSearchModuleComponent = () => {
             />
           </div>
           <div className="flex gap-2 bg-jaffa-400 p-4 rounded-3xl w-[calc(100%-2rem)] mx-auto -translate-y-1/2">
+            <TransportSelector transportType={transportType} setTransportType={setTransportType} />
             <Select value={selectedCountry} onValueChange={setSelectedCountry}>
               <SelectTrigger className="w-full border-none bg-jaffa-50 text-jaffa-900 font-bold rounded-xl">
-                <SelectValue placeholder="Select a country" />
+                <div className={cn("flex gap-2 items-center transition-all duration-100", { 'blur-sm': isLoadingCountries })}>
+                  <Plane className="h-4" />
+                  <SelectValue placeholder="Select a country" />
+                </div>
               </SelectTrigger>
               <SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
                 {countries.map((country: any) => (
@@ -235,7 +263,10 @@ export const TourSearchModuleComponent = () => {
             </Select>
             <Select value={selectedDepartureCity} onValueChange={setSelectedDepartureCity}>
               <SelectTrigger className="w-full border-none bg-jaffa-50 text-jaffa-900 font-bold rounded-xl">
-                <SelectValue placeholder="Select a departure city" />
+                <div className={cn("flex gap-2 items-center transition-all duration-100", { 'blur-sm': isLoadingDepartureCities })}>
+                  <MapPin className="h-4" />
+                  <SelectValue placeholder="Select a departure city" />
+                </div>
               </SelectTrigger>
               <SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
                 {departureCities.map((city: any) => (

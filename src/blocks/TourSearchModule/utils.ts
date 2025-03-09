@@ -390,7 +390,7 @@ interface ITTourSearchParams {
   region?: string
   child_age?: string
   package_tour_type: '1'
-  transport_type: '2' // Seems to be for avia/flight
+  transport_type: string // Seems to be for avia/flight
   country: '318' // Country code
   food: string // Food types, e.g. '498+512+560'
   adults: string // Number of adults
