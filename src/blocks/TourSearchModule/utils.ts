@@ -1,8 +1,7 @@
 import * as cheerio from 'cheerio'
 
 const makeITTourRequest = (tourId: string) => {
-  const timestamp = Date.now()
-  const jQueryCallback = `jQuery${Math.random().toString().slice(2)}_${timestamp}`
+  const { timestamp, jQueryCallback } = createTimestampCallback()
 
   const url = new URL('https://www.ittour.com.ua/tour_search.php')
   url.searchParams.append('callback', jQueryCallback)
@@ -16,31 +15,91 @@ const makeITTourRequest = (tourId: string) => {
   url.searchParams.append('sharding_rule_id', '')
   url.searchParams.append('_', timestamp.toString())
 
-  // Instead of using fetch, create a script element for JSONP
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script')
-    script.src = url.toString()
 
-    // Define the callback function
-    ;(window as any)[jQueryCallback] = (data: any) => {
-      resolve(data)
-      document.body.removeChild(script)
-      delete (window as any)[jQueryCallback]
-    }
+  return fetchJSONP(url.toString(), jQueryCallback)
+}
+
+const createTimestampCallback = (): { timestamp: number; jQueryCallback: string } => {
+  const timestamp = Date.now();
+  const random = Math.floor(Math.random() * 100000000000000000);
+  const jQueryCallback = `jQuery${random}_${timestamp}`;
+  return { timestamp, jQueryCallback };
+};
+
+const fetchJSONP = (url: string, jQueryCallback: string): Promise<any> => {
+  return new Promise((resolve, reject): void => {
+    // Define the callback directly on window
+    (window as any)[jQueryCallback] = function(data: any) {
+      cleanup();
+      resolve(data);
+    };
+
+    const script = document.createElement('script');
+    script.src = url;
+    script.type = 'text/javascript';
+
+    const cleanup = () => {
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+      delete (window as any)[jQueryCallback];
+    };
 
     script.onerror = () => {
-      reject(new Error('Script loading failed'))
-      document.body.removeChild(script)
-      delete (window as any)[jQueryCallback]
-    }
+      cleanup();
+      reject(new Error('Script loading failed'));
+    };
 
-    document.body.appendChild(script)
-  })
-}
+    document.body.appendChild(script);
+  });
+};
 
 const cleanPrice = (price: string) => {
   const priceMatch = price.match(/(\d+[\d\s]*)/)
   return priceMatch ? parseInt(priceMatch[0].trim()) : ''
+}
+
+
+const parseSearchResponse = (response: any) => {
+
+  try {
+    let htmlContent = ''
+    if (response && typeof response.text === 'string') {
+      htmlContent = response.text
+    } else if (typeof response === 'string') {
+      htmlContent = response
+    } else if (response && typeof response === 'object') {
+      htmlContent = JSON.stringify(response)
+    }
+
+    if (!htmlContent) {
+      throw new Error('No valid HTML content found in response')
+    }
+
+    const $ = cheerio.load(htmlContent)
+    const results: { title: string; id: string }[] = []
+
+    $('tbody > tr').each((_, element) => {
+      const $row = $(element)
+      if ($row.hasClass('itt_odd') || $row.hasClass('itt_even')) {
+        const title = $row.find('td:nth-child(4) > div').text().trim()
+        const id = $row.find('td:nth-child(2) > input').attr('id')
+
+        if (title && id) {
+          results.push({ title, id })
+        }
+      }
+    })
+
+    return results
+
+  } catch (error) {
+    console.error('Error parsing ITTour response:', error)
+    return {
+      error: 'Failed to parse response',
+      raw: response,
+    }
+  }
 }
 
 const selectors = {
@@ -61,6 +120,103 @@ const selectors = {
   nights: '.ittour_order_tour_info .ittour_order_right_list .ittour_order_description',
 }
 
+
+type DepartureCity = {
+  id: string
+  name: string
+}
+
+type ParseDepartureCitiesResponse = {
+  cities: Array<DepartureCity>
+  status: '200' | '400'
+}
+
+const parseDepartureCities = (htmlString: string): ParseDepartureCitiesResponse => {
+  if (!htmlString) {
+    throw new Error('No valid HTML content provided')
+  }
+
+  const result: Array<DepartureCity> = []
+  try {
+    const $ = cheerio.load(htmlString)
+
+    const options = $('option')
+
+    options.each((_, element) => {
+      const $item = $(element)
+      const id = $item.attr('value')
+      const name = $item.text().trim()
+
+      if (id && name) {
+        result.push({ id, name })
+      }
+    })
+
+
+
+    return {
+      cities: result,
+      status: '200',
+    }
+  } catch (error) {
+    console.error('Error parsing departure cities:', error)
+    return {
+      cities: [],
+      status: '400',
+    }
+  }
+}
+
+type Country = {
+  id: string
+  title: string
+}
+
+const getCountries = (countries: string): Country[] => {
+  const $ = cheerio.load(countries)
+  let result: Country[] = []
+  const countriesList = $('option')
+  countriesList.each((_, element) => {
+    const $item = $(element)
+    const id = $item.attr('value')
+    const title = $item.text().trim()
+    if (id && title) {
+      result.push({ id, title })
+    }
+  })
+  return result
+}
+
+type ParserSearchBilderResponse = {
+  countries: Country[]
+  status?: '200' | '400'
+}
+
+const parseSearchBilderResponse = (response: any): ParserSearchBilderResponse => {
+  try {
+    let { country, region, hotel, departure_city } = response
+
+    if (!country || !region || !hotel || !departure_city) {
+      throw new Error('No valid HTML content found in response')
+    }
+
+    const countries = getCountries(country)
+
+
+    return {
+      countries,
+      status: '200'
+    }
+
+  } catch (error) {
+    console.error('Error parsing ITTour response:', error)
+    return {
+      countries: [],
+      status: '400',
+    }
+  }
+}
+
 const parseITTourResponse = (response: any) => {
   try {
     let htmlContent = ''
@@ -75,6 +231,8 @@ const parseITTourResponse = (response: any) => {
     if (!htmlContent) {
       throw new Error('No valid HTML content found in response')
     }
+
+    console.log('htmlContent', htmlContent)
 
     const $ = cheerio.load(htmlContent)
 
@@ -148,4 +306,53 @@ const getStatus = ($: cheerio.CheerioAPI): string => {
   return 'available'
 }
 
-export { makeITTourRequest, parseITTourResponse }
+const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
+  const { timestamp, jQueryCallback } = createTimestampCallback();
+  const baseURL = 'https://www.ittour.com.ua/tour_search.php';
+
+  const defaultParams = {
+    callback: jQueryCallback,
+    module_type: 'tour_search',
+    id: 'DG400625103918756O740800',
+    ver: '1',
+    type: '2970',
+    theme: '38',
+    action: 'package_tour_search',
+    hotel_rating: '4+78',
+    items_per_page: '50',
+    hotel: '',
+    region: '',
+    child_age: '',
+    package_tour_type: '1',
+    transport_type: '2',
+    country: '318',
+    food: '498+512+560',
+    adults: '2',
+    children: '0',
+    date_from: '10.03.25',
+    date_till: '21.03.25',
+    night_from: '6',
+    night_till: '8',
+    price_from: '0',
+    price_till: '900000',
+    switch_price: 'UAH',
+    departure_city: '2014',
+    module_location_url: window.location.href,
+    preview: '1',
+    _: timestamp.toString(),
+    ...params
+  };
+
+  const url = new URL(baseURL);
+  Object.entries(defaultParams).forEach(([key, value]) => {
+    if (value !== undefined) {
+      url.searchParams.append(key, value.toString());
+    }
+  });
+
+  return url.toString()
+    .replace(/hotel_rating=4%2B78/, 'hotel_rating=4+78')
+    .replace(/food=498%2B512%2B560/, 'food=498+512+560');
+};
+
+export { makeITTourRequest, parseITTourResponse, fetchJSONP, createTimestampCallback, parseSearchResponse, buildITTourSearchURL, parseSearchBilderResponse, parseDepartureCities }

@@ -1,8 +1,28 @@
 'use client'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, use } from 'react'
 import Script from 'next/script'
-import { makeITTourRequest, parseITTourResponse } from './utils'
+import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, parseDepartureCities } from './utils'
+import dayjs from 'dayjs'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
+import { format } from 'date-fns'
+import { CalendarIcon } from 'lucide-react'
+import { cn } from '@/utilities/cn'
+import { DateRange } from 'react-day-picker'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 export const TourSearchModuleComponent = () => {
+  const [countries, setCountries] = useState<any>([])
+  const [departureCities, setDepartureCities] = useState<any>([])
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: undefined,
+    to: undefined,
+  })
+  const [selectedCountry, setSelectedCountry] = useState<any>(null)
+  const [selectedDepartureCity, setSelectedDepartureCity] = useState<any>(null)
+  const [tourSearchData, setTourSearchData] = useState<any>(null)
+  const [adultsNumber, setAdultsNumber] = useState<number>(2)
+
   const handleLoad = () => {
     console.log('handleLoad')
     const file_version = '59'
@@ -84,7 +104,6 @@ export const TourSearchModuleComponent = () => {
   // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350049&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-dfdd67c6b7607347a5a9dc3c822b5e84&sharding_rule_id=&_=1741030479830
   // https://www.ittour.com.ua/tour_search.php?callback=jQuery17108821699837300099_1741034930151&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-1a1318631d4d6aec8ef22cbbec2eeac1&sharding_rule_id=&_=1741036767165
   // https://www.ittour.com.ua/tour_search.php?callback=jQuery4375644823069742_1741031012487&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-840a980ca207ef2b2df684eeb0027aa8&sharding_rule_id=&_=1741031012487'
-
   // 03-08-840a980ca207ef2b2df684eeb0027aa8
 
   // useEffect(() => {
@@ -122,31 +141,405 @@ export const TourSearchModuleComponent = () => {
   //   return () => observer.disconnect()
   // }, [])
 
-  const fetchITTour = async () => {
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery17106025752721087283_1741514343320&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514355260
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery17103968606778564445_1741514676869&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514762876
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery9569997690939707_1741515817928&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4%2B78&items_per_page=50&package_tour_type=1&transport_type=2&country=318&food=498%2B512%2B560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%253A%252F%252Flocalhost%253A3000%252Ftours&preview=1&_=1741515817928
+
+  const MERCHANT_ID = 'DG400625103918756O740800'
+  const MODULE_VERSION = '1'
+  const MODULE_TYPE = 'tour_search'
+  const MODULE_THEME = '38'
+  const MODULE_ACTION = 'package_tour_search'
+  const HOTEL_RATING = '4+78'
+  const ITEMS_PER_PAGE = '50'
+  const HOTEL = ''
+  const REGION = ''
+  const CHILD_AGE = ''
+  const PACKAGE_TOUR_TYPE = '1'
+  const TRANSPORT_TYPE = '2'
+  const COUNTRY = '318'
+  const FOOD = '498+512+560'
+  const ADULTS = '2'
+  const CHILDREN = '0'
+  const DATE_FROM = '10.03.25'
+  const DATE_TILL = '21.03.25'
+  const NIGHT_FROM = '6'
+  const NIGHT_TILL = '8'
+  const PRICE_FROM = '0'
+  const PRICE_TILL = '900000'
+  const SWITCH_PRICE = 'UAH'
+  const DEPARTURE_CITY = '2014'
+  const MODULE_LOCATION_URL = encodeURIComponent(window.location.href)
+  const PREVIEW = '1'
+  const TIMESTAMP = Date.now()
+
+  interface ITTourSearchParams {
+    callback: string // jQuery callback name with timestamp
+    module_type: 'tour_search'
+    id: string // Partner ID: 'DG400625103918756O740800'
+    ver: '1'
+    type: '2970'
+    theme: '38'
+    action: 'package_tour_search'
+    hotel_rating: string // e.g. '4+78'
+    items_per_page: string // e.g. '50'
+    hotel?: string
+    region?: string
+    child_age?: string
+    package_tour_type: '1'
+    transport_type: '2' // Seems to be for avia/flight
+    country: '318' // Country code
+    food: string // Food types, e.g. '498+512+560'
+    adults: string // Number of adults
+    children: string // Number of children
+    date_from: string // Format: 'DD.MM.YY'
+    date_till: string // Format: 'DD.MM.YY'
+    night_from: string // Min nights
+    night_till: string // Max nights
+    price_from: string // Min price
+    price_till: string // Max price
+    switch_price: 'UAH' // Currency
+    departure_city: string // City code, e.g. '2014'
+    module_location_url: string // Current page URL
+    preview: '1'
+    _: string // Timestamp to prevent caching
+  }
+
+  const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
+    const baseURL = 'https://www.ittour.com.ua/tour_search.php'
+    const { timestamp, jQueryCallback } = createTimestampCallback()
+
+    // Pre-format certain parameters that need + instead of %2B
+    const hotelRating = '4+78'
+    const food = '498+512+560'
+
+    const defaultParams: ITTourSearchParams = {
+      callback: jQueryCallback,
+      module_type: 'tour_search',
+      id: 'DG400625103918756O740800',
+      ver: '1',
+      type: '2970',
+      theme: '38',
+      action: 'package_tour_search',
+      hotel_rating: hotelRating,
+      items_per_page: '50',
+      package_tour_type: '1',
+      transport_type: '2',
+      country: '318',
+      food: food,
+      adults: '2',
+      children: '0',
+      date_from: '10.03.25',
+      date_till: '21.03.25',
+      night_from: '6',
+      night_till: '8',
+      price_from: '0',
+      price_till: '900000',
+      switch_price: 'UAH',
+      departure_city: '2014',
+      module_location_url: encodeURIComponent(window.location.href),
+      preview: '1',
+      _: timestamp.toString(),
+      ...params,
+    }
+
+    const url = new URL(baseURL)
+    Object.entries(defaultParams).forEach(([key, value]) => {
+      if (value !== undefined) {
+        // Don't encode these specific parameters
+        if (key === 'hotel_rating' || key === 'food') {
+          url.searchParams.append(key, value)
+        } else {
+          url.searchParams.append(key, value)
+        }
+      }
+    })
+
+    // Replace any encoded plus signs back to actual plus signs for specific parameters
+    const finalUrl = url
+      .toString()
+      .replace(/hotel_rating=4%2B78/, 'hotel_rating=4+78')
+      .replace(/food=498%2B512%2B560/, 'food=498+512+560')
+
+    return finalUrl
+  }
+
+  const runSearch = async (): Promise<void> => {
     try {
-      const response = await makeITTourRequest('1a1318631d4d6aec8ef22cbbec2eeac1')
-      const parsedResponse = parseITTourResponse(response)
-      console.log('✅response', parsedResponse)
+      if (!(window as any).jQuery) {
+        console.error('jQuery is not loaded');
+        return;
+      }
+
+      const { timestamp, jQueryCallback } = createTimestampCallback();
+
+      const formattedDataFrom = dayjs(date?.from).format('DD.MM.YY');
+      const formattedDataTo = dayjs(date?.to).format('DD.MM.YY');
+
+      console.log('formattedDataFrom', formattedDataFrom);
+      console.log('formattedDataTo', formattedDataTo);
+
+      const url = buildITTourSearchURL({
+        callback: jQueryCallback,
+        date_from: formattedDataFrom,
+        date_till: formattedDataTo,
+        adults: adultsNumber.toString(),
+        _: timestamp.toString()
+      });
+
+      const response = await fetchJSONP(url, jQueryCallback);
+      const parsedResponse = parseSearchResponse(response);
+      setTourSearchData(parsedResponse);
+      console.log('✅response', parsedResponse);
     } catch (error) {
-      console.error('❌error', error)
+      console.error('Error during tour search:', error);
+    }
+  };
+
+  interface CountryResponse {
+    country?: string
+    region?: string
+    hotel?: string
+    departure_city?: string
+  }
+
+  const fetchCountries = async (
+    hotelRating: string = HOTEL_RATING,
+    transportType: string = TRANSPORT_TYPE,
+  ): Promise<CountryResponse> => {
+    const { timestamp, jQueryCallback } = createTimestampCallback()
+
+    const url = new URL('https://www.ittour.com.ua/tour_search.php')
+    url.searchParams.append('callback', jQueryCallback)
+    url.searchParams.append('module_type', MODULE_TYPE)
+    url.searchParams.append('id', MERCHANT_ID)
+    url.searchParams.append('action', 'get_package_search_filtered_field')
+    url.searchParams.append('event', 'select_transport')
+    url.searchParams.append('hotel_rating_id', hotelRating)
+    url.searchParams.append('transport_type_id', transportType)
+    url.searchParams.append('_', timestamp.toString())
+
+    try {
+      const response = await fetchJSONP(url.toString(), jQueryCallback)
+      return response
+    } catch (error) {
+      console.error('Error fetching countries:', error)
+      throw error
     }
   }
 
-  const handleLoadData = () => {
-    fetchITTour()
+  interface DepartureCityResponse {
+    departure_city?: string
+    error?: string
   }
+
+  const fetchDepartureCities = async (
+    countryId: string,
+    hotelRating: string = HOTEL_RATING,
+    transportType: string = TRANSPORT_TYPE,
+  ): Promise<DepartureCityResponse> => {
+    const { timestamp, jQueryCallback } = createTimestampCallback()
+
+    const url = new URL('https://www.ittour.com.ua/tour_search.php')
+    url.searchParams.append('callback', jQueryCallback)
+    url.searchParams.append('module_type', 'tour_search')
+    url.searchParams.append('id', 'DG400625103918756O740800')
+    url.searchParams.append('action', 'get_package_search_filtered_field')
+    url.searchParams.append('event', 'select_country')
+    url.searchParams.append('country_id', countryId)
+    url.searchParams.append('hotel_rating_id', hotelRating)
+    url.searchParams.append('transport_type_id', transportType)
+    url.searchParams.append('_', timestamp.toString())
+
+    try {
+      const response = await fetchJSONP(url.toString(), jQueryCallback)
+      return response
+    } catch (error) {
+      console.error('Error fetching departure cities:', error)
+      return { error: 'Failed to fetch departure cities' }
+    }
+  }
+
+  const loadDepartureCities = async () => {
+    try {
+      const response = await fetchDepartureCities(selectedCountry ?? COUNTRY)
+      if (response.departure_city) {
+        const cities = parseDepartureCities(response.departure_city)
+        setDepartureCities(cities.cities)
+
+        // Optionally set first city as default
+        if (cities.status === '200' && cities.cities.length > 0 && !selectedDepartureCity) {
+
+          let defaultCity = cities.cities.find((city: any) => city.name === 'Київ')
+
+          if (!defaultCity) {
+            defaultCity = cities.cities[0]
+          }
+
+          setSelectedDepartureCity(defaultCity.id)
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load departure cities:', error)
+    }
+  }
+
+
+  const init = async () => {
+    fetchCountries().then((response) => {
+      const parsedResponse = parseSearchBilderResponse(response)
+      if (
+        parsedResponse.status === '200' &&
+        parsedResponse.countries &&
+        parsedResponse.countries.length > 0
+      ) {
+        setCountries(parsedResponse.countries)
+        setSelectedCountry(parsedResponse.countries[0].id)
+      } else {
+        console.error('Error fetching countries:', parsedResponse.status)
+      }
+    })
+
+    loadDepartureCities()
+  }
+
+  useEffect(() : void => {
+    loadDepartureCities()
+  }, [selectedCountry])
+
+  useEffect(() : void => {
+    init()
+  }, [])
 
   return (
     <div className="w-full container-spacing">
       <div className="container-wrapper min-h-[300px] relative">
-        <div className="flex justify-center items-center">
-          <button
-            className="bg-astral-500 text-white px-4 py-2 rounded-md"
-            onClick={handleLoadData}
-          >
-            load data
-          </button>
+        <div className="w-full h-[300px] relative mb-40">
+          <div className="w-full h-full overflow-hidden rounded-4xl">
+            <img
+              src="https://o0z4coknhf.ufs.sh/f/UucILLerskLA60WL4Z0DxYO4iVTzFcfGgbECp9eH6Z8yrIAn"
+              alt="ITTour"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="flex gap-2 bg-jaffa-400 p-4 rounded-3xl w-[calc(100%-2rem)] mx-auto -translate-y-1/2">
+            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+              <SelectTrigger className="w-full border-none bg-jaffa-50 text-jaffa-900 font-bold rounded-xl">
+                <SelectValue placeholder="Select a country" />
+              </SelectTrigger>
+              <SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
+                {countries.map((country: any) => (
+                  <SelectItem
+                    key={country.id}
+                    value={country.id}
+                    className={cn('hover:bg-jaffa-100 rounded-xl', {
+                      'bg-jaffa-200 font-bold hover:bg-jaffa-400': selectedCountry === country.id,
+                    })}
+                  >
+                    {country.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={selectedDepartureCity} onValueChange={setSelectedDepartureCity}>
+              <SelectTrigger className="w-full border-none bg-jaffa-50 text-jaffa-900 font-bold rounded-xl">
+                <SelectValue placeholder="Select a departure city" />
+              </SelectTrigger>
+              <SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
+                {departureCities.map((city: any) => (
+                  <SelectItem
+                    key={city.id}
+                    value={city.id}
+                    className={cn('hover:bg-jaffa-100 rounded-xl', {
+                      'bg-jaffa-200 font-bold hover:bg-jaffa-400': selectedDepartureCity === city.id,
+                    })}
+                  >
+                    {city.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <div className="grid gap-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    id="date"
+                    variant={'outline'}
+                    className={cn(
+                      'w-[300px] justify-start text-left bg-jaffa-50 text-jaffa-900 font-bold border-none shadow-none rounded-xl',
+                      !date && 'text-muted-foreground',
+                    )}
+                  >
+                    <CalendarIcon />
+                    {date?.from ? (
+                      date.to ? (
+                        <>
+                          {format(date.from, 'LLL dd, y')} - {format(date.to, 'LLL dd, y')}
+                        </>
+                      ) : (
+                        format(date.from, 'LLL dd, y')
+                      )
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 bg-white border-none" align="start">
+                  <Calendar
+                    initialFocus
+                    mode="range"
+                    defaultMonth={date?.from}
+                    disabled={{
+                      before: dayjs().add(1, 'day').toDate(),
+                      after: date?.from ? dayjs(date?.from).add(11, 'day').toDate() : undefined,
+                    }}
+                    classNames={{
+                      cell: 'hover:bg-jaffa-50 rounded-md',
+                      day_disabled: '!text-gray-400 !cursor-not-allowed hover:!bg-white',
+                      day_selected: '!font-bold',
+                      day_range_start:
+                        'bg-linear-to-br from-jaffa-50 from-50% to-50% to-jaffa-100 text-jaffa-800 rounded-r-none',
+                      day_range_end:
+                        'bg-linear-to-br from-jaffa-100 from-50% to-50% to-jaffa-50 text-jaffa-800 rounded-l-none',
+                      day_range_middle: 'bg-jaffa-100 text-jaffa-800 rounded-none',
+                      day_outside: 'invisible',
+                    }}
+                    selected={date}
+                    onSelect={(range) =>
+                      setDate(
+                        range
+                          ? {
+                              from: range.from,
+                              to: range.to,
+                            }
+                          : {
+                              from: undefined,
+                              to: undefined,
+                            },
+                      )
+                    }
+                    numberOfMonths={2}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <Button className="rounded-xl bg-jaffa-900 text-jaffa-50" onClick={runSearch}>
+              Search
+            </Button>
+          </div>
         </div>
+
+        {tourSearchData && (
+          <div className="">
+            {tourSearchData.map((tour: any) => (
+              <div key={tour.id}>
+                <h2>{tour.title}</h2>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-2 bg-gray-200 rounded-full overflow-hidden">
           <div className="bg-astral-500 h-full rounded-full w-1/4 absolute top-0 animate-run"></div>
