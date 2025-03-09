@@ -1,5 +1,10 @@
 import * as cheerio from 'cheerio'
 
+const DEFAULT_HOTEL_RATING = '4+78'
+const DEFAULT_TRANSPORT_TYPE = '2'
+const MODULE_TYPE = 'tour_search'
+const MERCHANT_ID = 'DG400625103918756O740800'
+
 const makeITTourRequest = (tourId: string) => {
   const { timestamp, jQueryCallback } = createTimestampCallback()
 
@@ -306,6 +311,105 @@ const getStatus = ($: cheerio.CheerioAPI): string => {
   return 'available'
 }
 
+
+interface CountryResponse {
+  country?: string
+  region?: string
+  hotel?: string
+  departure_city?: string
+}
+
+const fetchCountries = async (
+  hotelRating: string = DEFAULT_HOTEL_RATING,
+  transportType: string = DEFAULT_TRANSPORT_TYPE,
+): Promise<CountryResponse> => {
+  const { timestamp, jQueryCallback } = createTimestampCallback()
+
+  const url = new URL('https://www.ittour.com.ua/tour_search.php')
+  url.searchParams.append('callback', jQueryCallback)
+  url.searchParams.append('module_type', MODULE_TYPE)
+  url.searchParams.append('id', MERCHANT_ID)
+  url.searchParams.append('action', 'get_package_search_filtered_field')
+  url.searchParams.append('event', 'select_transport')
+  url.searchParams.append('hotel_rating_id', hotelRating)
+  url.searchParams.append('transport_type_id', transportType)
+  url.searchParams.append('_', timestamp.toString())
+
+  try {
+    const response = await fetchJSONP(url.toString(), jQueryCallback)
+    return response
+  } catch (error) {
+    console.error('Error fetching countries:', error)
+    throw error
+  }
+}
+
+interface DepartureCityResponse {
+  departure_city?: string
+  error?: string
+}
+
+const fetchDepartureCities = async (
+  countryId: string,
+  hotelRating: string = DEFAULT_HOTEL_RATING,
+  transportType: string = DEFAULT_TRANSPORT_TYPE,
+): Promise<DepartureCityResponse> => {
+  const { timestamp, jQueryCallback } = createTimestampCallback()
+
+  const url = new URL('https://www.ittour.com.ua/tour_search.php')
+  url.searchParams.append('callback', jQueryCallback)
+  url.searchParams.append('module_type', 'tour_search')
+  url.searchParams.append('id', 'DG400625103918756O740800')
+  url.searchParams.append('action', 'get_package_search_filtered_field')
+  url.searchParams.append('event', 'select_country')
+  url.searchParams.append('country_id', countryId)
+  url.searchParams.append('hotel_rating_id', hotelRating)
+  url.searchParams.append('transport_type_id', transportType)
+  url.searchParams.append('_', timestamp.toString())
+
+  try {
+    const response = await fetchJSONP(url.toString(), jQueryCallback)
+    return response
+  } catch (error) {
+    console.error('Error fetching departure cities:', error)
+    return { error: 'Failed to fetch departure cities' }
+  }
+}
+
+interface ITTourSearchParams {
+  callback: string // jQuery callback name with timestamp
+  module_type: 'tour_search'
+  id: string // Partner ID: 'DG400625103918756O740800'
+  ver: '1'
+  type: '2970'
+  theme: '38'
+  action: 'package_tour_search'
+  hotel_rating: string // e.g. '4+78'
+  items_per_page: string // e.g. '50'
+  hotel?: string
+  region?: string
+  child_age?: string
+  package_tour_type: '1'
+  transport_type: '2' // Seems to be for avia/flight
+  country: '318' // Country code
+  food: string // Food types, e.g. '498+512+560'
+  adults: string // Number of adults
+  children: string // Number of children
+  date_from: string // Format: 'DD.MM.YY'
+  date_till: string // Format: 'DD.MM.YY'
+  night_from: string // Min nights
+  night_till: string // Max nights
+  price_from: string // Min price
+  price_till: string // Max price
+  switch_price: 'UAH' // Currency
+  departure_city: string // City code, e.g. '2014'
+  module_location_url: string // Current page URL
+  preview: '1'
+  _: string // Timestamp to prevent caching
+}
+
+
+
 const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
   const { timestamp, jQueryCallback } = createTimestampCallback();
   const baseURL = 'https://www.ittour.com.ua/tour_search.php';
@@ -355,4 +459,4 @@ const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
     .replace(/food=498%2B512%2B560/, 'food=498+512+560');
 };
 
-export { makeITTourRequest, parseITTourResponse, fetchJSONP, createTimestampCallback, parseSearchResponse, buildITTourSearchURL, parseSearchBilderResponse, parseDepartureCities }
+export { makeITTourRequest, parseITTourResponse, fetchJSONP, createTimestampCallback, parseSearchResponse, buildITTourSearchURL, parseSearchBilderResponse, parseDepartureCities, fetchCountries, fetchDepartureCities }
