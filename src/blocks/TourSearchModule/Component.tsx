@@ -11,6 +11,7 @@ import { CalendarIcon } from 'lucide-react'
 import { cn } from '@/utilities/cn'
 import { DateRange } from 'react-day-picker'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import PeopleSelector from './PeopleSelector'
 export const TourSearchModuleComponent = () => {
   const [countries, setCountries] = useState<any>([])
   const [departureCities, setDepartureCities] = useState<any>([])
@@ -22,6 +23,7 @@ export const TourSearchModuleComponent = () => {
   const [selectedDepartureCity, setSelectedDepartureCity] = useState<any>(null)
   const [tourSearchData, setTourSearchData] = useState<any>(null)
   const [adultsNumber, setAdultsNumber] = useState<number>(2)
+  const [childrenNumber, setChildrenNumber] = useState<number>(0)
 
   const handleLoad = () => {
     console.log('handleLoad')
@@ -151,7 +153,7 @@ export const TourSearchModuleComponent = () => {
   const MODULE_THEME = '38'
   const MODULE_ACTION = 'package_tour_search'
   const HOTEL_RATING = '4+78'
-  const ITEMS_PER_PAGE = '50'
+  const ITEMS_PER_PAGE = '100'
   const HOTEL = ''
   const REGION = ''
   const CHILD_AGE = ''
@@ -222,7 +224,7 @@ export const TourSearchModuleComponent = () => {
       theme: '38',
       action: 'package_tour_search',
       hotel_rating: hotelRating,
-      items_per_page: '50',
+      items_per_page: ITEMS_PER_PAGE,
       package_tour_type: '1',
       transport_type: '2',
       country: '318',
@@ -284,6 +286,9 @@ export const TourSearchModuleComponent = () => {
         date_from: formattedDataFrom,
         date_till: formattedDataTo,
         adults: adultsNumber.toString(),
+        children: childrenNumber.toString(),
+        departure_city: selectedDepartureCity,
+        country: selectedCountry,
         _: timestamp.toString()
       });
 
@@ -360,28 +365,33 @@ export const TourSearchModuleComponent = () => {
     }
   }
 
-  const loadDepartureCities = async () => {
+  const loadDepartureCities = async (): Promise<void> => {
+    console.log('✅selectedCountry', selectedCountry)
     try {
       const response = await fetchDepartureCities(selectedCountry ?? COUNTRY)
       if (response.departure_city) {
         const cities = parseDepartureCities(response.departure_city)
-        setDepartureCities(cities.cities)
-
         // Optionally set first city as default
         if (cities.status === '200' && cities.cities.length > 0 && !selectedDepartureCity) {
-
-          let defaultCity = cities.cities.find((city: any) => city.name === 'Київ')
-
-          if (!defaultCity) {
-            defaultCity = cities.cities[0]
-          }
-
-          setSelectedDepartureCity(defaultCity.id)
+          setDepartureCities(cities.cities)
+          setSelectedDepartureCity(getDefaultCity(cities))
+        } else {
+          console.error('Error fetching departure cities:', response.error)
         }
       }
     } catch (error) {
       console.error('Failed to load departure cities:', error)
     }
+  }
+
+  const getDefaultCity = (cities: any): string => {
+    let defaultCity = cities.cities.find((city: any) => city.name === 'Київ')
+
+    if (!defaultCity) {
+      defaultCity = cities.cities[0]
+    }
+
+    return defaultCity.id
   }
 
 
@@ -523,6 +533,9 @@ export const TourSearchModuleComponent = () => {
                   />
                 </PopoverContent>
               </Popover>
+            </div>
+            <div>
+              <PeopleSelector childrenNumber={childrenNumber} setChildrenNumber={setChildrenNumber} adultsNumber={adultsNumber} setAdultsNumber={setAdultsNumber} />
             </div>
 
             <Button className="rounded-xl bg-jaffa-900 text-jaffa-50" onClick={runSearch}>
