@@ -12,6 +12,7 @@ import { cn } from '@/utilities/cn'
 import { DateRange } from 'react-day-picker'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import PeopleSelector from './PeopleSelector'
+import NightsSelector from './NightsSelector'
 export const TourSearchModuleComponent = () => {
   const [countries, setCountries] = useState<any>([])
   const [departureCities, setDepartureCities] = useState<any>([])
@@ -24,6 +25,7 @@ export const TourSearchModuleComponent = () => {
   const [tourSearchData, setTourSearchData] = useState<any>(null)
   const [adultsNumber, setAdultsNumber] = useState<number>(2)
   const [childrenNumber, setChildrenNumber] = useState<number>(0)
+  const [nights, setNights] = useState<number[]>([7, 9])
 
   const handleLoad = () => {
     console.log('handleLoad')
@@ -289,6 +291,8 @@ export const TourSearchModuleComponent = () => {
         children: childrenNumber.toString(),
         departure_city: selectedDepartureCity,
         country: selectedCountry,
+        night_from: nights[0].toString(),
+        night_till: nights[1].toString(),
         _: timestamp.toString()
       });
 
@@ -491,7 +495,7 @@ export const TourSearchModuleComponent = () => {
                         format(date.from, 'LLL dd, y')
                       )
                     ) : (
-                      <span>Pick a date</span>
+                      <span>Виберіть дату</span>
                     )}
                   </Button>
                 </PopoverTrigger>
@@ -534,9 +538,8 @@ export const TourSearchModuleComponent = () => {
                 </PopoverContent>
               </Popover>
             </div>
-            <div>
+              <NightsSelector nights={nights} setNights={setNights} />
               <PeopleSelector childrenNumber={childrenNumber} setChildrenNumber={setChildrenNumber} adultsNumber={adultsNumber} setAdultsNumber={setAdultsNumber} />
-            </div>
 
             <Button className="rounded-xl bg-jaffa-900 text-jaffa-50" onClick={runSearch}>
               Search

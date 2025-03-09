@@ -58,7 +58,7 @@ const PeopleSelector = ({ childrenNumber, setChildrenNumber, adultsNumber, setAd
         </PopoverTrigger>
         <PopoverContent className="bg-jaffa-50 text-jaffa-900 rounded-xl border-none">
           <div className="flex justify-between items-center">
-            <p className="text-sm font-medium">Дорослі:</p>
+            <p className="text-sm font-bold">Дорослі:</p>
             <div className="flex items-center gap-2">
               <Button
                 className={buttonVariants({ disabled: adultsNumber === MIN_ADULTS_NUMBER })}
@@ -76,7 +76,7 @@ const PeopleSelector = ({ childrenNumber, setChildrenNumber, adultsNumber, setAd
             </div>
           </div>
           <div className="flex justify-between items-center">
-            <p className="text-sm font-medium">Діти:</p>
+            <p className="text-sm font-bold">Діти:</p>
             <div className="flex items-center gap-2">
               <Button
                 className={buttonVariants({ disabled: childrenNumber === MIN_CHILDREN_NUMBER })}
