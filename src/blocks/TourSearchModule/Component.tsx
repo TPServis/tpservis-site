@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState, useRef, use } from 'react'
 import Script from 'next/script'
-import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, parseDepartureCities, fetchCountries, fetchDepartureCities, buildITTourSearchURL } from './utils'
+import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, fetchCountries, fetchDepartureCities, buildITTourSearchURL, getOptions } from './utils'
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
@@ -134,23 +134,28 @@ export const TourSearchModuleComponent = () => {
     }
   };
 
+
   const getDepartureCities = async (): Promise<void> => {
     try {
       setIsLoadingDepartureCities(true)
-      const response = await fetchDepartureCities(selectedCountry ?? COUNTRY, HOTEL_RATING, transportType)
+      // If there is no previous response, fetch the departure cities
+      const response = await fetchDepartureCities(
+        selectedCountry ?? COUNTRY,
+        HOTEL_RATING,
+        transportType,
+      )
       if (response.departure_city) {
-        const cities = parseDepartureCities(response.departure_city)
-        // Optionally set first city as default
-        if (cities.status === '200' && cities.cities.length > 0) {
-          setDepartureCities(cities.cities)
+        const parsedResponse = parseSearchBilderResponse(response)
+        if (
+          parsedResponse.status === '400' ||
+          !parsedResponse.departureCities ||
+          parsedResponse.departureCities.length === 0
+        )
+          throw new Error('Error fetching departure cities: ' + JSON.stringify(parsedResponse))
 
-          if (!selectedDepartureCity || !cities.cities.find((city: any) => city.id === selectedDepartureCity)) {
-            setSelectedDepartureCity(getDefaultCity(cities))
-          }
 
-        } else {
-          console.error('Error fetching departure cities:', response.error)
-        }
+        setDepartureCities(parsedResponse.departureCities)
+        setSelectedDepartureCity(updateStateConditionally(selectedDepartureCity, parsedResponse.departureCities, 'Київ'))
         setIsLoadingDepartureCities(false)
       }
     } catch (error) {
@@ -158,59 +163,52 @@ export const TourSearchModuleComponent = () => {
     }
   }
 
-  const getDefaultCity = (cities: any): string => {
-    let defaultCity = cities.cities.find((city: any) => city.name === 'Київ')
 
-    if (!defaultCity) {
-      defaultCity = cities.cities[0]
-    }
-
-    return defaultCity.id
-  }
-
-
-  const getCountries = async () => {
+  const init = async () => {
     setIsLoadingCountries(true)
+    setIsLoadingDepartureCities(true)
     fetchCountries(HOTEL_RATING, transportType).then((response) => {
       const parsedResponse = parseSearchBilderResponse(response)
-      if (
-        parsedResponse.status === '200' &&
-        parsedResponse.countries &&
-        parsedResponse.countries.length > 0
-      ) {
-        setCountries(parsedResponse.countries)
-        if (!selectedCountry || !parsedResponse.countries.find((country: any) => country.id === selectedCountry)) {
-          setSelectedCountry(getDefaultCountry(parsedResponse.countries))
-        }
-      } else {
-        console.error('Error fetching countries:', parsedResponse.status)
-      }
-      setIsLoadingCountries(false)
-    })
 
-    getDepartureCities()
+
+      if (parsedResponse.status === '400') {
+        console.error('Error fetching countries:', parsedResponse.status)
+        return
+      }
+
+      if (parsedResponse.countries && parsedResponse.countries.length > 0) {
+        setCountries(parsedResponse.countries)
+        setSelectedCountry(updateStateConditionally(selectedCountry, parsedResponse.countries, 'Туреччина'))
+        setIsLoadingCountries(false)
+      }
+    })
   }
 
-  const getDefaultCountry = (countries: any) => {
-    let defaultCountry = countries.find((country: any) => country.title === 'Туреччина')
-    if (!defaultCountry) {
-      defaultCountry = countries[0]
+  const updateStateConditionally = (state: any, response: any, defaultOption: string) => {
+    if (!state || !response.find((item: {id: string}) => item.id === state)) {
+      return getDefaultOption(response, defaultOption)
+    }
+    return state
+  }
+
+  const getDefaultOption = (options: {name: string, id: string}[], defaultOption: string) => {
+    let option = options.find((option: {name: string}) => option.name === defaultOption)
+
+    if (!option) {
+      option = options[0]
     }
 
-    return defaultCountry.id
+    return option.id
   }
 
   useEffect(() : void => {
-    getCountries()
+    init()
   }, [transportType])
 
   useEffect(() : void => {
     getDepartureCities()
   }, [selectedCountry, transportType])
 
-  useEffect(() : void => {
-    getCountries()
-  }, [])
 
   return (
     <div className="w-full container-spacing">
@@ -223,7 +221,7 @@ export const TourSearchModuleComponent = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="grid grid-cols-12 lg:flex gap-2 bg-jaffa-400 p-4 rounded-3xl w-[calc(100%-2rem)] mx-auto -translate-y-1/2">
+          <div className="grid grid-cols-12 lg:flex gap-2 bg-jaffa-400 p-4 rounded-3xl w-full md:w-[calc(100%-2rem)] mx-auto -translate-y-1/2">
             <div className="col-span-3">
               <TransportSelector
                 transportType={transportType}
@@ -251,7 +249,7 @@ export const TourSearchModuleComponent = () => {
                         'bg-jaffa-200 font-bold hover:bg-jaffa-400': selectedCountry === country.id,
                       })}
                     >
-                      {country.title}
+                      {country.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -379,10 +377,6 @@ export const TourSearchModuleComponent = () => {
             ))}
           </div>
         )}
-
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-2 bg-gray-200 rounded-full overflow-hidden">
-          <div className="bg-astral-500 h-full rounded-full w-1/4 absolute top-0 animate-run"></div>
-        </div>
 
         <div id="tour_search_module" className="relative z-10 hidden"></div>
         <Script

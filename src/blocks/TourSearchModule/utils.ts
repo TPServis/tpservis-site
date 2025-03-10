@@ -5,13 +5,15 @@ const DEFAULT_TRANSPORT_TYPE = '2'
 const MODULE_TYPE = 'tour_search'
 const MERCHANT_ID = 'DG400625103918756O740800'
 
+type ResponsesStatus = '200' | '400'
+
 const makeITTourRequest = (tourId: string) => {
   const { timestamp, jQueryCallback } = createTimestampCallback()
 
   const url = new URL('https://www.ittour.com.ua/tour_search.php')
   url.searchParams.append('callback', jQueryCallback)
-  url.searchParams.append('module_type', 'tour_search')
-  url.searchParams.append('id', 'DG400625103918756O740800')
+  url.searchParams.append('module_type', MODULE_TYPE)
+  url.searchParams.append('id', MERCHANT_ID)
   url.searchParams.append('ver', '1')
   url.searchParams.append('type', '2970')
   url.searchParams.append('theme', '38')
@@ -65,44 +67,53 @@ const cleanPrice = (price: string) => {
 }
 
 
-const parseSearchResponse = (response: any) => {
+const isValidSearchItem = (row: any) : boolean => {
+  return row.hasClass('itt_odd') || row.hasClass('itt_even')
+}
+
+type SearchResult = {
+  title: string
+  id: string
+}
+
+type ParseSearchResponse = {
+  results?: SearchResult[]
+  status: ResponsesStatus
+}
+
+const searchSelectors = {
+  items: 'tbody > tr',
+  title: 'td:nth-child(4) > div',
+  id: 'td:nth-child(2) > input',
+}
+
+const parseSearchResponse = (response: any): ParseSearchResponse => {
 
   try {
-    let htmlContent = ''
-    if (response && typeof response.text === 'string') {
-      htmlContent = response.text
-    } else if (typeof response === 'string') {
-      htmlContent = response
-    } else if (response && typeof response === 'object') {
-      htmlContent = JSON.stringify(response)
-    }
+    const $ = cheerio.load(getValidContent(response))
+    const results: SearchResult[] = []
 
-    if (!htmlContent) {
-      throw new Error('No valid HTML content found in response')
-    }
+    $(searchSelectors.items).each((_, item) => {
+      if (!isValidSearchItem($(item))) return
 
-    const $ = cheerio.load(htmlContent)
-    const results: { title: string; id: string }[] = []
+      const title = $(item).find(searchSelectors.title).text().trim()
+      const id = $(item).find(searchSelectors.id).attr('id')
 
-    $('tbody > tr').each((_, element) => {
-      const $row = $(element)
-      if ($row.hasClass('itt_odd') || $row.hasClass('itt_even')) {
-        const title = $row.find('td:nth-child(4) > div').text().trim()
-        const id = $row.find('td:nth-child(2) > input').attr('id')
+      if (!title || !id) throw new Error('No valid title or id found')
 
-        if (title && id) {
-          results.push({ title, id })
-        }
-      }
+
+      results.push({ title, id })
     })
 
-    return results
+    return {
+      results,
+      status: '200',
+    }
 
   } catch (error) {
     console.error('Error parsing ITTour response:', error)
     return {
-      error: 'Failed to parse response',
-      raw: response,
+      status: '400',
     }
   }
 }
@@ -126,120 +137,98 @@ const selectors = {
 }
 
 
-type DepartureCity = {
+type Option = {
   id: string
   name: string
 }
 
-type ParseDepartureCitiesResponse = {
-  cities: Array<DepartureCity>
-  status: '200' | '400'
+type GetOptionsResponse = {
+  options?: Option[]
+  status: ResponsesStatus
 }
 
-const parseDepartureCities = (htmlString: string): ParseDepartureCitiesResponse => {
-  if (!htmlString) {
-    throw new Error('No valid HTML content provided')
-  }
 
-  const result: Array<DepartureCity> = []
+const getOptions = (htmlString: string): GetOptionsResponse => {
   try {
     const $ = cheerio.load(htmlString)
+    const result: Option[] = []
 
-    const options = $('option')
+  $('option').each((_, item): void => {
+    const id = $(item).attr('value')
+    const name = $(item).text().trim()
 
-    options.each((_, element) => {
-      const $item = $(element)
-      const id = $item.attr('value')
-      const name = $item.text().trim()
+    if (!id || !name) throw new Error('No valid id or name found')
 
-      if (id && name) {
-        result.push({ id, name })
-      }
-    })
+    result.push({ id, name })
+  })
 
-
-
-    return {
-      cities: result,
+  return {
+      options: result,
       status: '200',
     }
   } catch (error) {
-    console.error('Error parsing departure cities:', error)
+    console.error('Error parsing options:', error)
     return {
-      cities: [],
       status: '400',
     }
   }
 }
 
-type Country = {
-  id: string
-  title: string
-}
-
-const getCountries = (countries: string): Country[] => {
-  const $ = cheerio.load(countries)
-  let result: Country[] = []
-  const countriesList = $('option')
-  countriesList.each((_, element) => {
-    const $item = $(element)
-    const id = $item.attr('value')
-    const title = $item.text().trim()
-    if (id && title) {
-      result.push({ id, title })
-    }
-  })
-  return result
-}
 
 type ParserSearchBilderResponse = {
-  countries: Country[]
+  countries?: Option[]
+  departureCities?: Option[]
   status?: '200' | '400'
 }
 
 const parseSearchBilderResponse = (response: any): ParserSearchBilderResponse => {
   try {
-    let { country, region, hotel, departure_city } = response
+    let { country, departure_city } = response
 
-    if (!country || !region || !hotel || !departure_city) {
-      throw new Error('No valid HTML content found in response')
+
+    let countries: Option[] = []
+    let departureCities: Option[] = []
+
+    if(country) {
+      const countriesResponse = getOptions(country)
+      countries = countriesResponse.options ?? []
     }
 
-    const countries = getCountries(country)
+    if(departure_city) {
+      const departureCitiesResponse = getOptions(departure_city)
+      departureCities = departureCitiesResponse.options ?? []
+    }
 
 
     return {
-      countries,
+      countries: countries ?? [],
+      departureCities: departureCities ?? [],
       status: '200'
     }
 
   } catch (error) {
     console.error('Error parsing ITTour response:', error)
     return {
-      countries: [],
       status: '400',
     }
   }
 }
 
+const getValidContent = (content: any) => {
+  if (content && typeof content.text === 'string') {
+    return content.text
+  } else if (typeof content === 'string') {
+    return content
+  } else if (content && typeof content === 'object') {
+    return JSON.stringify(content)
+  } else {
+    throw new Error('No HTML valid content found')
+  }
+}
+
 const parseITTourResponse = (response: any) => {
   try {
-    let htmlContent = ''
-    if (response && typeof response.text === 'string') {
-      htmlContent = response.text
-    } else if (typeof response === 'string') {
-      htmlContent = response
-    } else if (response && typeof response === 'object') {
-      htmlContent = JSON.stringify(response)
-    }
-
-    if (!htmlContent) {
-      throw new Error('No valid HTML content found in response')
-    }
-
-    console.log('htmlContent', htmlContent)
-
-    const $ = cheerio.load(htmlContent)
+    const $ = cheerio.load(getValidContent(response))
 
     const price = cleanPrice($(selectors.price).text().trim())
 
@@ -459,4 +448,4 @@ const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
     .replace(/food=498%2B512%2B560/, 'food=498+512+560');
 };
 
-export { makeITTourRequest, parseITTourResponse, fetchJSONP, createTimestampCallback, parseSearchResponse, buildITTourSearchURL, parseSearchBilderResponse, parseDepartureCities, fetchCountries, fetchDepartureCities }
+export { makeITTourRequest, parseITTourResponse, fetchJSONP, createTimestampCallback, parseSearchResponse, buildITTourSearchURL, parseSearchBilderResponse, fetchCountries, fetchDepartureCities , getOptions }
