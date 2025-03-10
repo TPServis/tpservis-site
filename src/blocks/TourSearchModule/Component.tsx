@@ -15,6 +15,34 @@ import PeopleSelector from './PeopleSelector'
 import NightsSelector from './NightsSelector'
 import TransportSelector from './TransportSelector'
 
+
+
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350047&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-f33af08145db2441a65b3aedcbbb3b1b&sharding_rule_id=&_=1741030363394
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350049&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-dfdd67c6b7607347a5a9dc3c822b5e84&sharding_rule_id=&_=1741030479830
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery17108821699837300099_1741034930151&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-1a1318631d4d6aec8ef22cbbec2eeac1&sharding_rule_id=&_=1741036767165
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery4375644823069742_1741031012487&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-840a980ca207ef2b2df684eeb0027aa8&sharding_rule_id=&_=1741031012487'
+  // 03-08-840a980ca207ef2b2df684eeb0027aa8
+
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery17106025752721087283_1741514343320&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514355260
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery17103968606778564445_1741514676869&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514762876
+  // https://www.ittour.com.ua/tour_search.php?callback=jQuery9569997690939707_1741515817928&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4%2B78&items_per_page=50&package_tour_type=1&transport_type=2&country=318&food=498%2B512%2B560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%253A%252F%252Flocalhost%253A3000%252Ftours&preview=1&_=1741515817928
+
+
+
+ const MERCHANT_ID = 'DG400625103918756O740800'
+ const MODULE_TYPE = 'tour_search'
+ const HOTEL_RATING = '4+78'
+ const HOTEL = ''
+ const REGION = ''
+ const CHILD_AGE = ''
+ const TRANSPORT_TYPE = '2'
+ const COUNTRY = '318'
+ const FOOD = '498+512+560'
+ const PRICE_FROM = '0'
+ const PRICE_TILL = '900000'
+ const SWITCH_PRICE = 'UAH'
+ const DEPARTURE_CITY = '2014'
+
 export const TourSearchModuleComponent = () => {
   const [transportType, setTransportType] = useState<string>('2')
   const [countries, setCountries] = useState<any>([])
@@ -67,49 +95,6 @@ export const TourSearchModuleComponent = () => {
     }
   }
 
-  // const updateSelectAvia = () => {
-  //   const selectAvia = document.querySelector('#transport_type') as HTMLSelectElement
-  //   if (selectAvia) {
-  //     console.log('selectAvia', selectAvia)
-
-  //     // Simulate a user clicking the select element
-  //     selectAvia.selectedIndex = 2
-  //     const event = new Event('change', { bubbles: true, cancelable: true })
-  //     selectAvia.dispatchEvent(event)
-  //   }
-  // }
-
-  // const removeWidth = () => {
-  //   const itt_in_middle: any = document.querySelector('.itt_in_middel')
-  //   if (itt_in_middle) {
-  //     itt_in_middle.style.width = '100%'
-  //   }
-  // }
-
-
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350047&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-f33af08145db2441a65b3aedcbbb3b1b&sharding_rule_id=&_=1741030363394
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350049&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-dfdd67c6b7607347a5a9dc3c822b5e84&sharding_rule_id=&_=1741030479830
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery17108821699837300099_1741034930151&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-1a1318631d4d6aec8ef22cbbec2eeac1&sharding_rule_id=&_=1741036767165
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery4375644823069742_1741031012487&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-840a980ca207ef2b2df684eeb0027aa8&sharding_rule_id=&_=1741031012487'
-  // 03-08-840a980ca207ef2b2df684eeb0027aa8
-
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery17106025752721087283_1741514343320&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514355260
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery17103968606778564445_1741514676869&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514762876
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery9569997690939707_1741515817928&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4%2B78&items_per_page=50&package_tour_type=1&transport_type=2&country=318&food=498%2B512%2B560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%253A%252F%252Flocalhost%253A3000%252Ftours&preview=1&_=1741515817928
-
-  const MERCHANT_ID = 'DG400625103918756O740800'
-  const MODULE_TYPE = 'tour_search'
-  const HOTEL_RATING = '4+78'
-  const HOTEL = ''
-  const REGION = ''
-  const CHILD_AGE = ''
-  const TRANSPORT_TYPE = '2'
-  const COUNTRY = '318'
-  const FOOD = '498+512+560'
-  const PRICE_FROM = '0'
-  const PRICE_TILL = '900000'
-  const SWITCH_PRICE = 'UAH'
-  const DEPARTURE_CITY = '2014'
 
   const runSearch = async (): Promise<void> => {
     try {
@@ -238,59 +223,76 @@ export const TourSearchModuleComponent = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="flex gap-2 bg-jaffa-400 p-4 rounded-3xl w-[calc(100%-2rem)] mx-auto -translate-y-1/2">
-            <TransportSelector transportType={transportType} setTransportType={setTransportType} />
-            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger className="w-full border-none bg-jaffa-50 text-jaffa-900 font-bold rounded-xl">
-                <div className={cn("flex gap-2 items-center transition-all duration-100", { 'blur-sm': isLoadingCountries })}>
-                  <Plane className="h-4" />
-                  <SelectValue placeholder="Select a country" />
-                </div>
-              </SelectTrigger>
-              <SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
-                {countries.map((country: any) => (
-                  <SelectItem
-                    key={country.id}
-                    value={country.id}
-                    className={cn('hover:bg-jaffa-100 rounded-xl', {
-                      'bg-jaffa-200 font-bold hover:bg-jaffa-400': selectedCountry === country.id,
+          <div className="grid grid-cols-12 lg:flex gap-2 bg-jaffa-400 p-4 rounded-3xl w-[calc(100%-2rem)] mx-auto -translate-y-1/2">
+            <div className="col-span-3">
+              <TransportSelector
+                transportType={transportType}
+                setTransportType={setTransportType}
+              />
+            </div>
+            <div className="col-span-9 w-full">
+              <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                <SelectTrigger className="w-full border-none bg-jaffa-50 text-jaffa-900 font-bold rounded-xl">
+                  <div
+                    className={cn('flex gap-2 items-center transition-all duration-100', {
+                      'blur-sm': isLoadingCountries,
                     })}
                   >
-                    {country.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={selectedDepartureCity} onValueChange={setSelectedDepartureCity}>
-              <SelectTrigger className="w-full border-none bg-jaffa-50 text-jaffa-900 font-bold rounded-xl">
-                <div className={cn("flex gap-2 items-center transition-all duration-100", { 'blur-sm': isLoadingDepartureCities })}>
-                  <MapPin className="h-4" />
-                  <SelectValue placeholder="Select a departure city" />
-                </div>
-              </SelectTrigger>
-              <SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
-                {departureCities.map((city: any) => (
-                  <SelectItem
-                    key={city.id}
-                    value={city.id}
-                    className={cn('hover:bg-jaffa-100 rounded-xl', {
-                      'bg-jaffa-200 font-bold hover:bg-jaffa-400': selectedDepartureCity === city.id,
+                    <Plane className="h-4" />
+                    <SelectValue placeholder="Select a country" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
+                  {countries.map((country: any) => (
+                    <SelectItem
+                      key={country.id}
+                      value={country.id}
+                      className={cn('hover:bg-jaffa-100 rounded-xl', {
+                        'bg-jaffa-200 font-bold hover:bg-jaffa-400': selectedCountry === country.id,
+                      })}
+                    >
+                      {country.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="col-span-12 w-full">
+              <Select value={selectedDepartureCity} onValueChange={setSelectedDepartureCity}>
+                <SelectTrigger className="w-full border-none bg-jaffa-50 text-jaffa-900 font-bold rounded-xl">
+                  <div
+                    className={cn('flex gap-2 items-center transition-all duration-100', {
+                      'blur-sm': isLoadingDepartureCities,
                     })}
                   >
-                    {city.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <div className="grid gap-2">
+                    <MapPin className="h-4" />
+                    <SelectValue placeholder="Select a departure city" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
+                  {departureCities.map((city: any) => (
+                    <SelectItem
+                      key={city.id}
+                      value={city.id}
+                      className={cn('hover:bg-jaffa-100 rounded-xl', {
+                        'bg-jaffa-200 font-bold hover:bg-jaffa-400':
+                          selectedDepartureCity === city.id,
+                      })}
+                    >
+                      {city.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2 col-span-12 w-full">
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     id="date"
                     variant={'outline'}
                     className={cn(
-                      'w-[300px] justify-start text-left bg-jaffa-50 text-jaffa-900 font-bold border-none shadow-none rounded-xl',
+                      'lg:min-w-[300px] w-full justify-start text-left bg-jaffa-50 text-jaffa-900 font-bold border-none shadow-none rounded-xl',
                       !date && 'text-muted-foreground',
                     )}
                   >
@@ -347,10 +349,22 @@ export const TourSearchModuleComponent = () => {
                 </PopoverContent>
               </Popover>
             </div>
+            <div className="col-span-6">
               <NightsSelector nights={nights} setNights={setNights} />
-              <PeopleSelector childrenNumber={childrenNumber} setChildrenNumber={setChildrenNumber} adultsNumber={adultsNumber} setAdultsNumber={setAdultsNumber} />
+            </div>
+            <div className="col-span-6">
+              <PeopleSelector
+                childrenNumber={childrenNumber}
+                setChildrenNumber={setChildrenNumber}
+                adultsNumber={adultsNumber}
+                setAdultsNumber={setAdultsNumber}
+              />
+            </div>
 
-            <Button className="rounded-xl bg-jaffa-900 text-jaffa-50" onClick={runSearch}>
+            <Button
+              className="rounded-xl bg-jaffa-900 text-jaffa-50 col-span-12"
+              onClick={runSearch}
+            >
               Search
             </Button>
           </div>

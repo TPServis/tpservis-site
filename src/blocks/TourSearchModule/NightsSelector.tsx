@@ -15,7 +15,7 @@ const NightsSelector = ({ nights, setNights }: NightsSelectorProps) => {
     <div>
       <Popover>
         <PopoverTrigger asChild>
-          <Button className="bg-jaffa-50 text-jaffa-900 rounded-xl font-bold">
+          <Button className="bg-jaffa-50 text-jaffa-900 rounded-xl font-bold w-full lg:w-auto">
             <Moon className="h-4" />
             {nights[0]}-{nights[1]}
           </Button>

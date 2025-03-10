@@ -50,7 +50,7 @@ const PeopleSelector = ({ childrenNumber, setChildrenNumber, adultsNumber, setAd
     <div>
       <Popover>
         <PopoverTrigger asChild>
-          <Button className="bg-jaffa-50 text-jaffa-900 rounded-xl font-bold">
+          <Button className="bg-jaffa-50 text-jaffa-900 rounded-xl font-bold w-full lg:w-auto">
             <UsersRound className="w-4 h-4" />
             {adultsNumber}
             {childrenNumber > 0 && `+${childrenNumber}`}
