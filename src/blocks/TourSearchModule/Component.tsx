@@ -14,6 +14,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import PeopleSelector from './PeopleSelector'
 import NightsSelector from './NightsSelector'
 import TransportSelector from './TransportSelector'
+import { toast } from 'sonner'
+
 
 
 
@@ -97,8 +99,29 @@ export const TourSearchModuleComponent = () => {
 
 
   const runSearch = async (): Promise<void> => {
+    if (!date?.from || !date?.to) {
+      toast.error('Будь ласка, оберіть дату');
+      return;
+    }
+
+    if (!selectedCountry || !selectedDepartureCity) {
+      toast.error('Будь ласка, оберіть країну та місто відправлення');
+      return;
+    }
+
+    if (nights[1] <= 3) {
+      toast.error('Кількість ночей має бути не менше 3.');
+      return;
+    }
+
+    if (adultsNumber === 0) {
+      toast.error('Будь ласка, оберіть кількість дорослих');
+      return;
+    }
+
     try {
       if (!(window as any).jQuery) {
+        toast.error('Виникла помилка. Спробуйте пізніше.');
         console.error('jQuery is not loaded');
         return;
       }
@@ -368,7 +391,7 @@ export const TourSearchModuleComponent = () => {
           </div>
         </div>
 
-        {tourSearchData && (
+        {tourSearchData && tourSearchData.length > 0 && (
           <div className="">
             {tourSearchData.map((tour: any) => (
               <div key={tour.id}>

@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { cn } from 'src/utilities/cn'
 import { Inter } from 'next/font/google'
 import React from 'react'
+import { Toaster } from '@/components/ui/sonner'
 
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -35,6 +36,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
 
       <body className="bg-background transition duration-[1s]">
+        <Toaster className="z-1000" />
         <Providers>
           {process.env.NEXT_PUBLIC_ENABLE_ADMIN_BAR !== 'false' && (
             <AdminBar
