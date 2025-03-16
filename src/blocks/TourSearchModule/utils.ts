@@ -487,7 +487,7 @@ const fetchAllPages = async (
   let currentPage = 1;
   let hasMoreResults = true;
 
-  while (hasMoreResults) {
+  while (hasMoreResults && currentPage < 1) {
     // Add delay between requests to avoid rate limiting
     if (currentPage > 1) {
       await delay(1000); // 1 second delay between requests
