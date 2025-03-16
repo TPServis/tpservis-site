@@ -1,4 +1,5 @@
 import * as cheerio from 'cheerio'
+import { parse, addDays, format } from 'date-fns'
 
 const DEFAULT_HOTEL_RATING = '4+78'
 const DEFAULT_TRANSPORT_TYPE = '2'
@@ -71,13 +72,22 @@ const isValidSearchItem = (row: any) : boolean => {
   return row.hasClass('itt_odd') || row.hasClass('itt_even')
 }
 
-type SearchResult = {
+export type SearchResultType = {
   title: string
   id: string
+  room_title?: string
+  rating?: string
+  price_usd?: string
+  price_uah?: string
+  nights?: string
+  meal_type?: string
+  date_from?: string
+  date_till?: string
+  location?: string
 }
 
 type ParseSearchResponse = {
-  results?: SearchResult[]
+  results?: SearchResultType[]
   status: ResponsesStatus
 }
 
@@ -85,24 +95,39 @@ const searchSelectors = {
   items: 'tbody > tr',
   title: 'td:nth-child(4) > div',
   id: 'td:nth-child(2) > input',
+  room_title: 'td:nth-child(6)',
+  rating: 'td:nth-child(5)',
+  price: 'td:nth-child(11) > a > span:nth-child(1) > span:nth-child(1)',
+  price_uah: 'td:nth-child(11) > a > span:nth-child(2) > span:nth-child(1)',
+  nights: 'td:nth-child(8)',
+  meal_type: 'td:nth-child(7)',
+  date_from: 'td:nth-child(10)',
+  location: 'td:nth-child(3)',
 }
 
 const parseSearchResponse = (response: any): ParseSearchResponse => {
 
   try {
     const $ = cheerio.load(getValidContent(response))
-    const results: SearchResult[] = []
+    const results: SearchResultType[] = []
 
     $(searchSelectors.items).each((_, item) => {
       if (!isValidSearchItem($(item))) return
 
       const title = $(item).find(searchSelectors.title).text().trim()
       const id = $(item).find(searchSelectors.id).attr('id')
-
+      const room_title = $(item).find(searchSelectors.room_title).attr('title')
+      const rating = $(item).find(searchSelectors.rating).text().trim()
+      const price_usd = $(item).find(searchSelectors.price).text().trim()
+      const price_uah = $(item).find(searchSelectors.price_uah).text().trim()
+      const nights = $(item).find(searchSelectors.nights).text().trim()
+      const meal_type = $(item).find(searchSelectors.meal_type).text().trim()
+      const date_from = $(item).find(searchSelectors.date_from).text().trim().replace(/\./g, '/')
+      const date_till = format(addDays(parse(date_from, 'dd/MM/yy', new Date()), parseInt(nights)), 'dd/MM/yy')
+      const location = $(item).find(searchSelectors.location).text().trim()
       if (!title || !id) throw new Error('No valid title or id found')
 
-
-      results.push({ title, id })
+      results.push({ title, id, room_title, rating, price_usd, price_uah, nights, meal_type, date_from, date_till, location })
     })
 
     return {

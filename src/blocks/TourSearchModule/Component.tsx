@@ -15,6 +15,7 @@ import PeopleSelector from './PeopleSelector'
 import NightsSelector from './NightsSelector'
 import TransportSelector from './TransportSelector'
 import { toast } from 'sonner'
+import { SearchResultType } from './utils'
 
 
 
@@ -28,6 +29,24 @@ import { toast } from 'sonner'
   // https://www.ittour.com.ua/tour_search.php?callback=jQuery17106025752721087283_1741514343320&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514355260
   // https://www.ittour.com.ua/tour_search.php?callback=jQuery17103968606778564445_1741514676869&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514762876
   // https://www.ittour.com.ua/tour_search.php?callback=jQuery9569997690939707_1741515817928&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4%2B78&items_per_page=50&package_tour_type=1&transport_type=2&country=318&food=498%2B512%2B560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%253A%252F%252Flocalhost%253A3000%252Ftours&preview=1&_=1741515817928
+
+
+
+type TourSearchResultType = {
+    title: string
+    stars: number
+    location: string
+    rooms: {
+      id: string
+      title: string
+      price_usd: number
+      price_uah: number
+      nights: number
+      meal_type: string
+      date_from: string
+      date_till: string
+    }[]
+}
 
 
 
@@ -57,7 +76,7 @@ export const TourSearchModuleComponent = () => {
   })
   const [selectedCountry, setSelectedCountry] = useState<any>(null)
   const [selectedDepartureCity, setSelectedDepartureCity] = useState<any>(null)
-  const [tourSearchData, setTourSearchData] = useState<any>(null)
+  const [tourSearchData, setTourSearchData] = useState<TourSearchResultType[] | null>(null)
   const [adultsNumber, setAdultsNumber] = useState<number>(2)
   const [childrenNumber, setChildrenNumber] = useState<number>(0)
   const [nights, setNights] = useState<number[]>([7, 9])
@@ -150,12 +169,57 @@ export const TourSearchModuleComponent = () => {
 
       const response = await fetchJSONP(url, jQueryCallback);
       const parsedResponse = parseSearchResponse(response);
-      setTourSearchData(parsedResponse);
+      setTourSearchData(buildResultResponse(parsedResponse.results ?? []));
       console.log('✅response', parsedResponse);
     } catch (error) {
       console.error('Error during tour search:', error);
+      toast.error('Виникла помилка. Спробуйте пізніше.');
     }
   };
+
+
+
+  const buildResultResponse = (list: SearchResultType[]): TourSearchResultType[] | null => {
+    const result: TourSearchResultType[] = []
+
+    const groupedByHotel: { [hotelTitle: string]: SearchResultType[] } = {}
+
+    list.forEach((item: SearchResultType) => {
+      const hotelTitle = item.title
+      if (!groupedByHotel[hotelTitle]) {
+        groupedByHotel[hotelTitle] = []
+      }
+      groupedByHotel[hotelTitle].push(item)
+    })
+
+    for (const hotelTitle in groupedByHotel) {
+      if (groupedByHotel.hasOwnProperty(hotelTitle)) {
+        const hotelGroup = groupedByHotel[hotelTitle];
+        const firstItem = hotelGroup[0];
+        const rating = firstItem?.rating;
+        const location = firstItem?.location;
+
+        result.push({
+              title: hotelTitle,
+              stars: parseInt(rating ?? '0'),
+              location: location ?? '',
+              rooms: groupedByHotel[hotelTitle].map((item) => ({
+                id: item.id,
+                title: item.room_title ?? "",
+                price_usd: parseInt(item.price_usd ?? '0'),
+                price_uah: parseInt(item.price_uah ?? '0'),
+                nights: parseInt(item.nights ?? '0'),
+                meal_type: item.meal_type ?? '',
+                date_from: item.date_from ?? '',
+              date_till: item.date_till ?? '',
+            })),
+          })
+      }
+    }
+
+    return result
+  }
+
 
 
   const getDepartureCities = async (): Promise<void> => {
@@ -391,15 +455,27 @@ export const TourSearchModuleComponent = () => {
           </div>
         </div>
 
+
         {tourSearchData && tourSearchData.length > 0 && (
           <div className="">
-            {tourSearchData.map((tour: any) => (
-              <div key={tour.id}>
-                <h2>{tour.title}</h2>
+            {tourSearchData.map((hotel: TourSearchResultType) => (
+              <div key={hotel.title}>
+                <h2>{hotel.title}</h2>
+                <div>
+                  {hotel.rooms.map((room: any) => (
+                    <div key={room.id}>
+                      <h3>{room.title}</h3>
+                      <p>{room.price_usd}</p>
+                      <p>{room.price_uah}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
         )}
+
+        <pre>{JSON.stringify(tourSearchData, null, 2)}</pre>
 
         <div id="tour_search_module" className="relative z-10 hidden"></div>
         <Script
