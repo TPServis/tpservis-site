@@ -1,13 +1,13 @@
 'use client'
 import { useEffect, useState, useRef, use } from 'react'
 import Script from 'next/script'
-import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, fetchCountries, fetchDepartureCities, buildITTourSearchURL, getOptions } from './utils'
+import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, fetchCountries, fetchDepartureCities, buildITTourSearchURL, getOptions, fetchAllPages } from './utils'
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { format } from 'date-fns'
-import { CalendarIcon, Plane, MapPin } from 'lucide-react'
+import { CalendarIcon, Plane, MapPin, Loader2 } from 'lucide-react'
 import { cn } from '@/utilities/cn'
 import { DateRange } from 'react-day-picker'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -71,6 +71,8 @@ export const TourSearchModuleComponent = () => {
   const [isLoadingCountries, setIsLoadingCountries] = useState<boolean>(false)
   const [departureCities, setDepartureCities] = useState<any>([])
   const [isLoadingDepartureCities, setIsLoadingDepartureCities] = useState<boolean>(false)
+  const [isLoadingResults, setIsLoadingResults] = useState<boolean>(false)
+  const [loadedResults, setLoadedResults] = useState<number>(0)
   const [date, setDate] = useState<DateRange | undefined>({
     from: undefined,
     to: undefined,
@@ -146,16 +148,14 @@ export const TourSearchModuleComponent = () => {
         return;
       }
 
-      const { timestamp, jQueryCallback } = createTimestampCallback();
+      setIsLoadingResults(true);
+      setLoadedResults(0);
+      setTourSearchData(null);
 
       const formattedDataFrom = dayjs(date?.from).format('DD.MM.YY');
       const formattedDataTo = dayjs(date?.to).format('DD.MM.YY');
 
-      console.log('formattedDataFrom', formattedDataFrom);
-      console.log('formattedDataTo', formattedDataTo);
-
-      const url = buildITTourSearchURL({
-        callback: jQueryCallback,
+      const searchParams = {
         date_from: formattedDataFrom,
         date_till: formattedDataTo,
         adults: adultsNumber.toString(),
@@ -165,16 +165,19 @@ export const TourSearchModuleComponent = () => {
         night_from: nights[0].toString(),
         night_till: nights[1].toString(),
         transport_type: transportType,
-        _: timestamp.toString()
-      });
+        items_per_page: '100'
+      };
 
-      const response = await fetchJSONP(url, jQueryCallback);
-      const parsedResponse = parseSearchResponse(response);
-      setTourSearchData(buildResultResponse(parsedResponse.results ?? []));
-      console.log('✅response', parsedResponse);
+      const allResults = await fetchAllPages(searchParams, (results) => {
+        setLoadedResults(prev => prev + results.length);
+      });
+      setTourSearchData(buildResultResponse(allResults));
+
     } catch (error) {
       console.error('Error during tour search:', error);
       toast.error('Виникла помилка. Спробуйте пізніше.');
+    } finally {
+      setIsLoadingResults(false);
     }
   };
 
@@ -457,14 +460,21 @@ export const TourSearchModuleComponent = () => {
         </div>
 
 
-        {tourSearchData && tourSearchData.length > 0 && (
+        {(isLoadingResults || (tourSearchData && tourSearchData.length > 0)) && (
           <div className="">
-            <div>
+            <div className="flex items-center gap-4">
               <p className="text-sm text-shark-500">
-                {calcRoomsNumber(tourSearchData)} номерів знайдено
+                {isLoadingResults ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Знайдено {loadedResults} варіантів...
+                  </span>
+                ) : (
+                  `${calcRoomsNumber(tourSearchData)} номерів знайдено`
+                )}
               </p>
             </div>
-            {tourSearchData.map((hotel: TourSearchResultType) => (
+            {!isLoadingResults && tourSearchData && tourSearchData.map((hotel: TourSearchResultType) => (
               <div key={hotel.title} className="mt-20">
                 <div className="mb-4">
                   <div className="flex items-center gap-2">
@@ -542,10 +552,11 @@ const RoomCard = ({ room, hotel }: { room: any, hotel: any }) => {
   )
 }
 
-const calcRoomsNumber = (results: TourSearchResultType[]) => {
-  let totalRooms = 0
+const calcRoomsNumber = (results: TourSearchResultType[] | null): number => {
+  if (!results) return 0;
+  let totalRooms = 0;
   for (const hotel of results) {
-    totalRooms += hotel.rooms.length
+    totalRooms += hotel.rooms.length;
   }
-  return totalRooms
+  return totalRooms;
 }

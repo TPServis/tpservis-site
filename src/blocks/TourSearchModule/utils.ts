@@ -390,39 +390,40 @@ const fetchDepartureCities = async (
   }
 }
 
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 interface ITTourSearchParams {
-  callback: string // jQuery callback name with timestamp
+  callback: string
   module_type: 'tour_search'
-  id: string // Partner ID: 'DG400625103918756O740800'
+  id: string
   ver: '1'
   type: '2970'
   theme: '38'
   action: 'package_tour_search'
-  hotel_rating: string // e.g. '4+78'
-  items_per_page: string // e.g. '50'
+  hotel_rating: string
+  items_per_page: string
   hotel?: string
   region?: string
   child_age?: string
   package_tour_type: '1'
-  transport_type: string // Seems to be for avia/flight
-  country: '318' // Country code
-  food: string // Food types, e.g. '498+512+560'
-  adults: string // Number of adults
-  children: string // Number of children
-  date_from: string // Format: 'DD.MM.YY'
-  date_till: string // Format: 'DD.MM.YY'
-  night_from: string // Min nights
-  night_till: string // Max nights
-  price_from: string // Min price
-  price_till: string // Max price
-  switch_price: 'UAH' // Currency
-  departure_city: string // City code, e.g. '2014'
-  module_location_url: string // Current page URL
+  transport_type: string
+  country: '318'
+  food: string
+  adults: string
+  children: string
+  date_from: string
+  date_till: string
+  night_from: string
+  night_till: string
+  price_from: string
+  price_till: string
+  switch_price: 'UAH'
+  departure_city: string
+  module_location_url: string
   preview: '1'
-  _: string // Timestamp to prevent caching
+  _: string
+  page?: number
 }
-
-
 
 const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
   const { timestamp, jQueryCallback } = createTimestampCallback();
@@ -468,9 +469,62 @@ const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
     }
   });
 
+  // Add page parameter if provided
+  if (params.page && params.page > 1) {
+    url.searchParams.append('page', params.page.toString());
+  }
+
   return url.toString()
     .replace(/hotel_rating=4%2B78/, 'hotel_rating=4+78')
     .replace(/food=498%2B512%2B560/, 'food=498+512+560');
 };
 
-export { makeITTourRequest, parseITTourResponse, fetchJSONP, createTimestampCallback, parseSearchResponse, buildITTourSearchURL, parseSearchBilderResponse, fetchCountries, fetchDepartureCities , getOptions }
+const fetchAllPages = async (
+  initialParams: Partial<ITTourSearchParams>,
+  onPageLoad?: (results: SearchResultType[]) => void
+): Promise<SearchResultType[]> => {
+  let allResults: SearchResultType[] = [];
+  let currentPage = 1;
+  let hasMoreResults = true;
+
+  while (hasMoreResults) {
+    // Add delay between requests to avoid rate limiting
+    if (currentPage > 1) {
+      await delay(1000); // 1 second delay between requests
+    }
+
+    const { timestamp, jQueryCallback } = createTimestampCallback();
+    const url = buildITTourSearchURL({
+      ...initialParams,
+      page: currentPage,
+      _: timestamp.toString(),
+      callback: jQueryCallback
+    });
+
+    try {
+      const response = await fetchJSONP(url, jQueryCallback);
+      const parsedResponse = parseSearchResponse(response);
+
+      if (parsedResponse.status === '400' || !parsedResponse.results || parsedResponse.results.length === 0) {
+        hasMoreResults = false;
+      } else {
+        allResults = [...allResults, ...parsedResponse.results];
+        onPageLoad?.(parsedResponse.results);
+
+        // If we get less than the requested items_per_page, we've reached the last page
+        if (parsedResponse.results.length < parseInt(initialParams.items_per_page || '100')) {
+          hasMoreResults = false;
+        } else {
+          currentPage++;
+        }
+      }
+    } catch (error) {
+      console.error(`Error fetching page ${currentPage}:`, error);
+      hasMoreResults = false;
+    }
+  }
+
+  return allResults;
+};
+
+export { makeITTourRequest, parseITTourResponse, fetchJSONP, createTimestampCallback, parseSearchResponse, buildITTourSearchURL, parseSearchBilderResponse, fetchCountries, fetchDepartureCities, getOptions, fetchAllPages }
