@@ -122,8 +122,8 @@ const parseSearchResponse = (response: any): ParseSearchResponse => {
       const price_uah = $(item).find(searchSelectors.price_uah).text().trim()
       const nights = $(item).find(searchSelectors.nights).text().trim()
       const meal_type = $(item).find(searchSelectors.meal_type).text().trim()
-      const date_from = $(item).find(searchSelectors.date_from).text().trim().replace(/\./g, '/')
-      const date_till = format(addDays(parse(date_from, 'dd/MM/yy', new Date()), parseInt(nights)), 'dd/MM/yy')
+      const date_from = $(item).find(searchSelectors.date_from).text().trim()
+      const date_till = format(addDays(parse(date_from, 'dd.MM.yy', new Date()), parseInt(nights)), 'dd.MM.yy')
       const location = $(item).find(searchSelectors.location).text().trim()
       if (!title || !id) throw new Error('No valid title or id found')
 
@@ -437,7 +437,7 @@ const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
     theme: '38',
     action: 'package_tour_search',
     hotel_rating: '4+78',
-    items_per_page: '50',
+    items_per_page: '100',
     hotel: '',
     region: '',
     child_age: '',

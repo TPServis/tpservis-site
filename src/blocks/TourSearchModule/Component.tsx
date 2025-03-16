@@ -16,6 +16,7 @@ import NightsSelector from './NightsSelector'
 import TransportSelector from './TransportSelector'
 import { toast } from 'sonner'
 import { SearchResultType } from './utils'
+import { Stars } from './Stars'
 
 
 
@@ -458,16 +459,23 @@ export const TourSearchModuleComponent = () => {
 
         {tourSearchData && tourSearchData.length > 0 && (
           <div className="">
+            <div>
+              <p className="text-sm text-shark-500">
+                {calcRoomsNumber(tourSearchData)} номерів знайдено
+              </p>
+            </div>
             {tourSearchData.map((hotel: TourSearchResultType) => (
-              <div key={hotel.title}>
-                <h2>{hotel.title}</h2>
-                <div>
+              <div key={hotel.title} className="mt-20">
+                <div className="mb-4">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-4xl font-bold text-astral-800">{hotel.title}</h2>
+                    <Stars number={hotel.stars} />
+                  </div>
+                  <p className="text-shark-500">{hotel.location}</p>
+                </div>
+                <div className="grid grid-cols-12 gap-4">
                   {hotel.rooms.map((room: any) => (
-                    <div key={room.id}>
-                      <h3>{room.title}</h3>
-                      <p>{room.price_usd}</p>
-                      <p>{room.price_uah}</p>
-                    </div>
+                    <RoomCard key={room.id} room={room} hotel={hotel} />
                   ))}
                 </div>
               </div>
@@ -475,7 +483,6 @@ export const TourSearchModuleComponent = () => {
           </div>
         )}
 
-        <pre>{JSON.stringify(tourSearchData, null, 2)}</pre>
 
         <div id="tour_search_module" className="relative z-10 hidden"></div>
         <Script
@@ -493,4 +500,52 @@ export const TourSearchModuleComponent = () => {
       </div>
     </div>
   )
+}
+
+
+
+const RoomCard = ({ room, hotel }: { room: any, hotel: any }) => {
+
+  const price = room.price_uah.toLocaleString('uk-UA')
+  const title = room.title.length <= 3 ? hotel.title + ' ' + room.title : room.title
+  return (
+    <div className=" bg-astral-50 rounded-xl p-4 col-span-4 text-astral-900 font-light flex flex-col gap-2">
+      <h3 className="font-bold text-2xl">{title}</h3>
+      {/* <p>{room.price_usd}</p> */}
+      <div className="flex flex-col gap-2 h-full">
+        <p className="text-sm">
+          Тип харчування: <span className="font-bold text-base">{room.meal_type}</span>
+        </p>
+        <div className="flex gap-2 justify-between *:items-baseline *:flex *:gap-1 *:text-sm *:[&>span]:font-bold *:[&>span]:text-base">
+          <p>
+            Ночей у турі:
+            <span>{room.nights}</span>
+          </p>
+          <p>
+            з<span>{room.date_from}</span>
+            до
+            <span>{room.date_till}</span>
+          </p>
+        </div>
+        <div className="flex justify-end grow items-end">
+          <p className="text-lg flex gap-1 items-baseline">
+            <span className="text-sm">Ціна за номер</span>
+            <span className="font-bold text-lg">{price}</span>
+            <span className="text-sm">грн</span>
+          </p>
+        </div>
+        <Button className="w-full mt-4 bg-background-secondary text-text-on-secondary-primary">
+          Замовити тур
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+const calcRoomsNumber = (results: TourSearchResultType[]) => {
+  let totalRooms = 0
+  for (const hotel of results) {
+    totalRooms += hotel.rooms.length
+  }
+  return totalRooms
 }
