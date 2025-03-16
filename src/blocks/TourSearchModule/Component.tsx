@@ -475,20 +475,7 @@ export const TourSearchModuleComponent = () => {
               </p>
             </div>
             {!isLoadingResults && tourSearchData && tourSearchData.map((hotel: TourSearchResultType) => (
-              <div key={hotel.title} className="mt-20">
-                <div className="mb-4">
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-4xl font-bold text-astral-800">{hotel.title}</h2>
-                    <Stars number={hotel.stars} />
-                  </div>
-                  <p className="text-shark-500">{hotel.location}</p>
-                </div>
-                <div className="grid grid-cols-12 gap-4">
-                  {hotel.rooms.map((room: any) => (
-                    <RoomCard key={room.id} room={room} hotel={hotel} />
-                  ))}
-                </div>
-              </div>
+              <Hotel key={hotel.title} hotel={hotel} />
             ))}
           </div>
         )}
@@ -560,3 +547,48 @@ const calcRoomsNumber = (results: TourSearchResultType[] | null): number => {
   }
   return totalRooms;
 }
+
+const Hotel = ({ hotel }: { hotel: TourSearchResultType }) => {
+  const [visibleRooms, setVisibleRooms] = useState<number>(6);
+  const hasMoreRooms = hotel.rooms.length > visibleRooms;
+
+  const handleShowMore = () => {
+    setVisibleRooms(prev => prev + 6);
+  };
+
+  return (
+    <div className="mt-20">
+      <div className="mb-4">
+        <div className="flex items-center gap-2">
+          <h2 className="text-4xl font-bold text-astral-800">{hotel.title}</h2>
+          <Stars number={hotel.stars} />
+        </div>
+        <div className="flex items-center gap-2 text-shark-500">
+          <p>{hotel.location}</p>
+          <span className="w-1 h-1 rounded-full bg-shark-300" />
+          <p className="text-sm">
+            {hotel.rooms.length} {hotel.rooms.length === 1 ? 'номер' :
+              hotel.rooms.length > 1 && hotel.rooms.length < 5 ? 'номери' :
+              'номерів'} знайдено
+          </p>
+        </div>
+      </div>
+      <div className="grid grid-cols-12 gap-4">
+        {hotel.rooms.slice(0, visibleRooms).map((room) => (
+          <RoomCard key={room.id} room={room} hotel={hotel} />
+        ))}
+      </div>
+      {hasMoreRooms && (
+        <div className="mt-8 flex justify-center">
+          <Button
+            onClick={handleShowMore}
+            variant="outline"
+            className="bg-astral-50 hover:bg-astral-100 text-astral-900"
+          >
+            Показати ще {Math.min(6, hotel.rooms.length - visibleRooms)} номерів
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+};
