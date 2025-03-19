@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { cn } from 'src/utilities/cn'
 import { Inter } from 'next/font/google'
@@ -16,6 +18,7 @@ import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
+import { ReactQueryProvider } from '@/components/Providers/ReactQueryProvider'
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
@@ -38,23 +41,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
 
       <body className="bg-background transition duration-[1s]">
-        <Toaster className="z-1000" />
-        <Providers>
-          {process.env.NEXT_PUBLIC_ENABLE_ADMIN_BAR !== 'false' && (
-            <AdminBar
-              adminBarProps={{
-                preview: isEnabled,
-              }}
-            />
-          )}
-          {isEnabled && <LivePreviewListener />}
+        <ReactQueryProvider>
+          <Toaster className="z-1000" />
+          <Providers>
+            {process.env.NEXT_PUBLIC_ENABLE_ADMIN_BAR !== 'false' && (
+              <AdminBar
+                adminBarProps={{
+                  preview: isEnabled,
+                }}
+              />
+            )}
+            {isEnabled && <LivePreviewListener />}
 
-          <Header />
-          {children}
-          <Footer />
-        </Providers>
-        <Analytics />
-        <SpeedInsights />
+            <Header />
+            {children}
+            <Footer />
+          </Providers>
+          <Analytics />
+          <SpeedInsights />
+        </ReactQueryProvider>
       </body>
     </html>
   )

@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useRef, use } from 'react'
+import { useEffect, useState, useRef, use, useMemo } from 'react'
 import Script from 'next/script'
 import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, fetchCountries, fetchDepartureCities, buildITTourSearchURL, getOptions, fetchAllPages } from './utils'
 import dayjs from 'dayjs'
@@ -17,6 +17,7 @@ import TransportSelector from './TransportSelector'
 import { toast } from 'sonner'
 import { SearchResultType } from './utils'
 import { Stars } from './Stars'
+import { useQuery } from '@tanstack/react-query'
 
 
 
@@ -67,22 +68,40 @@ type TourSearchResultType = {
 
 export const TourSearchModuleComponent = () => {
   const [transportType, setTransportType] = useState<string>('2')
-  const [countries, setCountries] = useState<any>([])
-  const [isLoadingCountries, setIsLoadingCountries] = useState<boolean>(false)
-  const [departureCities, setDepartureCities] = useState<any>([])
-  const [isLoadingDepartureCities, setIsLoadingDepartureCities] = useState<boolean>(false)
+  const { data: countries, isLoading: isLoadingCountries } = fetchCountries(HOTEL_RATING, transportType);
+
+  const parsedCountries = useMemo(() => {
+    return parseSearchBilderResponse(countries)
+  }, [countries])
+
   const [isLoadingResults, setIsLoadingResults] = useState<boolean>(false)
   const [loadedResults, setLoadedResults] = useState<number>(0)
   const [date, setDate] = useState<DateRange | undefined>({
     from: undefined,
     to: undefined,
   })
-  const [selectedCountry, setSelectedCountry] = useState<any>(null)
+  const [selectedCountry, setSelectedCountry] = useState<any>(parsedCountries?.countries?.[0]?.id || null)
+  const { data: departureCities, isLoading: isLoadingDepartureCities } = fetchDepartureCities(selectedCountry, HOTEL_RATING, transportType);
+  const parsedDepartureCities = useMemo(() => {
+    return parseSearchBilderResponse(departureCities)
+  }, [departureCities])
   const [selectedDepartureCity, setSelectedDepartureCity] = useState<any>(null)
   const [tourSearchData, setTourSearchData] = useState<TourSearchResultType[] | null>(null)
   const [adultsNumber, setAdultsNumber] = useState<number>(2)
   const [childrenNumber, setChildrenNumber] = useState<number>(0)
   const [nights, setNights] = useState<number[]>([7, 9])
+
+
+
+  useEffect(() => {
+    setSelectedCountry(parsedCountries?.countries?.[0]?.id)
+    setSelectedDepartureCity(parsedCountries?.departureCities?.[0]?.id)
+  }, [parsedCountries])
+
+  useEffect(() => {
+    setSelectedDepartureCity(updateStateConditionally(selectedDepartureCity, parsedDepartureCities?.departureCities, 'Київ'))
+  }, [parsedDepartureCities])
+
 
   const handleLoad = () => {
     console.log('handleLoad')
@@ -226,79 +245,84 @@ export const TourSearchModuleComponent = () => {
 
 
 
-  const getDepartureCities = async (): Promise<void> => {
-    try {
-      setIsLoadingDepartureCities(true)
-      // If there is no previous response, fetch the departure cities
-      const response = await fetchDepartureCities(
-        selectedCountry ?? COUNTRY,
-        HOTEL_RATING,
-        transportType,
-      )
-      if (response.departure_city) {
-        const parsedResponse = parseSearchBilderResponse(response)
-        if (
-          parsedResponse.status === '400' ||
-          !parsedResponse.departureCities ||
-          parsedResponse.departureCities.length === 0
-        )
-          throw new Error('Error fetching departure cities: ' + JSON.stringify(parsedResponse))
+  // const getDepartureCities = async (): Promise<void> => {
+  //   try {
+  //     setIsLoadingDepartureCities(true)
+  //     // If there is no previous response, fetch the departure cities
+  //     const response = await fetchDepartureCities(
+  //       selectedCountry ?? COUNTRY,
+  //       HOTEL_RATING,
+  //       transportType,
+  //     )
+  //     if (response.departure_city) {
+  //       const parsedResponse = parseSearchBilderResponse(response)
+  //       if (
+  //         parsedResponse.status === '400' ||
+  //         !parsedResponse.departureCities ||
+  //         parsedResponse.departureCities.length === 0
+  //       )
+  //         throw new Error('Error fetching departure cities: ' + JSON.stringify(parsedResponse))
 
 
-        setDepartureCities(parsedResponse.departureCities)
-        setSelectedDepartureCity(updateStateConditionally(selectedDepartureCity, parsedResponse.departureCities, 'Київ'))
-        setIsLoadingDepartureCities(false)
-      }
-    } catch (error) {
-      console.error('Failed to load departure cities:', error)
-    }
-  }
+  //       setDepartureCities(parsedResponse.departureCities)
+  //       setSelectedDepartureCity(updateStateConditionally(selectedDepartureCity, parsedResponse.departureCities, 'Київ'))
+  //       setIsLoadingDepartureCities(false)
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to load departure cities:', error)
+  //   }
+  // }
 
 
-  const init = async () => {
-    setIsLoadingCountries(true)
-    setIsLoadingDepartureCities(true)
-    fetchCountries(HOTEL_RATING, transportType).then((response) => {
-      const parsedResponse = parseSearchBilderResponse(response)
+  // const init = async () => {
+  //   setIsLoadingCountries(true)
+  //   setIsLoadingDepartureCities(true)
+  //   fetchCountries(HOTEL_RATING, transportType).then((response) => {
+  //     const parsedResponse = parseSearchBilderResponse(response)
 
 
-      if (parsedResponse.status === '400') {
-        console.error('Error fetching countries:', parsedResponse.status)
-        return
-      }
+  //     if (parsedResponse.status === '400') {
+  //       console.error('Error fetching countries:', parsedResponse.status)
+  //       return
+  //     }
 
-      if (parsedResponse.countries && parsedResponse.countries.length > 0) {
-        setCountries(parsedResponse.countries)
-        setSelectedCountry(updateStateConditionally(selectedCountry, parsedResponse.countries, 'Туреччина'))
-        setIsLoadingCountries(false)
-      }
-    })
-  }
+  //     if (parsedResponse.countries && parsedResponse.countries.length > 0) {
+  //       setCountries(parsedResponse.countries)
+  //       setSelectedCountry(updateStateConditionally(selectedCountry, parsedResponse.countries, 'Туреччина'))
+  //       setIsLoadingCountries(false)
+  //     }
+  //   })
+  // }
 
   const updateStateConditionally = (state: any, response: any, defaultOption: string) => {
-    if (!state || !response.find((item: {id: string}) => item.id === state)) {
+    if (!state || !response || !response.find((item: {id: string}): boolean => item.id === state)) {
       return getDefaultOption(response, defaultOption)
     }
     return state
   }
 
   const getDefaultOption = (options: {name: string, id: string}[], defaultOption: string) => {
-    let option = options.find((option: {name: string}) => option.name === defaultOption)
+    // Check if options is undefined or empty
+    if (!options || options.length === 0) {
+      return '';
+    }
 
-    if (!option) {
+    let option: {name: string, id: string} | undefined = options.find((option: {name: string}) => option.name === defaultOption)
+
+    if (!option || !option.id) {
       option = options[0]
     }
 
-    return option.id
+    return option?.id || ''
   }
 
-  useEffect(() : void => {
-    init()
-  }, [transportType])
+  // useEffect(() : void => {
+  //   init()
+  // }, [transportType])
 
-  useEffect(() : void => {
-    getDepartureCities()
-  }, [selectedCountry, transportType])
+  // useEffect(() : void => {
+  //   getDepartureCities()
+  // }, [selectedCountry, transportType])
 
 
   return (
@@ -332,7 +356,7 @@ export const TourSearchModuleComponent = () => {
                   </div>
                 </SelectTrigger>
                 <SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
-                  {countries.map((country: any) => (
+                  {parsedCountries?.countries?.map((country: any) => (
                     <SelectItem
                       key={country.id}
                       value={country.id}
@@ -359,7 +383,7 @@ export const TourSearchModuleComponent = () => {
                   </div>
                 </SelectTrigger>
                 <SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
-                  {departureCities.map((city: any) => (
+                  {parsedDepartureCities?.departureCities?.map((city: any) => (
                     <SelectItem
                       key={city.id}
                       value={city.id}

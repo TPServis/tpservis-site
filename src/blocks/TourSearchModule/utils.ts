@@ -1,5 +1,8 @@
 import * as cheerio from 'cheerio'
 import { parse, addDays, format } from 'date-fns'
+import { useQuery, UseQueryResult } from '@tanstack/react-query'
+import { a } from 'node_modules/drizzle-kit/index-BAUrj6Ib.mjs'
+
 
 const DEFAULT_HOTEL_RATING = '4+78'
 const DEFAULT_TRANSPORT_TYPE = '2'
@@ -7,6 +10,14 @@ const MODULE_TYPE = 'tour_search'
 const MERCHANT_ID = 'DG400625103918756O740800'
 
 type ResponsesStatus = '200' | '400'
+
+const getBaseUrl = (url: string): string => {
+  const urlObj = new URL(url);
+  // Remove callback and timestamp parameters
+  urlObj.searchParams.delete('callback');
+  urlObj.searchParams.delete('_');
+  return urlObj.toString();
+}
 
 const makeITTourRequest = (tourId: string) => {
   const { timestamp, jQueryCallback } = createTimestampCallback()
@@ -24,7 +35,7 @@ const makeITTourRequest = (tourId: string) => {
   url.searchParams.append('_', timestamp.toString())
 
 
-  return fetchJSONP(url.toString(), jQueryCallback)
+  return useJSONPQuery(url.toString());
 }
 
 const createTimestampCallback = (): { timestamp: number; jQueryCallback: string } => {
@@ -36,8 +47,7 @@ const createTimestampCallback = (): { timestamp: number; jQueryCallback: string 
 
 const fetchJSONP = (url: string, jQueryCallback: string): Promise<any> => {
   return new Promise((resolve, reject): void => {
-    // Define the callback directly on window
-    (window as any)[jQueryCallback] = function(data: any) {
+    (window as any)[jQueryCallback] = function (data: any) {
       cleanup();
       resolve(data);
     };
@@ -59,6 +69,27 @@ const fetchJSONP = (url: string, jQueryCallback: string): Promise<any> => {
     };
 
     document.body.appendChild(script);
+  });
+};
+
+
+// Modified JSONP fetcher that accepts base URL
+const fetchJSONPWithCache = (baseUrl: string): Promise<any> => {
+  const { timestamp, jQueryCallback } = createTimestampCallback();
+
+  // Add random parameters to the base URL
+  const fullUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}callback=${jQueryCallback}&_=${timestamp}`;
+
+  return fetchJSONP(fullUrl, jQueryCallback);
+};
+
+export const useJSONPQuery = (url: string) => {
+  const baseUrl = getBaseUrl(url);
+
+  return useQuery({
+    queryKey: ['jsonp', baseUrl], // Cache key uses base URL without random parameters
+    queryFn: () => fetchJSONPWithCache(baseUrl),
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
   });
 };
 
@@ -208,8 +239,15 @@ type ParserSearchBilderResponse = {
 
 const parseSearchBilderResponse = (response: any): ParserSearchBilderResponse => {
   try {
-    let { country, departure_city } = response
+    if (!response) {
+      return {
+        countries: [],
+        departureCities: [],
+        status: '400'
+      }
+    }
 
+    let { country, departure_city } = response
 
     let countries: Option[] = []
     let departureCities: Option[] = []
@@ -223,7 +261,6 @@ const parseSearchBilderResponse = (response: any): ParserSearchBilderResponse =>
       const departureCitiesResponse = getOptions(departure_city)
       departureCities = departureCitiesResponse.options ?? []
     }
-
 
     return {
       countries: countries ?? [],
@@ -333,29 +370,26 @@ interface CountryResponse {
   departure_city?: string
 }
 
-const fetchCountries = async (
+const getCountriesBaseUrl = (
   hotelRating: string = DEFAULT_HOTEL_RATING,
   transportType: string = DEFAULT_TRANSPORT_TYPE,
-): Promise<CountryResponse> => {
-  const { timestamp, jQueryCallback } = createTimestampCallback()
-
+): string => {
   const url = new URL('https://www.ittour.com.ua/tour_search.php')
-  url.searchParams.append('callback', jQueryCallback)
   url.searchParams.append('module_type', MODULE_TYPE)
   url.searchParams.append('id', MERCHANT_ID)
   url.searchParams.append('action', 'get_package_search_filtered_field')
   url.searchParams.append('event', 'select_transport')
   url.searchParams.append('hotel_rating_id', hotelRating)
   url.searchParams.append('transport_type_id', transportType)
-  url.searchParams.append('_', timestamp.toString())
+  return url.toString()
+}
 
-  try {
-    const response = await fetchJSONP(url.toString(), jQueryCallback)
-    return response
-  } catch (error) {
-    console.error('Error fetching countries:', error)
-    throw error
-  }
+const fetchCountries = (
+  hotelRating: string = DEFAULT_HOTEL_RATING,
+  transportType: string = DEFAULT_TRANSPORT_TYPE,
+): UseQueryResult<CountryResponse> => {
+  const baseUrl = getCountriesBaseUrl(hotelRating, transportType)
+  return useJSONPQuery(baseUrl)
 }
 
 interface DepartureCityResponse {
@@ -363,31 +397,30 @@ interface DepartureCityResponse {
   error?: string
 }
 
-const fetchDepartureCities = async (
+
+const getDepartureCitiesBaseUrl = (
   countryId: string,
   hotelRating: string = DEFAULT_HOTEL_RATING,
   transportType: string = DEFAULT_TRANSPORT_TYPE,
-): Promise<DepartureCityResponse> => {
-  const { timestamp, jQueryCallback } = createTimestampCallback()
-
+) => {
   const url = new URL('https://www.ittour.com.ua/tour_search.php')
-  url.searchParams.append('callback', jQueryCallback)
-  url.searchParams.append('module_type', 'tour_search')
-  url.searchParams.append('id', 'DG400625103918756O740800')
+  url.searchParams.append('module_type', MODULE_TYPE)
+  url.searchParams.append('id', MERCHANT_ID)
   url.searchParams.append('action', 'get_package_search_filtered_field')
   url.searchParams.append('event', 'select_country')
   url.searchParams.append('country_id', countryId)
   url.searchParams.append('hotel_rating_id', hotelRating)
   url.searchParams.append('transport_type_id', transportType)
-  url.searchParams.append('_', timestamp.toString())
+  return url.toString()
+}
 
-  try {
-    const response = await fetchJSONP(url.toString(), jQueryCallback)
-    return response
-  } catch (error) {
-    console.error('Error fetching departure cities:', error)
-    return { error: 'Failed to fetch departure cities' }
-  }
+const fetchDepartureCities =  (
+  countryId: string,
+  hotelRating: string = DEFAULT_HOTEL_RATING,
+  transportType: string = DEFAULT_TRANSPORT_TYPE,
+): UseQueryResult<DepartureCityResponse> => {
+  const baseUrl = getDepartureCitiesBaseUrl(countryId, hotelRating, transportType)
+  return useJSONPQuery(baseUrl)
 }
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
