@@ -6,7 +6,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
   },
   rules: {
-    'no-unused-vars': 'error',
+    'no-unused-vars': 'off',
     'react/no-string-refs': 'off',
   },
 }

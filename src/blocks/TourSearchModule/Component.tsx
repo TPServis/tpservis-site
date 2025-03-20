@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
 import Script from 'next/script'
-import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, fetchCountries, fetchDepartureCities, ,buildITTourSearchURL, getOptions, fetchSearchResults } from './utils'
+import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, useCountries, useDepartureCities, buildITTourSearchURL, getOptions, fetchSearchResults } from './utils'
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
@@ -69,7 +69,7 @@ type TourSearchResultType = {
 
 export const TourSearchModuleComponent = () => {
   const [transportType, setTransportType] = useState<string>('2')
-  const { data: countries, isLoading: isLoadingCountries } = fetchCountries(HOTEL_RATING, transportType);
+  const { data: countries, isLoading: isLoadingCountries } = useCountries(HOTEL_RATING, transportType);
 
   const parsedCountries = useMemo(() => {
     return parseSearchBilderResponse(countries)
@@ -82,7 +82,7 @@ export const TourSearchModuleComponent = () => {
     to: undefined,
   })
   const [selectedCountry, setSelectedCountry] = useState<any>(parsedCountries?.countries?.[0]?.id || null)
-  const { data: departureCities, isLoading: isLoadingDepartureCities } = fetchDepartureCities(selectedCountry, HOTEL_RATING, transportType);
+  const { data: departureCities, isLoading: isLoadingDepartureCities } = useDepartureCities(selectedCountry, HOTEL_RATING, transportType);
   const parsedDepartureCities = useMemo(() => {
     return parseSearchBilderResponse(departureCities)
   }, [departureCities])

@@ -19,7 +19,7 @@ const getBaseUrl = (url: string): string => {
   return urlObj.toString();
 }
 
-const makeITTourRequest = (tourId: string) => {
+const useITTourRequest = (tourId: string) => {
   const { timestamp, jQueryCallback } = createTimestampCallback()
 
   const url = new URL('https://www.ittour.com.ua/tour_search.php')
@@ -33,7 +33,6 @@ const makeITTourRequest = (tourId: string) => {
   url.searchParams.append('tour_id', `03-08-${tourId}`)
   url.searchParams.append('sharding_rule_id', '')
   url.searchParams.append('_', timestamp.toString())
-
 
   return useJSONPQuery(url.toString());
 }
@@ -430,7 +429,7 @@ const getCountriesBaseUrl = (
   return url.toString()
 }
 
-const fetchCountries = (
+const useCountries = (
   hotelRating: string = DEFAULT_HOTEL_RATING,
   transportType: string = DEFAULT_TRANSPORT_TYPE,
 ): UseQueryResult<CountryResponse> => {
@@ -460,7 +459,7 @@ const getDepartureCitiesBaseUrl = (
   return url.toString()
 }
 
-const fetchDepartureCities =  (
+const useDepartureCities = (
   countryId: string,
   hotelRating: string = DEFAULT_HOTEL_RATING,
   transportType: string = DEFAULT_TRANSPORT_TYPE,
@@ -631,4 +630,4 @@ const fetchSearchResults = async (
   return allResults;
 };
 
-export { makeITTourRequest, parseITTourResponse, fetchJSONP, createTimestampCallback, parseSearchResponse, buildITTourSearchURL, parseSearchBilderResponse, fetchCountries, fetchDepartureCities, getOptions, fetchSearchResults }
+export { useITTourRequest, parseITTourResponse, fetchJSONP, createTimestampCallback, parseSearchResponse, buildITTourSearchURL, parseSearchBilderResponse, useCountries, useDepartureCities, getOptions, fetchSearchResults }

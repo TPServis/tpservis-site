@@ -20,7 +20,7 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "clean": "rm -rf .next && rm -rf node_modules",
     "generate-types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
-    "test": "bun test tsc lint"
+    "check": "bun tsc && bun lint"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.22.0",
