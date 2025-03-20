@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
 import Script from 'next/script'
-import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, fetchCountries, fetchDepartureCities, buildITTourSearchURL, getOptions, fetchAllPages, fetchSearchResults } from './utils'
+import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, fetchCountries, fetchDepartureCities, buildITTourSearchURL, getOptions, fetchSearchResults } from './utils'
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
@@ -104,40 +104,40 @@ export const TourSearchModuleComponent = () => {
   }, [parsedDepartureCities])
 
 
-  const handleLoad = () => {
-    console.log('handleLoad')
-    const file_version = '59'
+  // const handleLoad = () => {
+  //   console.log('handleLoad')
+  //   const file_version = '59'
 
 
-    if ((window as any).load_js) {
-      ;(window as any).load_stylesheet(
-        'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/clear_all.css?i=' +
-          file_version,
-      )
-      ;(window as any).load_stylesheet(
-        'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/tour_search_main_clr.css?i=' +
-          file_version,
-      )
-      ;(window as any).load_stylesheet(
-        'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/tour_seach_form_clr_650x375.css?i=' +
-          file_version,
-      )
-      ;(window as any).load_stylesheet(
-        'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/jquery-ui-1.7.2.custom.css?i=1',
-      )
-      ;(window as any).load_stylesheet(
-        'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/orbit-1.2.3.css?i=' +
-          file_version,
-      )
-      ;(window as any).load_js('jquery')
-      ;(window as any).load_js('ui')
-      ;(window as any).load_js('boxy')
-      ;(window as any).load_js('datepicker')
-      ;(window as any).load_js('orbit')
-      ;(window as any).load_js('tour_seach_form')
-      ;(window as any).load_js('prepare_form')
-    }
-  }
+  //   if ((window as any).load_js) {
+  //     ;(window as any).load_stylesheet(
+  //       'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/clear_all.css?i=' +
+  //         file_version,
+  //     )
+  //     ;(window as any).load_stylesheet(
+  //       'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/tour_search_main_clr.css?i=' +
+  //         file_version,
+  //     )
+  //     ;(window as any).load_stylesheet(
+  //       'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/tour_seach_form_clr_650x375.css?i=' +
+  //         file_version,
+  //     )
+  //     ;(window as any).load_stylesheet(
+  //       'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/jquery-ui-1.7.2.custom.css?i=1',
+  //     )
+  //     ;(window as any).load_stylesheet(
+  //       'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/orbit-1.2.3.css?i=' +
+  //         file_version,
+  //     )
+  //     ;(window as any).load_js('jquery')
+  //     ;(window as any).load_js('ui')
+  //     ;(window as any).load_js('boxy')
+  //     ;(window as any).load_js('datepicker')
+  //     ;(window as any).load_js('orbit')
+  //     ;(window as any).load_js('tour_seach_form')
+  //     ;(window as any).load_js('prepare_form')
+  //   }
+  // }
 
 
   const runSearch = async (): Promise<void> => {
@@ -449,7 +449,7 @@ export const TourSearchModuleComponent = () => {
         )}
 
 
-        <div id="tour_search_module" className="relative z-10 hidden"></div>
+        {/* <div id="tour_search_module" className="relative z-10 hidden"></div>
         <Script
           src="https://code.jquery.com/jquery-1.7.1.min.js"
           strategy="beforeInteractive"
@@ -461,7 +461,7 @@ export const TourSearchModuleComponent = () => {
           src="https://www.ittour.com.ua/tour_search.jsx?id=DG400625103918756O740800&ver=1&type=2970"
           // strategy="afterInteractive"
           onLoad={handleLoad}
-        />
+        /> */}
       </div>
     </div>
   )
