@@ -1,7 +1,7 @@
 'use client'
-import { useEffect, useState, useRef, use, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Script from 'next/script'
-import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, fetchCountries, fetchDepartureCities, buildITTourSearchURL, getOptions, fetchAllPages } from './utils'
+import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, fetchCountries, fetchDepartureCities, buildITTourSearchURL, getOptions, fetchAllPages, fetchSearchResults } from './utils'
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
@@ -18,6 +18,7 @@ import { toast } from 'sonner'
 import { SearchResultType } from './utils'
 import { Stars } from './Stars'
 import { useQuery } from '@tanstack/react-query'
+import { SearchParams } from 'next/dist/server/request/search-params'
 
 
 
@@ -161,12 +162,6 @@ export const TourSearchModuleComponent = () => {
     }
 
     try {
-      if (!(window as any).jQuery) {
-        toast.error('Виникла помилка. Спробуйте пізніше.');
-        console.error('jQuery is not loaded');
-        return;
-      }
-
       setIsLoadingResults(true);
       setLoadedResults(0);
       setTourSearchData(null);
@@ -174,7 +169,7 @@ export const TourSearchModuleComponent = () => {
       const formattedDataFrom = dayjs(date?.from).format('DD.MM.YY');
       const formattedDataTo = dayjs(date?.to).format('DD.MM.YY');
 
-      const searchParams = {
+      const searchParams: SearchParams = {
         date_from: formattedDataFrom,
         date_till: formattedDataTo,
         adults: adultsNumber.toString(),
@@ -187,10 +182,10 @@ export const TourSearchModuleComponent = () => {
         items_per_page: '100'
       };
 
-      const allResults = await fetchAllPages(searchParams, (results) => {
-        setLoadedResults(prev => prev + results.length);
-      });
-      setTourSearchData(buildResultResponse(allResults));
+      const results = await fetchSearchResults(searchParams);
+      console.log('results', results)
+      setLoadedResults(results.length);
+      setTourSearchData(buildResultResponse(results));
 
     } catch (error) {
       console.error('Error during tour search:', error);
@@ -242,57 +237,6 @@ export const TourSearchModuleComponent = () => {
 
     return result
   }
-
-
-
-  // const getDepartureCities = async (): Promise<void> => {
-  //   try {
-  //     setIsLoadingDepartureCities(true)
-  //     // If there is no previous response, fetch the departure cities
-  //     const response = await fetchDepartureCities(
-  //       selectedCountry ?? COUNTRY,
-  //       HOTEL_RATING,
-  //       transportType,
-  //     )
-  //     if (response.departure_city) {
-  //       const parsedResponse = parseSearchBilderResponse(response)
-  //       if (
-  //         parsedResponse.status === '400' ||
-  //         !parsedResponse.departureCities ||
-  //         parsedResponse.departureCities.length === 0
-  //       )
-  //         throw new Error('Error fetching departure cities: ' + JSON.stringify(parsedResponse))
-
-
-  //       setDepartureCities(parsedResponse.departureCities)
-  //       setSelectedDepartureCity(updateStateConditionally(selectedDepartureCity, parsedResponse.departureCities, 'Київ'))
-  //       setIsLoadingDepartureCities(false)
-  //     }
-  //   } catch (error) {
-  //     console.error('Failed to load departure cities:', error)
-  //   }
-  // }
-
-
-  // const init = async () => {
-  //   setIsLoadingCountries(true)
-  //   setIsLoadingDepartureCities(true)
-  //   fetchCountries(HOTEL_RATING, transportType).then((response) => {
-  //     const parsedResponse = parseSearchBilderResponse(response)
-
-
-  //     if (parsedResponse.status === '400') {
-  //       console.error('Error fetching countries:', parsedResponse.status)
-  //       return
-  //     }
-
-  //     if (parsedResponse.countries && parsedResponse.countries.length > 0) {
-  //       setCountries(parsedResponse.countries)
-  //       setSelectedCountry(updateStateConditionally(selectedCountry, parsedResponse.countries, 'Туреччина'))
-  //       setIsLoadingCountries(false)
-  //     }
-  //   })
-  // }
 
   const updateStateConditionally = (state: any, response: any, defaultOption: string) => {
     if (!state || !response || !response.find((item: {id: string}): boolean => item.id === state)) {

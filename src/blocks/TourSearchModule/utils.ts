@@ -77,9 +77,28 @@ const fetchJSONP = (url: string, jQueryCallback: string): Promise<any> => {
 const fetchJSONPWithCache = (baseUrl: string): Promise<any> => {
   const { timestamp, jQueryCallback } = createTimestampCallback();
 
-  // Add random parameters to the base URL
-  const fullUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}callback=${jQueryCallback}&_=${timestamp}`;
+  // Create URL object to manipulate parameters
+  const url = new URL(baseUrl);
+  const searchParams = url.searchParams;
 
+  // Create a new URLSearchParams with callback first
+  const newParams = new URLSearchParams();
+  newParams.append('callback', jQueryCallback);
+
+  // Add all existing parameters
+  for (const [key, value] of searchParams.entries()) {
+    newParams.append(key, value);
+  }
+
+  // Add timestamp at the end
+  newParams.append('_', timestamp.toString());
+
+  // Construct the final URL with reordered parameters
+  const fullUrl = `${url.origin}${url.pathname}?${newParams.toString()}`
+    .replace(/hotel_rating=4%2B78/g, 'hotel_rating=4+78')
+    .replace(/food=498%2B512%2B560/g, 'food=498+512+560');
+
+  console.log('JSONP URL:', fullUrl);
   return fetchJSONP(fullUrl, jQueryCallback);
 };
 
@@ -137,42 +156,69 @@ const searchSelectors = {
 }
 
 const parseSearchResponse = (response: any): ParseSearchResponse => {
+  console.log('Raw response:', response);
+  console.log('Response type:', typeof response);
 
   try {
-    const $ = cheerio.load(getValidContent(response))
-    const results: SearchResultType[] = []
+    const validContent = getValidContent(response);
+    console.log('Valid content:', validContent);
 
-    $(searchSelectors.items).each((_, item) => {
-      if (!isValidSearchItem($(item))) return
+    const $ = cheerio.load(validContent);
+    console.log('Cheerio loaded HTML:', $.html());
 
-      const title = $(item).find(searchSelectors.title).text().trim()
-      const id = $(item).find(searchSelectors.id).attr('id')
-      const room_title = $(item).find(searchSelectors.room_title).attr('title')
-      const rating = $(item).find(searchSelectors.rating).text().trim()
-      const price_usd = $(item).find(searchSelectors.price).text().trim()
-      const price_uah = $(item).find(searchSelectors.price_uah).text().trim()
-      const nights = $(item).find(searchSelectors.nights).text().trim()
-      const meal_type = $(item).find(searchSelectors.meal_type).text().trim()
-      const date_from = $(item).find(searchSelectors.date_from).text().trim()
-      const date_till = format(addDays(parse(date_from, 'dd.MM.yy', new Date()), parseInt(nights)), 'dd.MM.yy')
-      const location = $(item).find(searchSelectors.location).text().trim()
-      if (!title || !id) throw new Error('No valid title or id found')
+    const results: SearchResultType[] = [];
+    const items = $(searchSelectors.items);
+    console.log('Found items count:', items.length);
+    console.log('Items selector:', searchSelectors.items);
 
-      results.push({ title, id, room_title, rating, price_usd, price_uah, nights, meal_type, date_from, date_till, location })
-    })
+    $(searchSelectors.items).each((index, item) => {
+      console.log(`Processing item ${index}:`, $(item).html());
 
+      if (!isValidSearchItem($(item))) {
+        console.log(`Item ${index} is not valid`);
+        return;
+      }
+
+      const title = $(item).find(searchSelectors.title).text().trim();
+      const id = $(item).find(searchSelectors.id).attr('id');
+
+      console.log(`Item ${index} parsed:`, { title, id });
+
+      if (!title || !id) {
+        console.log(`Item ${index} missing title or id`);
+        return;
+      }
+
+      const result = {
+        title,
+        id,
+        room_title: $(item).find(searchSelectors.room_title).attr('title'),
+        rating: $(item).find(searchSelectors.rating).text().trim(),
+        price_usd: $(item).find(searchSelectors.price).text().trim(),
+        price_uah: $(item).find(searchSelectors.price_uah).text().trim(),
+        nights: $(item).find(searchSelectors.nights).text().trim(),
+        meal_type: $(item).find(searchSelectors.meal_type).text().trim(),
+        date_from: $(item).find(searchSelectors.date_from).text().trim(),
+        location: $(item).find(searchSelectors.location).text().trim()
+      };
+
+      console.log(`Item ${index} full result:`, result);
+      results.push(result);
+    });
+
+    console.log('Final parsed results:', results);
     return {
       results,
       status: '200',
-    }
-
+    };
   } catch (error) {
-    console.error('Error parsing ITTour response:', error)
+    console.error('Error parsing ITTour response:', error);
+    console.error('Error stack:', error.stack);
     return {
       status: '400',
-    }
+    };
   }
-}
+};
 
 const selectors = {
   price: '.ittour_order_tour_price',
@@ -459,83 +505,109 @@ interface ITTourSearchParams {
 }
 
 const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
-  const { timestamp, jQueryCallback } = createTimestampCallback();
   const baseURL = 'https://www.ittour.com.ua/tour_search.php';
 
   const defaultParams = {
-    callback: jQueryCallback,
     module_type: 'tour_search',
-    id: 'DG400625103918756O740800',
+    id: MERCHANT_ID,
     ver: '1',
     type: '2970',
     theme: '38',
     action: 'package_tour_search',
     hotel_rating: '4+78',
-    items_per_page: '100',
+    items_per_page: '50',
     hotel: '',
     region: '',
     child_age: '',
     package_tour_type: '1',
     transport_type: '2',
-    country: '318',
+    country: params.country || '318',
     food: '498+512+560',
-    adults: '2',
-    children: '0',
-    date_from: '10.03.25',
-    date_till: '21.03.25',
-    night_from: '6',
-    night_till: '8',
+    adults: params.adults || '2',
+    children: params.children || '0',
+    date_from: params.date_from || '',
+    date_till: params.date_till || '',
+    night_from: params.night_from || '7',
+    night_till: params.night_till || '9',
     price_from: '0',
     price_till: '900000',
     switch_price: 'UAH',
-    departure_city: '2014',
-    module_location_url: window.location.href,
+    departure_city: params.departure_city || '2014',
+    module_location_url: encodeURIComponent(window.location.href),
     preview: '1',
-    _: timestamp.toString(),
     ...params
   };
 
   const url = new URL(baseURL);
+
+  // Add parameters in specific order
   Object.entries(defaultParams).forEach(([key, value]) => {
-    if (value !== undefined) {
+    if (value !== undefined && value !== null && !['callback', '_'].includes(key)) {
       url.searchParams.append(key, value.toString());
     }
   });
 
-  // Add page parameter if provided
-  if (params.page && params.page > 1) {
-    url.searchParams.append('page', params.page.toString());
-  }
+  // Fix encoding for specific parameters and ensure proper format
+  let finalUrl = url.toString()
+    .replace(/hotel_rating=4%2B78/g, 'hotel_rating=4+78')
+    .replace(/food=498%2B512%2B560/g, 'food=498+512+560');
 
-  return url.toString()
-    .replace(/hotel_rating=4%2B78/, 'hotel_rating=4+78')
-    .replace(/food=498%2B512%2B560/, 'food=498+512+560');
+  // Log the final URL for debugging
+  console.log('Search URL:', finalUrl);
+
+  return finalUrl;
 };
 
-const fetchAllPages = async (
+// Add a helper function to validate search params
+const validateSearchParams = (params: Partial<ITTourSearchParams>): boolean => {
+  const requiredParams = [
+    'date_from',
+    'date_till',
+    'adults',
+    'children',
+    'departure_city',
+    'country',
+    'night_from',
+    'night_till'
+  ];
+
+  const missingParams = requiredParams.filter(param => !params[param as keyof ITTourSearchParams]);
+
+  if (missingParams.length > 0) {
+    console.warn('Missing required parameters:', missingParams);
+    return false;
+  }
+
+  return true;
+};
+
+const fetchSearchResults = async (
   initialParams: Partial<ITTourSearchParams>,
   onPageLoad?: (results: SearchResultType[]) => void
 ): Promise<SearchResultType[]> => {
+  // Validate parameters before making the request
+  if (!validateSearchParams(initialParams)) {
+    console.error('Invalid search parameters');
+    return [];
+  }
+
   let allResults: SearchResultType[] = [];
   let currentPage = 1;
   let hasMoreResults = true;
 
   while (hasMoreResults && currentPage < 2) {
-    // Add delay between requests to avoid rate limiting
     if (currentPage > 1) {
-      await delay(1000); // 1 second delay between requests
+      await delay(1000);
     }
 
-    const { timestamp, jQueryCallback } = createTimestampCallback();
-    const url = buildITTourSearchURL({
+    const baseUrl = buildITTourSearchURL({
       ...initialParams,
       page: currentPage,
-      _: timestamp.toString(),
-      callback: jQueryCallback
     });
 
     try {
-      const response = await fetchJSONP(url, jQueryCallback);
+      const response = await fetchJSONPWithCache(baseUrl);
+      console.log('API Response:', response);
       const parsedResponse = parseSearchResponse(response);
 
       if (parsedResponse.status === '400' || !parsedResponse.results || parsedResponse.results.length === 0) {
@@ -544,8 +616,7 @@ const fetchAllPages = async (
         allResults = [...allResults, ...parsedResponse.results];
         onPageLoad?.(parsedResponse.results);
 
-        // If we get less than the requested items_per_page, we've reached the last page
-        if (parsedResponse.results.length < parseInt(initialParams.items_per_page || '100')) {
+        if (parsedResponse.results.length < parseInt(initialParams.items_per_page || '50')) {
           hasMoreResults = false;
         } else {
           currentPage++;
@@ -560,4 +631,4 @@ const fetchAllPages = async (
   return allResults;
 };
 
-export { makeITTourRequest, parseITTourResponse, fetchJSONP, createTimestampCallback, parseSearchResponse, buildITTourSearchURL, parseSearchBilderResponse, fetchCountries, fetchDepartureCities, getOptions, fetchAllPages }
+export { makeITTourRequest, parseITTourResponse, fetchJSONP, createTimestampCallback, parseSearchResponse, buildITTourSearchURL, parseSearchBilderResponse, fetchCountries, fetchDepartureCities, getOptions, fetchSearchResults }
