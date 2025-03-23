@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
 import Script from 'next/script'
-import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, useCountries, useDepartureCities, buildITTourSearchURL, getOptions, useFetchSearchResults, ITTourSearchParams, validateSearchParams, fetchJSONPWithCache } from './utils'
+import { parseSearchResponse, parseSearchBilderResponse, useCountries, useDepartureCities, buildITTourSearchURL, getOptions, useFetchSearchResults, ITTourSearchParams, validateSearchParams, fetchJSONPWithCache } from './utils'
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
@@ -20,6 +20,15 @@ import { Stars } from './Stars'
 import { useQuery } from '@tanstack/react-query'
 import { SearchParams } from 'next/dist/server/request/search-params'
 import Image from 'next/image'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
+
 
 
 
@@ -268,14 +277,6 @@ export const TourSearchModuleComponent = () => {
     return option?.id || ''
   }
 
-  // useEffect(() : void => {
-  //   init()
-  // }, [transportType])
-
-  // useEffect(() : void => {
-  //   getDepartureCities()
-  // }, [selectedCountry, transportType])
-
 
   return (
     <div className="w-full container-spacing">
@@ -510,9 +511,22 @@ const RoomCard = ({ room, hotel }: { room: any, hotel: any }) => {
             <span className="text-sm">грн</span>
           </p>
         </div>
-        <Button className="w-full mt-4 bg-background-secondary text-text-on-secondary-primary">
-          Замовити тур
-        </Button>
+        <Sheet>
+          <SheetTrigger>
+            <Button className="w-full mt-4 bg-background-secondary text-text-on-secondary-primary hover:brightness-110 transition-all duration-100 cursor-pointer active:brightness-90">
+              Замовити тур
+            </Button>
+          </SheetTrigger>
+          <SheetContent forceMount className="bg-jaffa-50 text-jaffa-900 w-1/2 transition-all duration-100">
+            <SheetHeader>
+              <SheetTitle>Are you absolutely sure?</SheetTitle>
+              <SheetDescription>
+                This action cannot be undone. This will permanently delete your account and remove
+                your data from our servers.
+              </SheetDescription>
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
       </div>
     </div>
   )
