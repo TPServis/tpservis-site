@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
 import Script from 'next/script'
-import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, useCountries, useDepartureCities, buildITTourSearchURL, getOptions, fetchSearchResults } from './utils'
+import { fetchJSONP, createTimestampCallback, parseSearchResponse, parseSearchBilderResponse, useCountries, useDepartureCities, buildITTourSearchURL, getOptions, useFetchSearchResults, ITTourSearchParams, validateSearchParams, fetchJSONPWithCache } from './utils'
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
@@ -19,6 +19,7 @@ import { SearchResultType } from './utils'
 import { Stars } from './Stars'
 import { useQuery } from '@tanstack/react-query'
 import { SearchParams } from 'next/dist/server/request/search-params'
+import Image from 'next/image'
 
 
 
@@ -67,78 +68,91 @@ type TourSearchResultType = {
  const SWITCH_PRICE = 'UAH'
  const DEPARTURE_CITY = '2014'
 
+// Move cache outside component to avoid recreation
+const searchCache = new Map<string, { results: SearchResultType[], timestamp: number }>();
+const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
+
 export const TourSearchModuleComponent = () => {
   const [transportType, setTransportType] = useState<string>('2')
-  const { data: countries, isLoading: isLoadingCountries } = useCountries(HOTEL_RATING, transportType);
-
-  const parsedCountries = useMemo(() => {
-    return parseSearchBilderResponse(countries)
-  }, [countries])
-
   const [isLoadingResults, setIsLoadingResults] = useState<boolean>(false)
   const [loadedResults, setLoadedResults] = useState<number>(0)
   const [date, setDate] = useState<DateRange | undefined>({
     from: undefined,
     to: undefined,
   })
-  const [selectedCountry, setSelectedCountry] = useState<any>(parsedCountries?.countries?.[0]?.id || null)
-  const { data: departureCities, isLoading: isLoadingDepartureCities } = useDepartureCities(selectedCountry, HOTEL_RATING, transportType);
-  const parsedDepartureCities = useMemo(() => {
-    return parseSearchBilderResponse(departureCities)
-  }, [departureCities])
+  const [selectedCountry, setSelectedCountry] = useState<any>(null)
   const [selectedDepartureCity, setSelectedDepartureCity] = useState<any>(null)
   const [tourSearchData, setTourSearchData] = useState<TourSearchResultType[] | null>(null)
   const [adultsNumber, setAdultsNumber] = useState<number>(2)
   const [childrenNumber, setChildrenNumber] = useState<number>(0)
   const [nights, setNights] = useState<number[]>([7, 9])
+  const [searchParams, setSearchParams] = useState<Partial<ITTourSearchParams>>({})
+  const [searchError, setSearchError] = useState<Error | null>(null)
 
+  const { data: countries, isLoading: isLoadingCountries } = useCountries(HOTEL_RATING, transportType);
+  const { data: departureCities, isLoading: isLoadingDepartureCities } = useDepartureCities(selectedCountry, HOTEL_RATING, transportType);
 
+  const parsedCountries = useMemo(() => {
+    return parseSearchBilderResponse(countries)
+  }, [countries])
 
+  const parsedDepartureCities = useMemo(() => {
+    return parseSearchBilderResponse(departureCities)
+  }, [departureCities])
+
+  // Handle search when params change
   useEffect(() => {
-    setSelectedCountry(parsedCountries?.countries?.[0]?.id)
-    setSelectedDepartureCity(parsedCountries?.departureCities?.[0]?.id)
-  }, [parsedCountries])
+    const fetchResults = async () => {
+      if (!searchParams || Object.keys(searchParams).length === 0) {
+        return;
+      }
 
-  useEffect(() => {
-    setSelectedDepartureCity(updateStateConditionally(selectedDepartureCity, parsedDepartureCities?.departureCities, 'Київ'))
-  }, [parsedDepartureCities])
+      if (!validateSearchParams(searchParams)) {
+        console.error('Invalid search parameters');
+        return;
+      }
 
+      try {
+        setIsLoadingResults(true);
+        setSearchError(null);
 
-  // const handleLoad = () => {
-  //   console.log('handleLoad')
-  //   const file_version = '59'
+        const baseUrl = buildITTourSearchURL(searchParams);
 
+        // Check cache first
+        const cachedData = searchCache.get(baseUrl);
+        if (cachedData && Date.now() - cachedData.timestamp < CACHE_DURATION) {
+          setLoadedResults(cachedData.results.length);
+          setTourSearchData(buildResultResponse(cachedData.results));
+          setIsLoadingResults(false);
+          return;
+        }
 
-  //   if ((window as any).load_js) {
-  //     ;(window as any).load_stylesheet(
-  //       'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/clear_all.css?i=' +
-  //         file_version,
-  //     )
-  //     ;(window as any).load_stylesheet(
-  //       'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/tour_search_main_clr.css?i=' +
-  //         file_version,
-  //     )
-  //     ;(window as any).load_stylesheet(
-  //       'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/tour_seach_form_clr_650x375.css?i=' +
-  //         file_version,
-  //     )
-  //     ;(window as any).load_stylesheet(
-  //       'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/jquery-ui-1.7.2.custom.css?i=1',
-  //     )
-  //     ;(window as any).load_stylesheet(
-  //       'https://www.ittour.com.ua/classes/handlers/ittour_external_modules/ittour_modules/css/orbit-1.2.3.css?i=' +
-  //         file_version,
-  //     )
-  //     ;(window as any).load_js('jquery')
-  //     ;(window as any).load_js('ui')
-  //     ;(window as any).load_js('boxy')
-  //     ;(window as any).load_js('datepicker')
-  //     ;(window as any).load_js('orbit')
-  //     ;(window as any).load_js('tour_seach_form')
-  //     ;(window as any).load_js('prepare_form')
-  //   }
-  // }
+        const response = await fetchJSONPWithCache(baseUrl);
+        const parsedResponse = parseSearchResponse(response);
 
+        if (parsedResponse.status === '400' || !parsedResponse.results) {
+          throw new Error('Failed to parse search results');
+        }
+
+        // Update cache
+        searchCache.set(baseUrl, {
+          results: parsedResponse.results,
+          timestamp: Date.now()
+        });
+
+        setLoadedResults(parsedResponse.results.length);
+        setTourSearchData(buildResultResponse(parsedResponse.results));
+      } catch (error) {
+        console.error('Error during tour search:', error);
+        setSearchError(error as Error);
+        toast.error('Виникла помилка. Спробуйте пізніше.');
+      } finally {
+        setIsLoadingResults(false);
+      }
+    };
+
+    fetchResults();
+  }, [searchParams]); // No need for CACHE_DURATION and searchCache in deps as they're now outside component
 
   const runSearch = async (): Promise<void> => {
     if (!date?.from || !date?.to) {
@@ -162,14 +176,13 @@ export const TourSearchModuleComponent = () => {
     }
 
     try {
-      setIsLoadingResults(true);
       setLoadedResults(0);
       setTourSearchData(null);
 
       const formattedDataFrom = dayjs(date?.from).format('DD.MM.YY');
       const formattedDataTo = dayjs(date?.to).format('DD.MM.YY');
 
-      const searchParams: SearchParams = {
+      const params: Partial<ITTourSearchParams> = {
         date_from: formattedDataFrom,
         date_till: formattedDataTo,
         adults: adultsNumber.toString(),
@@ -182,16 +195,11 @@ export const TourSearchModuleComponent = () => {
         items_per_page: '100'
       };
 
-      const results = await fetchSearchResults(searchParams);
-      console.log('results', results)
-      setLoadedResults(results.length);
-      setTourSearchData(buildResultResponse(results));
+      setSearchParams(params);
 
     } catch (error) {
       console.error('Error during tour search:', error);
       toast.error('Виникла помилка. Спробуйте пізніше.');
-    } finally {
-      setIsLoadingResults(false);
     }
   };
 
@@ -274,10 +282,13 @@ export const TourSearchModuleComponent = () => {
       <div className="container-wrapper min-h-[300px] relative">
         <div className="w-full h-[300px] relative mb-40">
           <div className="w-full h-full overflow-hidden rounded-4xl">
-            <img
+            <Image
               src="https://o0z4coknhf.ufs.sh/f/UucILLerskLA60WL4Z0DxYO4iVTzFcfGgbECp9eH6Z8yrIAn"
               alt="ITTour"
               className="w-full h-full object-cover"
+              width={1920}
+              height={1080}
+              priority
             />
           </div>
           <div className="grid grid-cols-12 lg:flex gap-2 bg-jaffa-400 p-4 rounded-3xl w-full md:w-[calc(100%-2rem)] mx-auto -translate-y-1/2">

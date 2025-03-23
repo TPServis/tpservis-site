@@ -2,6 +2,7 @@ import * as cheerio from 'cheerio'
 import { parse, addDays, format } from 'date-fns'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { a } from 'node_modules/drizzle-kit/index-BAUrj6Ib.mjs'
+import { useMemo } from 'react'
 
 
 const DEFAULT_HOTEL_RATING = '4+78'
@@ -97,7 +98,6 @@ const fetchJSONPWithCache = (baseUrl: string): Promise<any> => {
     .replace(/hotel_rating=4%2B78/g, 'hotel_rating=4+78')
     .replace(/food=498%2B512%2B560/g, 'food=498+512+560');
 
-  console.log('JSONP URL:', fullUrl);
   return fetchJSONP(fullUrl, jQueryCallback);
 };
 
@@ -107,7 +107,7 @@ export const useJSONPQuery = (url: string) => {
   return useQuery({
     queryKey: ['jsonp', baseUrl], // Cache key uses base URL without random parameters
     queryFn: () => fetchJSONPWithCache(baseUrl),
-    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
+    staleTime: 30 * 60 * 1000, // Consider data fresh for 30 minutes
   });
 };
 
@@ -470,7 +470,7 @@ const useDepartureCities = (
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-interface ITTourSearchParams {
+export interface ITTourSearchParams {
   callback: string
   module_type: 'tour_search'
   id: string
@@ -533,7 +533,7 @@ const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
     switch_price: 'UAH',
     departure_city: params.departure_city || '2014',
     module_location_url: encodeURIComponent(window.location.href),
-    preview: '1',
+    preview: '2',
     ...params
   };
 
@@ -550,9 +550,6 @@ const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
   let finalUrl = url.toString()
     .replace(/hotel_rating=4%2B78/g, 'hotel_rating=4+78')
     .replace(/food=498%2B512%2B560/g, 'food=498+512+560');
-
-  // Log the final URL for debugging
-  console.log('Search URL:', finalUrl);
 
   return finalUrl;
 };
@@ -580,54 +577,55 @@ const validateSearchParams = (params: Partial<ITTourSearchParams>): boolean => {
   return true;
 };
 
-const fetchSearchResults = async (
-  initialParams: Partial<ITTourSearchParams>,
+const useFetchSearchResults = (
+  params: Partial<ITTourSearchParams>,
   onPageLoad?: (results: SearchResultType[]) => void
-): Promise<SearchResultType[]> => {
-  // Validate parameters before making the request
-  if (!validateSearchParams(initialParams)) {
-    console.error('Invalid search parameters');
-    return [];
-  }
-
-  let allResults: SearchResultType[] = [];
-  let currentPage = 1;
-  let hasMoreResults = true;
-
-  while (hasMoreResults && currentPage < 2) {
-    if (currentPage > 1) {
-      await delay(1000);
+) => {
+  const baseUrl = useMemo(() => {
+    if (!params || Object.keys(params).length === 0) {
+      return null;
     }
+    if (!validateSearchParams(params)) {
+      console.error('Invalid search parameters');
+      return null;
+    }
+    return buildITTourSearchURL(params);
+  }, [params]);
 
-    const baseUrl = buildITTourSearchURL({
-      ...initialParams,
-      page: currentPage,
-    });
+  return useQuery({
+    queryKey: ['searchResults', baseUrl],
+    queryFn: async () => {
+      if (!baseUrl) {
+        return [];
+      }
 
-    try {
       const response = await fetchJSONPWithCache(baseUrl);
-      console.log('API Response:', response);
       const parsedResponse = parseSearchResponse(response);
 
-      if (parsedResponse.status === '400' || !parsedResponse.results || parsedResponse.results.length === 0) {
-        hasMoreResults = false;
-      } else {
-        allResults = [...allResults, ...parsedResponse.results];
-        onPageLoad?.(parsedResponse.results);
-
-        if (parsedResponse.results.length < parseInt(initialParams.items_per_page || '50')) {
-          hasMoreResults = false;
-        } else {
-          currentPage++;
-        }
+      if (parsedResponse.status === '400' || !parsedResponse.results) {
+        throw new Error('Failed to parse search results');
       }
-    } catch (error) {
-      console.error(`Error fetching page ${currentPage}:`, error);
-      hasMoreResults = false;
-    }
-  }
 
-  return allResults;
+      onPageLoad?.(parsedResponse.results);
+      return parsedResponse.results;
+    },
+    enabled: !!baseUrl,
+    staleTime: 30 * 60 * 1000,
+  });
 };
 
-export { useITTourRequest, parseITTourResponse, fetchJSONP, createTimestampCallback, parseSearchResponse, buildITTourSearchURL, parseSearchBilderResponse, useCountries, useDepartureCities, getOptions, fetchSearchResults }
+export {
+  useITTourRequest,
+  parseITTourResponse,
+  fetchJSONP,
+  createTimestampCallback,
+  parseSearchResponse,
+  buildITTourSearchURL,
+  parseSearchBilderResponse,
+  useCountries,
+  useDepartureCities,
+  getOptions,
+  useFetchSearchResults,
+  validateSearchParams,
+  fetchJSONPWithCache
+}
