@@ -30,10 +30,6 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  api: {
-    bodyParser: false,
-  },
-
   reactStrictMode: true,
   redirects: redirects as any,
   compiler: {

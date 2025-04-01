@@ -1,7 +1,15 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
-import Script from 'next/script'
-import { parseSearchResponse, parseSearchBilderResponse, useCountries, useDepartureCities, buildITTourSearchURL, getOptions, useFetchSearchResults, ITTourSearchParams, validateSearchParams, fetchJSONPWithCache } from './utils'
+import {
+  parseSearchResponse,
+  parseSearchBilderResponse,
+  useCountries,
+  useDepartureCities,
+  buildITTourSearchURL,
+  ITTourSearchParams,
+  validateSearchParams,
+  fetchJSONPWithCache,
+} from './utils'
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
@@ -10,76 +18,82 @@ import { format } from 'date-fns'
 import { CalendarIcon, Plane, MapPin, Loader2 } from 'lucide-react'
 import { cn } from '@/utilities/cn'
 import { DateRange } from 'react-day-picker'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import PeopleSelector from './PeopleSelector'
 import NightsSelector from './NightsSelector'
 import TransportSelector from './TransportSelector'
 import { toast } from 'sonner'
 import { SearchResultType } from './utils'
 import { Stars } from './Stars'
-import { useQuery } from '@tanstack/react-query'
-import { SearchParams } from 'next/dist/server/request/search-params'
 import Image from 'next/image'
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer'
 
+// https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350047&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-f33af08145db2441a65b3aedcbbb3b1b&sharding_rule_id=&_=1741030363394
+// https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350049&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-dfdd67c6b7607347a5a9dc3c822b5e84&sharding_rule_id=&_=1741030479830
+// https://www.ittour.com.ua/tour_search.php?callback=jQuery17108821699837300099_1741034930151&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-1a1318631d4d6aec8ef22cbbec2eeac1&sharding_rule_id=&_=1741036767165
+// https://www.ittour.com.ua/tour_search.php?callback=jQuery4375644823069742_1741031012487&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-840a980ca207ef2b2df684eeb0027aa8&sharding_rule_id=&_=1741031012487'
+// 03-08-840a980ca207ef2b2df684eeb0027aa8
 
-
-
-
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350047&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-f33af08145db2441a65b3aedcbbb3b1b&sharding_rule_id=&_=1741030363394
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350049&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-dfdd67c6b7607347a5a9dc3c822b5e84&sharding_rule_id=&_=1741030479830
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery17108821699837300099_1741034930151&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-1a1318631d4d6aec8ef22cbbec2eeac1&sharding_rule_id=&_=1741036767165
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery4375644823069742_1741031012487&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-840a980ca207ef2b2df684eeb0027aa8&sharding_rule_id=&_=1741031012487'
-  // 03-08-840a980ca207ef2b2df684eeb0027aa8
-
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery17106025752721087283_1741514343320&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514355260
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery17103968606778564445_1741514676869&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514762876
-  // https://www.ittour.com.ua/tour_search.php?callback=jQuery9569997690939707_1741515817928&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4%2B78&items_per_page=50&package_tour_type=1&transport_type=2&country=318&food=498%2B512%2B560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%253A%252F%252Flocalhost%253A3000%252Ftours&preview=1&_=1741515817928
-
-
+// https://www.ittour.com.ua/tour_search.php?callback=jQuery17106025752721087283_1741514343320&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514355260
+// https://www.ittour.com.ua/tour_search.php?callback=jQuery17103968606778564445_1741514676869&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514762876
+// https://www.ittour.com.ua/tour_search.php?callback=jQuery9569997690939707_1741515817928&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4%2B78&items_per_page=50&package_tour_type=1&transport_type=2&country=318&food=498%2B512%2B560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%253A%252F%252Flocalhost%253A3000%252Ftours&preview=1&_=1741515817928
 
 type TourSearchResultType = {
+  title: string
+  stars: number
+  location: string
+  rooms: {
+    id: string
     title: string
-    stars: number
-    location: string
-    rooms: {
-      id: string
-      title: string
-      price_usd: number
-      price_uah: number
-      nights: number
-      meal_type: string
-      date_from: string
-      date_till: string
-    }[]
+    price_usd: number
+    price_uah: number
+    nights: number
+    meal_type: string
+    date_from: string
+    date_till: string
+  }[]
 }
 
-
-
- const MERCHANT_ID = 'DG400625103918756O740800'
- const MODULE_TYPE = 'tour_search'
- const HOTEL_RATING = '4+78'
- const HOTEL = ''
- const REGION = ''
- const CHILD_AGE = ''
- const TRANSPORT_TYPE = '2'
- const COUNTRY = '318'
- const FOOD = '498+512+560'
- const PRICE_FROM = '0'
- const PRICE_TILL = '900000'
- const SWITCH_PRICE = 'UAH'
- const DEPARTURE_CITY = '2014'
+const MERCHANT_ID = 'DG400625103918756O740800'
+const MODULE_TYPE = 'tour_search'
+const HOTEL_RATING = '4+78'
+const HOTEL = ''
+const REGION = ''
+const CHILD_AGE = ''
+const TRANSPORT_TYPE = '2'
+const COUNTRY = '318'
+const FOOD = '498+512+560'
+const PRICE_FROM = '0'
+const PRICE_TILL = '900000'
+const SWITCH_PRICE = 'UAH'
+const DEPARTURE_CITY = '2014'
 
 // Move cache outside component to avoid recreation
-const searchCache = new Map<string, { results: SearchResultType[], timestamp: number }>();
-const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
+const searchCache = new Map<string, { results: SearchResultType[]; timestamp: number }>()
+const CACHE_DURATION = 30 * 60 * 1000 // 30 minutes in milliseconds
 
 export const TourSearchModuleComponent = () => {
   const [transportType, setTransportType] = useState<string>('2')
@@ -98,8 +112,15 @@ export const TourSearchModuleComponent = () => {
   const [searchParams, setSearchParams] = useState<Partial<ITTourSearchParams>>({})
   const [searchError, setSearchError] = useState<Error | null>(null)
 
-  const { data: countries, isLoading: isLoadingCountries } = useCountries(HOTEL_RATING, transportType);
-  const { data: departureCities, isLoading: isLoadingDepartureCities } = useDepartureCities(selectedCountry, HOTEL_RATING, transportType);
+  const { data: countries, isLoading: isLoadingCountries } = useCountries(
+    HOTEL_RATING,
+    transportType,
+  )
+  const { data: departureCities, isLoading: isLoadingDepartureCities } = useDepartureCities(
+    selectedCountry,
+    HOTEL_RATING,
+    transportType,
+  )
 
   const parsedCountries = useMemo(() => {
     return parseSearchBilderResponse(countries)
@@ -113,83 +134,83 @@ export const TourSearchModuleComponent = () => {
   useEffect(() => {
     const fetchResults = async () => {
       if (!searchParams || Object.keys(searchParams).length === 0) {
-        return;
+        return
       }
 
       if (!validateSearchParams(searchParams)) {
-        console.error('Invalid search parameters');
-        return;
+        console.error('Invalid search parameters')
+        return
       }
 
       try {
-        setIsLoadingResults(true);
-        setSearchError(null);
+        setIsLoadingResults(true)
+        setSearchError(null)
 
-        const baseUrl = buildITTourSearchURL(searchParams);
+        const baseUrl = buildITTourSearchURL(searchParams)
 
         // Check cache first
-        const cachedData = searchCache.get(baseUrl);
+        const cachedData = searchCache.get(baseUrl)
         if (cachedData && Date.now() - cachedData.timestamp < CACHE_DURATION) {
-          setLoadedResults(cachedData.results.length);
-          setTourSearchData(buildResultResponse(cachedData.results));
-          setIsLoadingResults(false);
-          return;
+          setLoadedResults(cachedData.results.length)
+          setTourSearchData(buildResultResponse(cachedData.results))
+          setIsLoadingResults(false)
+          return
         }
 
-        const response = await fetchJSONPWithCache(baseUrl);
-        const parsedResponse = parseSearchResponse(response);
+        const response = await fetchJSONPWithCache(baseUrl)
+        const parsedResponse = parseSearchResponse(response)
 
         if (parsedResponse.status === '400' || !parsedResponse.results) {
-          throw new Error('Failed to parse search results');
+          throw new Error('Failed to parse search results')
         }
 
         // Update cache
         searchCache.set(baseUrl, {
           results: parsedResponse.results,
-          timestamp: Date.now()
-        });
+          timestamp: Date.now(),
+        })
 
-        setLoadedResults(parsedResponse.results.length);
-        setTourSearchData(buildResultResponse(parsedResponse.results));
+        setLoadedResults(parsedResponse.results.length)
+        setTourSearchData(buildResultResponse(parsedResponse.results))
       } catch (error) {
-        console.error('Error during tour search:', error);
-        setSearchError(error as Error);
-        toast.error('Виникла помилка. Спробуйте пізніше.');
+        console.error('Error during tour search:', error)
+        setSearchError(error as Error)
+        toast.error('Виникла помилка. Спробуйте пізніше.')
       } finally {
-        setIsLoadingResults(false);
+        setIsLoadingResults(false)
       }
-    };
+    }
 
-    fetchResults();
-  }, [searchParams]); // No need for CACHE_DURATION and searchCache in deps as they're now outside component
+    fetchResults()
+  }, [searchParams]) // No need for CACHE_DURATION and searchCache in deps as they're now outside component
 
   const runSearch = async (): Promise<void> => {
     if (!date?.from || !date?.to) {
-      toast.error('Будь ласка, оберіть дату');
-      return;
+      toast.error('Будь ласка, оберіть дату')
+      return
     }
 
     if (!selectedCountry || !selectedDepartureCity) {
-      toast.error('Будь ласка, оберіть країну та місто відправлення');
-      return;
+      toast.error('Будь ласка, оберіть країну та місто відправлення')
+      return
     }
 
     if (nights[1] <= 3) {
-      toast.error('Кількість ночей має бути не менше 3.');
-      return;
+      toast.error('Кількість ночей має бути не менше 3.')
+      return
     }
 
     if (adultsNumber === 0) {
-      toast.error('Будь ласка, оберіть кількість дорослих');
-      return;
+      toast.error('Будь ласка, оберіть кількість дорослих')
+      return
     }
 
     try {
-      setLoadedResults(0);
-      setTourSearchData(null);
+      setLoadedResults(0)
+      setTourSearchData(null)
 
-      const formattedDataFrom = dayjs(date?.from).format('DD.MM.YY');
-      const formattedDataTo = dayjs(date?.to).format('DD.MM.YY');
+      const formattedDataFrom = dayjs(date?.from).format('DD.MM.YY')
+      const formattedDataTo = dayjs(date?.to).format('DD.MM.YY')
 
       const params: Partial<ITTourSearchParams> = {
         date_from: formattedDataFrom,
@@ -201,18 +222,15 @@ export const TourSearchModuleComponent = () => {
         night_from: nights[0].toString(),
         night_till: nights[1].toString(),
         transport_type: transportType,
-        items_per_page: '100'
-      };
+        items_per_page: '100',
+      }
 
-      setSearchParams(params);
-
+      setSearchParams(params)
     } catch (error) {
-      console.error('Error during tour search:', error);
-      toast.error('Виникла помилка. Спробуйте пізніше.');
+      console.error('Error during tour search:', error)
+      toast.error('Виникла помилка. Спробуйте пізніше.')
     }
-  };
-
-
+  }
 
   const buildResultResponse = (list: SearchResultType[]): TourSearchResultType[] | null => {
     const result: TourSearchResultType[] = []
@@ -229,55 +247,31 @@ export const TourSearchModuleComponent = () => {
 
     for (const hotelTitle in groupedByHotel) {
       if (groupedByHotel.hasOwnProperty(hotelTitle)) {
-        const hotelGroup = groupedByHotel[hotelTitle];
-        const firstItem = hotelGroup[0];
-        const rating = firstItem?.rating;
-        const location = firstItem?.location;
+        const hotelGroup = groupedByHotel[hotelTitle]
+        const firstItem = hotelGroup[0]
+        const rating = firstItem?.rating
+        const location = firstItem?.location
 
         result.push({
-              title: hotelTitle,
-              stars: parseInt(rating ?? '0'),
-              location: location ?? '',
-              rooms: groupedByHotel[hotelTitle].map((item) => ({
-                id: item.id,
-                title: item.room_title ?? "",
-                price_usd: parseInt(item.price_usd ?? '0'),
-                price_uah: parseInt(item.price_uah ?? '0'),
-                nights: parseInt(item.nights ?? '0'),
-                meal_type: item.meal_type ?? '',
-                date_from: item.date_from ?? '',
-              date_till: item.date_till ?? '',
-            })),
-          })
+          title: hotelTitle,
+          stars: parseInt(rating ?? '0'),
+          location: location ?? '',
+          rooms: groupedByHotel[hotelTitle].map((item) => ({
+            id: item.id,
+            title: item.room_title ?? '',
+            price_usd: parseInt(item.price_usd ?? '0'),
+            price_uah: parseInt(item.price_uah ?? '0'),
+            nights: parseInt(item.nights ?? '0'),
+            meal_type: item.meal_type ?? '',
+            date_from: item.date_from ?? '',
+            date_till: item.date_till ?? '',
+          })),
+        })
       }
     }
 
     return result
   }
-
-  const updateStateConditionally = (state: any, response: any, defaultOption: string) => {
-    if (!state || !response || !response.find((item: {id: string}): boolean => item.id === state)) {
-      return getDefaultOption(response, defaultOption)
-    }
-    return state
-  }
-
-  const getDefaultOption = (options: {name: string, id: string}[], defaultOption: string) => {
-    // Check if options is undefined or empty
-    if (!options || options.length === 0) {
-      return '';
-    }
-
-    let option: {name: string, id: string} | undefined = options.find((option: {name: string}) => option.name === defaultOption)
-
-    if (!option || !option.id) {
-      option = options[0]
-    }
-
-    return option?.id || ''
-  }
-
-
   return (
     <div className="w-full container-spacing">
       <div className="container-wrapper min-h-[300px] relative">
@@ -439,7 +433,6 @@ export const TourSearchModuleComponent = () => {
           </div>
         </div>
 
-
         {(isLoadingResults || (tourSearchData && tourSearchData.length > 0)) && (
           <div className="">
             <div className="flex items-center gap-4">
@@ -454,12 +447,13 @@ export const TourSearchModuleComponent = () => {
                 )}
               </p>
             </div>
-            {!isLoadingResults && tourSearchData && tourSearchData.map((hotel: TourSearchResultType) => (
-              <Hotel key={hotel.title} hotel={hotel} />
-            ))}
+            {!isLoadingResults &&
+              tourSearchData &&
+              tourSearchData.map((hotel: TourSearchResultType) => (
+                <Hotel key={hotel.title} hotel={hotel} />
+              ))}
           </div>
         )}
-
 
         {/* <div id="tour_search_module" className="relative z-10 hidden"></div>
         <Script
@@ -479,12 +473,11 @@ export const TourSearchModuleComponent = () => {
   )
 }
 
-
-
-const RoomCard = ({ room, hotel }: { room: any, hotel: any }) => {
-
+const RoomCard = ({ room, hotel }: { room: any; hotel: any }) => {
+  const [open, setOpen] = useState(false)
   const price = room.price_uah.toLocaleString('uk-UA')
   const title = room.title.length <= 3 ? hotel.title + ' ' + room.title : room.title
+
   return (
     <div className=" bg-astral-50 rounded-xl p-4 col-span-4 text-astral-900 font-light flex flex-col gap-2">
       <h3 className="font-bold text-2xl">{title}</h3>
@@ -511,22 +504,39 @@ const RoomCard = ({ room, hotel }: { room: any, hotel: any }) => {
             <span className="text-sm">грн</span>
           </p>
         </div>
-        <Sheet>
-          <SheetTrigger>
-            <Button className="w-full mt-4 bg-background-secondary text-text-on-secondary-primary hover:brightness-110 transition-all duration-100 cursor-pointer active:brightness-90">
-              Замовити тур
-            </Button>
-          </SheetTrigger>
-          <SheetContent forceMount className="bg-jaffa-50 text-jaffa-900 w-1/2 transition-all duration-100">
-            <SheetHeader>
-              <SheetTitle>Are you absolutely sure?</SheetTitle>
-              <SheetDescription>
-                This action cannot be undone. This will permanently delete your account and remove
-                your data from our servers.
-              </SheetDescription>
-            </SheetHeader>
-          </SheetContent>
-        </Sheet>
+        {/* <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button variant="outline">Edit Profile</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Edit profile</DialogTitle>
+              <DialogDescription>
+                Make changes to your profile here. Click save when you're done.
+              </DialogDescription>
+            </DialogHeader>
+            <p>Hello</p>
+          </DialogContent>
+        </Dialog>
+        <Drawer open={open} onOpenChange={setOpen}>
+          <DrawerTrigger asChild>
+            <Button variant="outline">Edit Profile</Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader className="text-left">
+              <DrawerTitle>Edit profile</DrawerTitle>
+              <DrawerDescription>
+                Make changes to your profile here. Click save when you're done.
+              </DrawerDescription>
+            </DrawerHeader>
+            <p>Hello</p>
+            <DrawerFooter className="pt-2">
+              <DrawerClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer> */}
       </div>
     </div>
   )

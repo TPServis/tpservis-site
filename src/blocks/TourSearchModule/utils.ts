@@ -4,7 +4,6 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { a } from 'node_modules/drizzle-kit/index-BAUrj6Ib.mjs'
 import { useMemo } from 'react'
 
-
 const DEFAULT_HOTEL_RATING = '4+78'
 const DEFAULT_TRANSPORT_TYPE = '2'
 const MODULE_TYPE = 'tour_search'
@@ -13,11 +12,11 @@ const MERCHANT_ID = 'DG400625103918756O740800'
 type ResponsesStatus = '200' | '400'
 
 const getBaseUrl = (url: string): string => {
-  const urlObj = new URL(url);
+  const urlObj = new URL(url)
   // Remove callback and timestamp parameters
-  urlObj.searchParams.delete('callback');
-  urlObj.searchParams.delete('_');
-  return urlObj.toString();
+  urlObj.searchParams.delete('callback')
+  urlObj.searchParams.delete('_')
+  return urlObj.toString()
 }
 
 const useITTourRequest = (tourId: string) => {
@@ -35,89 +34,87 @@ const useITTourRequest = (tourId: string) => {
   url.searchParams.append('sharding_rule_id', '')
   url.searchParams.append('_', timestamp.toString())
 
-  return useJSONPQuery(url.toString());
+  return useJSONPQuery(url.toString())
 }
 
 const createTimestampCallback = (): { timestamp: number; jQueryCallback: string } => {
-  const timestamp = Date.now();
-  const random = Math.floor(Math.random() * 100000000000000000);
-  const jQueryCallback = `jQuery${random}_${timestamp}`;
-  return { timestamp, jQueryCallback };
-};
+  const timestamp = Date.now()
+  const random = Math.floor(Math.random() * 100000000000000000)
+  const jQueryCallback = `jQuery${random}_${timestamp}`
+  return { timestamp, jQueryCallback }
+}
 
 const fetchJSONP = (url: string, jQueryCallback: string): Promise<any> => {
   return new Promise((resolve, reject): void => {
-    (window as any)[jQueryCallback] = function (data: any) {
-      cleanup();
-      resolve(data);
-    };
+    ;(window as any)[jQueryCallback] = function (data: any) {
+      cleanup()
+      resolve(data)
+    }
 
-    const script = document.createElement('script');
-    script.src = url;
-    script.type = 'text/javascript';
+    const script = document.createElement('script')
+    script.src = url
+    script.type = 'text/javascript'
 
     const cleanup = () => {
       if (script.parentNode) {
-        script.parentNode.removeChild(script);
+        script.parentNode.removeChild(script)
       }
-      delete (window as any)[jQueryCallback];
-    };
+      delete (window as any)[jQueryCallback]
+    }
 
     script.onerror = () => {
-      cleanup();
-      reject(new Error('Script loading failed'));
-    };
+      cleanup()
+      reject(new Error('Script loading failed'))
+    }
 
-    document.body.appendChild(script);
-  });
-};
-
+    document.body.appendChild(script)
+  })
+}
 
 // Modified JSONP fetcher that accepts base URL
 const fetchJSONPWithCache = (baseUrl: string): Promise<any> => {
-  const { timestamp, jQueryCallback } = createTimestampCallback();
+  const { timestamp, jQueryCallback } = createTimestampCallback()
 
   // Create URL object to manipulate parameters
-  const url = new URL(baseUrl);
-  const searchParams = url.searchParams;
+  const url = new URL(baseUrl)
+  const searchParams = url.searchParams
 
   // Create a new URLSearchParams with callback first
-  const newParams = new URLSearchParams();
-  newParams.append('callback', jQueryCallback);
+  const newParams = new URLSearchParams()
+  newParams.append('callback', jQueryCallback)
 
   // Add all existing parameters
   for (const [key, value] of searchParams.entries()) {
-    newParams.append(key, value);
+    newParams.append(key, value)
   }
 
   // Add timestamp at the end
-  newParams.append('_', timestamp.toString());
+  newParams.append('_', timestamp.toString())
 
   // Construct the final URL with reordered parameters
   const fullUrl = `${url.origin}${url.pathname}?${newParams.toString()}`
     .replace(/hotel_rating=4%2B78/g, 'hotel_rating=4+78')
-    .replace(/food=498%2B512%2B560/g, 'food=498+512+560');
+    .replace(/food=498%2B512%2B560/g, 'food=498+512+560')
 
-  return fetchJSONP(fullUrl, jQueryCallback);
-};
+  return fetchJSONP(fullUrl, jQueryCallback)
+}
 
 export const useJSONPQuery = (url: string) => {
-  const baseUrl = getBaseUrl(url);
+  const baseUrl = getBaseUrl(url)
 
   return useQuery({
     queryKey: ['jsonp', baseUrl], // Cache key uses base URL without random parameters
     queryFn: () => fetchJSONPWithCache(baseUrl),
     staleTime: 30 * 60 * 1000, // Consider data fresh for 30 minutes
-  });
-};
+  })
+}
 
 const cleanPrice = (price: string) => {
   const priceMatch = price.match(/(\d+[\d\s]*)/)
   return priceMatch ? parseInt(priceMatch[0].trim()) : ''
 }
 
-
-const isValidSearchItem = (row: any) : boolean => {
+const isValidSearchItem = (row: any): boolean => {
   return row.hasClass('itt_odd') || row.hasClass('itt_even')
 }
 
@@ -155,37 +152,37 @@ const searchSelectors = {
 }
 
 const parseSearchResponse = (response: any): ParseSearchResponse => {
-  console.log('Raw response:', response);
-  console.log('Response type:', typeof response);
+  console.log('Raw response:', response)
+  console.log('Response type:', typeof response)
 
   try {
-    const validContent = getValidContent(response);
-    console.log('Valid content:', validContent);
+    const validContent = getValidContent(response)
+    console.log('Valid content:', validContent)
 
-    const $ = cheerio.load(validContent);
-    console.log('Cheerio loaded HTML:', $.html());
+    const $ = cheerio.load(validContent)
+    console.log('Cheerio loaded HTML:', $.html())
 
-    const results: SearchResultType[] = [];
-    const items = $(searchSelectors.items);
-    console.log('Found items count:', items.length);
-    console.log('Items selector:', searchSelectors.items);
+    const results: SearchResultType[] = []
+    const items = $(searchSelectors.items)
+    console.log('Found items count:', items.length)
+    console.log('Items selector:', searchSelectors.items)
 
     $(searchSelectors.items).each((index, item) => {
-      console.log(`Processing item ${index}:`, $(item).html());
+      console.log(`Processing item ${index}:`, $(item).html())
 
       if (!isValidSearchItem($(item))) {
-        console.log(`Item ${index} is not valid`);
-        return;
+        console.log(`Item ${index} is not valid`)
+        return
       }
 
-      const title = $(item).find(searchSelectors.title).text().trim();
-      const id = $(item).find(searchSelectors.id).attr('id');
+      const title = $(item).find(searchSelectors.title).text().trim()
+      const id = $(item).find(searchSelectors.id).attr('id')
 
-      console.log(`Item ${index} parsed:`, { title, id });
+      console.log(`Item ${index} parsed:`, { title, id })
 
       if (!title || !id) {
-        console.log(`Item ${index} missing title or id`);
-        return;
+        console.log(`Item ${index} missing title or id`)
+        return
       }
 
       const result = {
@@ -198,26 +195,26 @@ const parseSearchResponse = (response: any): ParseSearchResponse => {
         nights: $(item).find(searchSelectors.nights).text().trim(),
         meal_type: $(item).find(searchSelectors.meal_type).text().trim(),
         date_from: $(item).find(searchSelectors.date_from).text().trim(),
-        location: $(item).find(searchSelectors.location).text().trim()
-      };
+        location: $(item).find(searchSelectors.location).text().trim(),
+      }
 
-      console.log(`Item ${index} full result:`, result);
-      results.push(result);
-    });
+      console.log(`Item ${index} full result:`, result)
+      results.push(result)
+    })
 
-    console.log('Final parsed results:', results);
+    console.log('Final parsed results:', results)
     return {
       results,
       status: '200',
-    };
+    }
   } catch (error) {
-    console.error('Error parsing ITTour response:', error);
-    console.error('Error stack:', error.stack);
+    console.error('Error parsing ITTour response:', error)
+    console.error('Error stack:', error.stack)
     return {
       status: '400',
-    };
+    }
   }
-};
+}
 
 const selectors = {
   price: '.ittour_order_tour_price',
@@ -237,7 +234,6 @@ const selectors = {
   nights: '.ittour_order_tour_info .ittour_order_right_list .ittour_order_description',
 }
 
-
 type Option = {
   id: string
   name: string
@@ -248,22 +244,21 @@ type GetOptionsResponse = {
   status: ResponsesStatus
 }
 
-
 const getOptions = (htmlString: string): GetOptionsResponse => {
   try {
     const $ = cheerio.load(htmlString)
     const result: Option[] = []
 
-  $('option').each((_, item): void => {
-    const id = $(item).attr('value')
-    const name = $(item).text().trim()
+    $('option').each((_, item): void => {
+      const id = $(item).attr('value')
+      const name = $(item).text().trim()
 
-    if (!id || !name) throw new Error('No valid id or name found')
+      if (!id || !name) throw new Error('No valid id or name found')
 
-    result.push({ id, name })
-  })
+      result.push({ id, name })
+    })
 
-  return {
+    return {
       options: result,
       status: '200',
     }
@@ -274,7 +269,6 @@ const getOptions = (htmlString: string): GetOptionsResponse => {
     }
   }
 }
-
 
 type ParserSearchBilderResponse = {
   countries?: Option[]
@@ -288,7 +282,7 @@ const parseSearchBilderResponse = (response: any): ParserSearchBilderResponse =>
       return {
         countries: [],
         departureCities: [],
-        status: '400'
+        status: '400',
       }
     }
 
@@ -297,12 +291,12 @@ const parseSearchBilderResponse = (response: any): ParserSearchBilderResponse =>
     let countries: Option[] = []
     let departureCities: Option[] = []
 
-    if(country) {
+    if (country) {
       const countriesResponse = getOptions(country)
       countries = countriesResponse.options ?? []
     }
 
-    if(departure_city) {
+    if (departure_city) {
       const departureCitiesResponse = getOptions(departure_city)
       departureCities = departureCitiesResponse.options ?? []
     }
@@ -310,9 +304,8 @@ const parseSearchBilderResponse = (response: any): ParserSearchBilderResponse =>
     return {
       countries: countries ?? [],
       departureCities: departureCities ?? [],
-      status: '200'
+      status: '200',
     }
-
   } catch (error) {
     console.error('Error parsing ITTour response:', error)
     return {
@@ -407,7 +400,6 @@ const getStatus = ($: cheerio.CheerioAPI): string => {
   return 'available'
 }
 
-
 interface CountryResponse {
   country?: string
   region?: string
@@ -441,7 +433,6 @@ interface DepartureCityResponse {
   departure_city?: string
   error?: string
 }
-
 
 const getDepartureCitiesBaseUrl = (
   countryId: string,
