@@ -504,29 +504,20 @@ const RoomCard = ({ room, hotel }: { room: any; hotel: any }) => {
             <span className="text-sm">грн</span>
           </p>
         </div>
-        {/* <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button variant="outline">Edit Profile</Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Edit profile</DialogTitle>
-              <DialogDescription>
-                Make changes to your profile here. Click save when you're done.
-              </DialogDescription>
-            </DialogHeader>
-            <p>Hello</p>
-          </DialogContent>
-        </Dialog>
         <Drawer open={open} onOpenChange={setOpen}>
           <DrawerTrigger asChild>
-            <Button variant="outline">Edit Profile</Button>
+            <button
+              aria-label="order"
+              className="w-full bg-astral-600 text-astral-50 rounded-xl p-2 font-bold"
+            >
+              замовити
+            </button>
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader className="text-left">
               <DrawerTitle>Edit profile</DrawerTitle>
               <DrawerDescription>
-                Make changes to your profile here. Click save when you're done.
+                Make changes to your profile here. Click save when you&apos;re done.
               </DrawerDescription>
             </DrawerHeader>
             <p>Hello</p>
@@ -536,7 +527,7 @@ const RoomCard = ({ room, hotel }: { room: any; hotel: any }) => {
               </DrawerClose>
             </DrawerFooter>
           </DrawerContent>
-        </Drawer> */}
+        </Drawer>
       </div>
     </div>
   )
