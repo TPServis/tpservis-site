@@ -51,6 +51,9 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 
+
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+
 // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350047&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-f33af08145db2441a65b3aedcbbb3b1b&sharding_rule_id=&_=1741030363394
 // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350049&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-dfdd67c6b7607347a5a9dc3c822b5e84&sharding_rule_id=&_=1741030479830
 // https://www.ittour.com.ua/tour_search.php?callback=jQuery17108821699837300099_1741034930151&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-1a1318631d4d6aec8ef22cbbec2eeac1&sharding_rule_id=&_=1741036767165
@@ -131,6 +134,23 @@ export const TourSearchModuleComponent = () => {
   }, [departureCities])
 
   // Handle search when params change
+
+  useEffect(() => {
+    if (parsedCountries?.countries && parsedCountries?.countries?.length > 0 && !selectedCountry) {
+      setSelectedCountry(parsedCountries.countries[0].id)
+    }
+  }, [parsedCountries, selectedCountry])
+
+  useEffect(() => {
+    if (
+      parsedDepartureCities?.departureCities &&
+      parsedDepartureCities?.departureCities?.length > 0 &&
+      !selectedDepartureCity
+    ) {
+      setSelectedDepartureCity(parsedDepartureCities.departureCities[0].id)
+    }
+  }, [parsedDepartureCities, selectedDepartureCity])
+
   useEffect(() => {
     const fetchResults = async () => {
       if (!searchParams || Object.keys(searchParams).length === 0) {
@@ -286,7 +306,7 @@ export const TourSearchModuleComponent = () => {
               priority
             />
           </div>
-          <div className="grid grid-cols-12 lg:flex gap-2 bg-jaffa-400 p-4 rounded-3xl w-full md:w-[calc(100%-2rem)] mx-auto -translate-y-1/2">
+          <div className="grid grid-cols-12 lg:flex gap-1.5 bg-jaffa-400 p-4 rounded-3xl w-full md:w-[calc(100%-2rem)] mx-auto -translate-y-1/2">
             <div className="col-span-3">
               <TransportSelector
                 transportType={transportType}
@@ -295,16 +315,28 @@ export const TourSearchModuleComponent = () => {
             </div>
             <div className="col-span-9 w-full">
               <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                <SelectTrigger className="w-full border-none bg-jaffa-50 text-jaffa-900 font-bold rounded-xl">
-                  <div
-                    className={cn('flex gap-2 items-center transition-all duration-100', {
-                      'blur-sm': isLoadingCountries,
-                    })}
-                  >
-                    <Plane className="h-4" />
-                    <SelectValue placeholder="Select a country" />
-                  </div>
-                </SelectTrigger>
+                <TooltipProvider>
+                  <Tooltip delayDuration={600}>
+                    <TooltipTrigger asChild>
+                      <SelectTrigger className="w-full border-none bg-jaffa-50  text-jaffa-900 font-bold rounded-xl">
+                        <div
+                          className={cn('flex gap-2 items-center transition-all duration-100', {
+                            'blur-sm': isLoadingCountries,
+                          })}
+                        >
+                          <Plane className="h-4" />
+                          <SelectValue placeholder="Select a country" />
+                        </div>
+                      </SelectTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      className="bg-jaffa-50 text-jaffa-900 rounded-lg border-none font-bold text-sm"
+                      sideOffset={8}
+                    >
+                      <p>Оберіть країну призначення</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
                   {parsedCountries?.countries?.map((country: any) => (
                     <SelectItem
@@ -322,16 +354,28 @@ export const TourSearchModuleComponent = () => {
             </div>
             <div className="col-span-12 w-full">
               <Select value={selectedDepartureCity} onValueChange={setSelectedDepartureCity}>
-                <SelectTrigger className="w-full border-none bg-jaffa-50 text-jaffa-900 font-bold rounded-xl">
-                  <div
-                    className={cn('flex gap-2 items-center transition-all duration-100', {
-                      'blur-sm': isLoadingDepartureCities,
-                    })}
-                  >
-                    <MapPin className="h-4" />
-                    <SelectValue placeholder="Select a departure city" />
-                  </div>
-                </SelectTrigger>
+                <TooltipProvider>
+                  <Tooltip delayDuration={600}>
+                    <TooltipTrigger asChild>
+                      <SelectTrigger className="w-full border-none bg-jaffa-50 text-jaffa-900 font-bold rounded-xl">
+                        <div
+                          className={cn('flex gap-2 items-center transition-all duration-100', {
+                            'blur-sm': isLoadingDepartureCities,
+                          })}
+                        >
+                          <MapPin className="h-4" />
+                          <SelectValue placeholder="Select a departure city" />
+                        </div>
+                      </SelectTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      className="bg-jaffa-50 text-jaffa-900 rounded-lg border-none font-bold text-sm"
+                      sideOffset={8}
+                    >
+                      <p>Оберіть місто відправлення</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
                   {parsedDepartureCities?.departureCities?.map((city: any) => (
                     <SelectItem
@@ -350,29 +394,41 @@ export const TourSearchModuleComponent = () => {
             </div>
             <div className="grid gap-2 col-span-12 w-full">
               <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    id="date"
-                    variant={'outline'}
-                    className={cn(
-                      'lg:min-w-[300px] w-full justify-start text-left bg-jaffa-50 text-jaffa-900 font-bold border-none shadow-none rounded-xl',
-                      !date && 'text-muted-foreground',
-                    )}
-                  >
-                    <CalendarIcon />
-                    {date?.from ? (
-                      date.to ? (
-                        <>
-                          {format(date.from, 'LLL dd, y')} - {format(date.to, 'LLL dd, y')}
-                        </>
-                      ) : (
-                        format(date.from, 'LLL dd, y')
-                      )
-                    ) : (
-                      <span>Виберіть дату</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
+                <TooltipProvider>
+                  <Tooltip delayDuration={600}>
+                    <TooltipTrigger asChild>
+                      <PopoverTrigger asChild>
+                        <Button
+                          id="date"
+                          variant={'outline'}
+                          className={cn(
+                            'lg:min-w-[300px] w-full justify-start text-left bg-jaffa-50 text-jaffa-900 font-bold border-none shadow-none rounded-xl',
+                            !date && 'text-muted-foreground',
+                          )}
+                        >
+                          <CalendarIcon />
+                          {date?.from ? (
+                            date.to ? (
+                              <>
+                                {format(date.from, 'LLL dd, y')} - {format(date.to, 'LLL dd, y')}
+                              </>
+                            ) : (
+                              format(date.from, 'LLL dd, y')
+                            )
+                          ) : (
+                            <span>Виберіть дату</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      className="bg-jaffa-50 text-jaffa-900 rounded-lg border-none font-bold text-sm"
+                      sideOffset={8}
+                    >
+                      <p>Оберіть бажаний діапазон дат вильоту</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <PopoverContent className="w-auto p-0 bg-white border-none" align="start">
                   <Calendar
                     initialFocus
@@ -413,22 +469,50 @@ export const TourSearchModuleComponent = () => {
               </Popover>
             </div>
             <div className="col-span-6">
-              <NightsSelector nights={nights} setNights={setNights} />
+              <TooltipProvider>
+                <Tooltip delayDuration={600}>
+                  <TooltipTrigger asChild>
+                    <div>
+                      <NightsSelector nights={nights} setNights={setNights} />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className="bg-jaffa-50 text-jaffa-900 rounded-lg border-none font-bold text-sm"
+                    sideOffset={8}
+                  >
+                    <p>Оберіть бажану кількість ночей</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
             <div className="col-span-6">
-              <PeopleSelector
-                childrenNumber={childrenNumber}
-                setChildrenNumber={setChildrenNumber}
-                adultsNumber={adultsNumber}
-                setAdultsNumber={setAdultsNumber}
-              />
+              <TooltipProvider>
+                <Tooltip delayDuration={600}>
+                  <TooltipTrigger asChild>
+                    <div>
+                      <PeopleSelector
+                        childrenNumber={childrenNumber}
+                        setChildrenNumber={setChildrenNumber}
+                        adultsNumber={adultsNumber}
+                        setAdultsNumber={setAdultsNumber}
+                      />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className="bg-jaffa-50 text-jaffa-900 rounded-lg border-none font-bold text-sm"
+                    sideOffset={8}
+                  >
+                    <p>Оберіть кількість дорослих та дітей</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
 
             <Button
-              className="rounded-xl bg-jaffa-900 text-jaffa-50 col-span-12"
+              className="rounded-xl bg-jaffa-900 text-jaffa-50 col-span-12 font-bold"
               onClick={runSearch}
             >
-              Search
+              Знайти тури
             </Button>
           </div>
         </div>
