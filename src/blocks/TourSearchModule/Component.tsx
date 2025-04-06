@@ -32,28 +32,11 @@ import { toast } from 'sonner'
 import { SearchResultType } from './utils'
 import { Stars } from './Stars'
 import Image from 'next/image'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer'
-
+import RoomCard from './RoomCard'
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
+import { TourSearchResultType } from './types'
 // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350047&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-f33af08145db2441a65b3aedcbbb3b1b&sharding_rule_id=&_=1741030363394
 // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350049&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-dfdd67c6b7607347a5a9dc3c822b5e84&sharding_rule_id=&_=1741030479830
 // https://www.ittour.com.ua/tour_search.php?callback=jQuery17108821699837300099_1741034930151&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-1a1318631d4d6aec8ef22cbbec2eeac1&sharding_rule_id=&_=1741036767165
@@ -63,22 +46,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 // https://www.ittour.com.ua/tour_search.php?callback=jQuery17106025752721087283_1741514343320&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514355260
 // https://www.ittour.com.ua/tour_search.php?callback=jQuery17103968606778564445_1741514676869&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514762876
 // https://www.ittour.com.ua/tour_search.php?callback=jQuery9569997690939707_1741515817928&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4%2B78&items_per_page=50&package_tour_type=1&transport_type=2&country=318&food=498%2B512%2B560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%253A%252F%252Flocalhost%253A3000%252Ftours&preview=1&_=1741515817928
-
-type TourSearchResultType = {
-  title: string
-  stars: number
-  location: string
-  rooms: {
-    id: string
-    title: string
-    price_usd: number
-    price_uah: number
-    nights: number
-    meal_type: string
-    date_from: string
-    date_till: string
-  }[]
-}
 
 const MERCHANT_ID = 'DG400625103918756O740800'
 const MODULE_TYPE = 'tour_search'
@@ -552,66 +519,6 @@ export const TourSearchModuleComponent = () => {
           // strategy="afterInteractive"
           onLoad={handleLoad}
         /> */}
-      </div>
-    </div>
-  )
-}
-
-const RoomCard = ({ room, hotel }: { room: any; hotel: any }) => {
-  const [open, setOpen] = useState(false)
-  const price = room.price_uah.toLocaleString('uk-UA')
-  const title = room.title.length <= 3 ? hotel.title + ' ' + room.title : room.title
-
-  return (
-    <div className=" bg-astral-50 rounded-xl p-4 col-span-4 text-astral-900 font-light flex flex-col gap-2">
-      <h3 className="font-bold text-2xl">{title}</h3>
-      {/* <p>{room.price_usd}</p> */}
-      <div className="flex flex-col gap-2 h-full">
-        <p className="text-sm">
-          Тип харчування: <span className="font-bold text-base">{room.meal_type}</span>
-        </p>
-        <div className="flex gap-2 justify-between *:items-baseline *:flex *:gap-1 *:text-sm *:[&>span]:font-bold *:[&>span]:text-base">
-          <p>
-            Ночей у турі:
-            <span>{room.nights}</span>
-          </p>
-          <p>
-            з<span>{room.date_from}</span>
-            до
-            <span>{room.date_till}</span>
-          </p>
-        </div>
-        <div className="flex justify-end grow items-end">
-          <p className="text-lg flex gap-1 items-baseline">
-            <span className="text-sm">Ціна за номер</span>
-            <span className="font-bold text-lg">{price}</span>
-            <span className="text-sm">грн</span>
-          </p>
-        </div>
-        <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerTrigger asChild>
-            <button
-              aria-label="order"
-              className="w-full bg-astral-600 text-astral-50 rounded-xl p-2 font-bold"
-            >
-              замовити
-            </button>
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader className="text-left">
-              <DrawerTitle>Edit profile</DrawerTitle>
-              <DrawerDescription>
-                Make changes to your profile here. Click save when you&apos;re done.
-              </DrawerDescription>
-            </DrawerHeader>
-            <p>Hello</p>
-            <DrawerFooter className="pt-2">
-              <DrawerClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
       </div>
     </div>
   )
