@@ -27,6 +27,8 @@ type RoomDrawerProps = {
 
 const RoomDrawer = (props: RoomDrawerProps): JSX.Element => {
   const [open, setOpen] = useState(false)
+
+  // TODO: structure this into a function
   const hotelData = Object.entries(props.hotel)
     .filter(([key]) => key !== 'rooms')
     .map(([key, value]) => {
@@ -46,8 +48,6 @@ const RoomDrawer = (props: RoomDrawerProps): JSX.Element => {
       [key]: value,
     }
   })
-
-  console.log(customData)
 
   return (
     <Drawer open={open} onOpenChange={setOpen} shouldScaleBackground={true}>
