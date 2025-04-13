@@ -152,36 +152,36 @@ const searchSelectors = {
 }
 
 const parseSearchResponse = (response: any): ParseSearchResponse => {
-  console.log('Raw response:', response)
-  console.log('Response type:', typeof response)
+  // console.log('Raw response:', response)
+  // console.log('Response type:', typeof response)
 
   try {
     const validContent = getValidContent(response)
-    console.log('Valid content:', validContent)
+    // console.log('Valid content:', validContent)
 
     const $ = cheerio.load(validContent)
-    console.log('Cheerio loaded HTML:', $.html())
+    // console.log('Cheerio loaded HTML:', $.html())
 
     const results: SearchResultType[] = []
     const items = $(searchSelectors.items)
-    console.log('Found items count:', items.length)
-    console.log('Items selector:', searchSelectors.items)
+    // console.log('Found items count:', items.length)
+    // console.log('Items selector:', searchSelectors.items)
 
     $(searchSelectors.items).each((index, item) => {
-      console.log(`Processing item ${index}:`, $(item).html())
+      // console.log(`Processing item ${index}:`, $(item).html())
 
       if (!isValidSearchItem($(item))) {
-        console.log(`Item ${index} is not valid`)
+        // console.log(`Item ${index} is not valid`)
         return
       }
 
       const title = $(item).find(searchSelectors.title).text().trim()
       const id = $(item).find(searchSelectors.id).attr('id')
 
-      console.log(`Item ${index} parsed:`, { title, id })
+      // console.log(`Item ${index} parsed:`, { title, id })
 
       if (!title || !id) {
-        console.log(`Item ${index} missing title or id`)
+        // console.log(`Item ${index} missing title or id`)
         return
       }
 
@@ -198,11 +198,11 @@ const parseSearchResponse = (response: any): ParseSearchResponse => {
         location: $(item).find(searchSelectors.location).text().trim(),
       }
 
-      console.log(`Item ${index} full result:`, result)
+      // console.log(`Item ${index} full result:`, result)
       results.push(result)
     })
 
-    console.log('Final parsed results:', results)
+    // console.log('Final parsed results:', results)
     return {
       results,
       status: '200',
@@ -459,7 +459,7 @@ const useDepartureCities = (
   return useJSONPQuery(baseUrl)
 }
 
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export interface ITTourSearchParams {
   callback: string
@@ -495,7 +495,7 @@ export interface ITTourSearchParams {
 }
 
 const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
-  const baseURL = 'https://www.ittour.com.ua/tour_search.php';
+  const baseURL = 'https://www.ittour.com.ua/tour_search.php'
 
   const defaultParams = {
     module_type: 'tour_search',
@@ -525,25 +525,26 @@ const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
     departure_city: params.departure_city || '2014',
     module_location_url: encodeURIComponent(window.location.href),
     preview: '2',
-    ...params
-  };
+    ...params,
+  }
 
-  const url = new URL(baseURL);
+  const url = new URL(baseURL)
 
   // Add parameters in specific order
   Object.entries(defaultParams).forEach(([key, value]) => {
     if (value !== undefined && value !== null && !['callback', '_'].includes(key)) {
-      url.searchParams.append(key, value.toString());
+      url.searchParams.append(key, value.toString())
     }
-  });
+  })
 
   // Fix encoding for specific parameters and ensure proper format
-  let finalUrl = url.toString()
+  let finalUrl = url
+    .toString()
     .replace(/hotel_rating=4%2B78/g, 'hotel_rating=4+78')
-    .replace(/food=498%2B512%2B560/g, 'food=498+512+560');
+    .replace(/food=498%2B512%2B560/g, 'food=498+512+560')
 
-  return finalUrl;
-};
+  return finalUrl
+}
 
 // Add a helper function to validate search params
 const validateSearchParams = (params: Partial<ITTourSearchParams>): boolean => {
@@ -555,55 +556,55 @@ const validateSearchParams = (params: Partial<ITTourSearchParams>): boolean => {
     'departure_city',
     'country',
     'night_from',
-    'night_till'
-  ];
+    'night_till',
+  ]
 
-  const missingParams = requiredParams.filter(param => !params[param as keyof ITTourSearchParams]);
+  const missingParams = requiredParams.filter((param) => !params[param as keyof ITTourSearchParams])
 
   if (missingParams.length > 0) {
-    console.warn('Missing required parameters:', missingParams);
-    return false;
+    console.warn('Missing required parameters:', missingParams)
+    return false
   }
 
-  return true;
-};
+  return true
+}
 
 const useFetchSearchResults = (
   params: Partial<ITTourSearchParams>,
-  onPageLoad?: (results: SearchResultType[]) => void
+  onPageLoad?: (results: SearchResultType[]) => void,
 ) => {
   const baseUrl = useMemo(() => {
     if (!params || Object.keys(params).length === 0) {
-      return null;
+      return null
     }
     if (!validateSearchParams(params)) {
-      console.error('Invalid search parameters');
-      return null;
+      console.error('Invalid search parameters')
+      return null
     }
-    return buildITTourSearchURL(params);
-  }, [params]);
+    return buildITTourSearchURL(params)
+  }, [params])
 
   return useQuery({
     queryKey: ['searchResults', baseUrl],
     queryFn: async () => {
       if (!baseUrl) {
-        return [];
+        return []
       }
 
-      const response = await fetchJSONPWithCache(baseUrl);
-      const parsedResponse = parseSearchResponse(response);
+      const response = await fetchJSONPWithCache(baseUrl)
+      const parsedResponse = parseSearchResponse(response)
 
       if (parsedResponse.status === '400' || !parsedResponse.results) {
-        throw new Error('Failed to parse search results');
+        throw new Error('Failed to parse search results')
       }
 
-      onPageLoad?.(parsedResponse.results);
-      return parsedResponse.results;
+      onPageLoad?.(parsedResponse.results)
+      return parsedResponse.results
     },
     enabled: !!baseUrl,
     staleTime: 30 * 60 * 1000,
-  });
-};
+  })
+}
 
 export {
   useITTourRequest,
@@ -618,5 +619,5 @@ export {
   getOptions,
   useFetchSearchResults,
   validateSearchParams,
-  fetchJSONPWithCache
+  fetchJSONPWithCache,
 }

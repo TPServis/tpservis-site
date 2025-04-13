@@ -1,13 +1,15 @@
 import React from 'react'
 import { Room, TourSearchResultType } from './types'
 import RoomDrawer from './RoomDrawer'
+import type { Form } from '@/payload-types'
 
 type RoomCardProps = {
   room: Room
   hotel: TourSearchResultType
+  form: Form
 }
 
-const RoomCard = ({ room, hotel }: RoomCardProps) => {
+const RoomCard = ({ room, hotel, form }: RoomCardProps) => {
   const price = room.price_uah.toLocaleString('uk-UA')
   const title = room.title.length <= 3 ? hotel.title + ' ' + room.title : room.title
 
@@ -37,7 +39,9 @@ const RoomCard = ({ room, hotel }: RoomCardProps) => {
             <span className="text-sm">грн</span>
           </p>
         </div>
-        <RoomDrawer room={room}>замовити</RoomDrawer>
+        <RoomDrawer room={room} form={form} hotel={hotel}>
+          замовити
+        </RoomDrawer>
       </div>
     </div>
   )
