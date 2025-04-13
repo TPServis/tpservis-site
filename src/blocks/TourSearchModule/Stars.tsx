@@ -5,9 +5,9 @@ type StarsProps = {
 }
 export const Stars = ({ number }: StarsProps) => {
   return (
-    <div className="flex items-center gap-1 lg:gap-2">
+    <div className="flex items-center gap-1">
       {Array.from({ length: number }).map((_, index) => (
-        <Star key={index} className="text-yellow-500 w-4 lg:w-8" fill="currentColor" />
+        <Star key={index} className="text-yellow-500 h-4 lg:h-8 w-auto" fill="currentColor" />
       ))}
     </div>
   )

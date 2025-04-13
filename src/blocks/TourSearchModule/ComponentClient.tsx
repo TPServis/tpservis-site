@@ -1,5 +1,6 @@
 'use client'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import * as cheerio from 'cheerio'
 import {
   parseSearchResponse,
   parseSearchBilderResponse,
@@ -9,6 +10,7 @@ import {
   ITTourSearchParams,
   validateSearchParams,
   fetchJSONPWithCache,
+  useITTourRequest,
 } from './utils'
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -34,6 +36,7 @@ import { Stars } from './Stars'
 import Image from 'next/image'
 import RoomCard from './RoomCard'
 import type { Form } from '@/payload-types'
+import HotelGallery from './HotelGallery'
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
@@ -220,6 +223,8 @@ export const TourSearchModule = ({ form }: { form: Form }) => {
 
   const buildResultResponse = (list: SearchResultType[]): TourSearchResultType[] | null => {
     const result: TourSearchResultType[] = []
+
+    console.log(list[0])
 
     const groupedByHotel: { [hotelTitle: string]: SearchResultType[] } = {}
 
@@ -537,20 +542,34 @@ const Hotel = ({ hotel, form }: { hotel: TourSearchResultType; form: Form }) => 
   const [visibleRooms, setVisibleRooms] = useState<number>(ROOMS_TO_SHOW)
   const hasMoreRooms = hotel.rooms.length > visibleRooms
 
+  let images: string[] = []
+
   const handleShowMore = () => {
     setVisibleRooms((prev) => prev + ROOMS_TO_SHOW)
+  }
+
+  // getting images for the gallery
+  const tour = useITTourRequest(hotel.rooms[0].id)
+  if (tour.data && tour.data.text) {
+    const $ = cheerio.load(tour.data.text)
+
+    $('#gallery_big_img_tour img.gallery_big_img_tour_item').map((_, el) => {
+      const image = $(el).attr('src')
+      if (image) images.push(image)
+    })
   }
 
   return (
     <div className="mt-20">
       <div className="mb-4">
+        <img src={images[0]} />
         <div>
-          <h2 className="text-2xl lg:text-4xl font-bold text-astral-800 inline-block pr-2">
+          <h2 className="text-2xl lg:text-4xl font-bold text-astral-800 text-balance">
             {hotel.title}
+            <div className="inline-block ml-2 align-middle">
+              <Stars number={hotel.stars} />
+            </div>
           </h2>
-          <div className="inline">
-            <Stars number={hotel.stars} />
-          </div>
         </div>
         <div className="flex items-center gap-2 text-shark-500">
           <p>{hotel.location}</p>

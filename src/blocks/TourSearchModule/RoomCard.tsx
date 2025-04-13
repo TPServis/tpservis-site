@@ -15,7 +15,7 @@ const RoomCard = ({ room, hotel, form }: RoomCardProps) => {
 
   return (
     <div className=" bg-astral-50 rounded-3xl p-4 col-span-12 sm:col-span-6 lg:col-span-4 text-astral-900 font-light flex flex-col gap-2">
-      <h3 className="font-bold text-xl md:text-2xl">{title}</h3>
+      <h3 className="font-bold text-xl md:text-2xl text-balance">{title}</h3>
       {/* <p>{room.price_usd}</p> */}
       <div className="flex flex-col gap-2 h-full">
         <p className="text-sm">

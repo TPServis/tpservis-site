@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState, type JSX } from 'react'
+import { useState, type JSX } from 'react'
 import { FormBlock } from '@/blocks/Form/Component'
 import type { Form } from '@/payload-types'
 import { Stars } from './Stars'
@@ -63,9 +63,9 @@ const RoomDrawer = (props: RoomDrawerProps): JSX.Element => {
         <div className="flex flex-col h-full container-wrapper mt-0">
           <DrawerHeader>
             <div>
-              <DrawerTitle className="font-bold text-4xl">
+              <DrawerTitle className="font-bold text-2xl lg:text-4xl">
                 {props.hotel.title} · {props.room.title}
-                <div className="inline-block ml-2">
+                <div className="inline-block ml-2 align-middle">
                   <Stars number={props.hotel.stars} />
                 </div>
               </DrawerTitle>
@@ -76,7 +76,7 @@ const RoomDrawer = (props: RoomDrawerProps): JSX.Element => {
             <div className="flex flex-col gap-8 w-full lg:w-1/2">
               <RoomData room={props.room} />
             </div>
-            <div className="w-full lg:w-1/2">
+            <div className="w-full lg:w-1/2 pb-10">
               <FormBlock enableIntro={false} form={props.form as any} customData={customData} />
               <p className="text-sm pt-4 text-shark-500">
                 Наш менеджер-консультант зв&apos;яжеться з вами, щоб обговорити деталі вашої
@@ -122,20 +122,20 @@ const RoomData = ({ room }: { room: Room }) => {
             </Tooltip>
           </TooltipProvider>
         </div>
-        <p className="text-3xl font-bold" onClick={() => setIsUSD(!isUSD)}>
+        <p className="text-xl lg:text-3xl font-bold" onClick={() => setIsUSD(!isUSD)}>
           {price} {isUSD ? '$' : 'грн'}
         </p>
       </div>
       <div className="border-b border-shark-200 pb-4">
         <p className="text-sm">Тип харчування</p>
-        <p className="text-3xl font-bold">{room.meal_type}</p>
+        <p className="text-xl lg:text-3xl font-bold">{room.meal_type}</p>
       </div>
       <p className="text-sm">Ночей у турі:</p>
       <div className="flex justify-between">
-        <span className="font-bold text-3xl">{room.nights}</span>
+        <span className="font-bold text-xl lg:text-3xl">{room.nights}</span>
         <p className="text-sm flex gap-2 items-baseline">
-          з<span className="font-bold text-3xl">{room.date_from}</span>
-          до<span className="font-bold text-3xl">{room.date_till}</span>
+          з<span className="font-bold text-xl lg:text-3xl">{room.date_from}</span>
+          до<span className="font-bold text-xl lg:text-3xl">{room.date_till}</span>
         </p>
       </div>
     </div>

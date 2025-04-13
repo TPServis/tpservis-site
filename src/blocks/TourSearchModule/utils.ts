@@ -1,7 +1,6 @@
 import * as cheerio from 'cheerio'
 import { parse, addDays, format } from 'date-fns'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
-import { a } from 'node_modules/drizzle-kit/index-BAUrj6Ib.mjs'
 import { useMemo } from 'react'
 
 const DEFAULT_HOTEL_RATING = '4+78'
@@ -30,7 +29,7 @@ const useITTourRequest = (tourId: string) => {
   url.searchParams.append('type', '2970')
   url.searchParams.append('theme', '38')
   url.searchParams.append('action', 'get_package_tour_order_form')
-  url.searchParams.append('tour_id', `03-08-${tourId}`)
+  url.searchParams.append('tour_id', `${tourId}`)
   url.searchParams.append('sharding_rule_id', '')
   url.searchParams.append('_', timestamp.toString())
 
@@ -136,6 +135,9 @@ type ParseSearchResponse = {
   results?: SearchResultType[]
   status: ResponsesStatus
 }
+// main_image:
+//   'ittour_order_block_content_box_right_frame > .ittour_order_block_content_box_right_frame_rounde > img.ittour_order_rounded_image',
+// image_gallery: '#gallery_big_img_tour',
 
 const searchSelectors = {
   items: 'tbody > tr',
@@ -152,38 +154,20 @@ const searchSelectors = {
 }
 
 const parseSearchResponse = (response: any): ParseSearchResponse => {
-  // console.log('Raw response:', response)
-  // console.log('Response type:', typeof response)
-
   try {
     const validContent = getValidContent(response)
-    // console.log('Valid content:', validContent)
 
     const $ = cheerio.load(validContent)
-    // console.log('Cheerio loaded HTML:', $.html())
 
     const results: SearchResultType[] = []
-    const items = $(searchSelectors.items)
-    // console.log('Found items count:', items.length)
-    // console.log('Items selector:', searchSelectors.items)
 
-    $(searchSelectors.items).each((index, item) => {
-      // console.log(`Processing item ${index}:`, $(item).html())
-
-      if (!isValidSearchItem($(item))) {
-        // console.log(`Item ${index} is not valid`)
-        return
-      }
+    $(searchSelectors.items).each((_, item) => {
+      if (!isValidSearchItem($(item))) return
 
       const title = $(item).find(searchSelectors.title).text().trim()
       const id = $(item).find(searchSelectors.id).attr('id')
 
-      // console.log(`Item ${index} parsed:`, { title, id })
-
-      if (!title || !id) {
-        // console.log(`Item ${index} missing title or id`)
-        return
-      }
+      if (!title || !id) return
 
       const departureDate = $(item).find(searchSelectors.date_from).text().trim()
       const nights = $(item).find(searchSelectors.nights).text().trim()
@@ -203,11 +187,9 @@ const parseSearchResponse = (response: any): ParseSearchResponse => {
         location: $(item).find(searchSelectors.location).text().trim(),
       }
 
-      // console.log(`Item ${index} full result:`, result)
       results.push(result)
     })
 
-    // console.log('Final parsed results:', results)
     return {
       results,
       status: '200',
@@ -221,10 +203,8 @@ const parseSearchResponse = (response: any): ParseSearchResponse => {
 }
 
 const getReturnDate = (nights: number, departureDate: string) => {
-  console.log('nights', nights)
   const date = parse(departureDate, 'dd.MM.yy', new Date())
   const returnDate = addDays(date, nights)
-  console.log('Return date:', returnDate)
   return format(returnDate, 'dd.MM.yy')
 }
 
