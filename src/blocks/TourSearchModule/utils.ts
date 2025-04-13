@@ -185,6 +185,10 @@ const parseSearchResponse = (response: any): ParseSearchResponse => {
         return
       }
 
+      const departureDate = $(item).find(searchSelectors.date_from).text().trim()
+      const nights = $(item).find(searchSelectors.nights).text().trim()
+      const returnDate = getReturnDate(Number(nights), departureDate)
+
       const result = {
         title,
         id,
@@ -194,7 +198,8 @@ const parseSearchResponse = (response: any): ParseSearchResponse => {
         price_uah: $(item).find(searchSelectors.price_uah).text().trim(),
         nights: $(item).find(searchSelectors.nights).text().trim(),
         meal_type: $(item).find(searchSelectors.meal_type).text().trim(),
-        date_from: $(item).find(searchSelectors.date_from).text().trim(),
+        date_from: departureDate,
+        date_till: returnDate,
         location: $(item).find(searchSelectors.location).text().trim(),
       }
 
@@ -208,12 +213,19 @@ const parseSearchResponse = (response: any): ParseSearchResponse => {
       status: '200',
     }
   } catch (error) {
-    console.error('Error parsing ITTour response:', error)
     console.error('Error stack:', error.stack)
     return {
       status: '400',
     }
   }
+}
+
+const getReturnDate = (nights: number, departureDate: string) => {
+  console.log('nights', nights)
+  const date = parse(departureDate, 'dd.MM.yy', new Date())
+  const returnDate = addDays(date, nights)
+  console.log('Return date:', returnDate)
+  return format(returnDate, 'dd.MM.yy')
 }
 
 const selectors = {
