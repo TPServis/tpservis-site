@@ -33,7 +33,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
     return () => {
       setTheme('blue')
     }
-  }, [])
+  }, [setTheme])
 
   return (
     <div

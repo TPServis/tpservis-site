@@ -67,7 +67,7 @@ export default function ClientServicesList(props: ServicesListProps) {
     if (currentPath != undefined && !isNaN(parseInt(currentPath))) {
       handleNavigationWithHash(parseInt(currentPath))
     }
-  }, [])
+  }, [handleNavigationWithHash])
 
   return (
     <div

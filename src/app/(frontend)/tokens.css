@@ -71,4 +71,8 @@
   --text-color-success: var(--color-green);
   --text-color-error: var(--color-red);
   --text-color-heading: var(--color-astral-600);
+
+  --popover: var(--color-jaffa-900);
+  --popover-foreground: var(--color-jaffa-100);
+  --border: var(--color-shark-200);
 }

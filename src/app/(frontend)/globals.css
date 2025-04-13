@@ -4,7 +4,7 @@
 @import './tokens';
 @import './style/global';
 
-@theme {
+@theme inline {
   --color-heading: var(--color-astral-600);
 
   --color-background: var(--color-white);
@@ -17,6 +17,33 @@
   --width-container: var(--screen-xl);
 
   --animation-float: float 10s ease-in-out infinite;
+  --animate-run: run 1.5s ease-in-out infinite alternate;
+  @keyframes run {
+    0% {
+      left: 0;
+      transform: translateX(-50%);
+      width: 30%;
+    }
+    50% {
+      width: 60%;
+    }
+    100% {
+      left: 100%;
+      transform: translateX(-50%);
+      width: 30%;
+    }
+  }
+}
+
+@keyframes loading-linear {
+  0% {
+    left: 0;
+    right: 100%;
+  }
+  100% {
+    left: 100%;
+    right: 0;
+  }
 }
 
 @layer base {
