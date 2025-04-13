@@ -39,7 +39,7 @@ const RoomDrawer = (props: RoomDrawerProps): JSX.Element => {
     console.log(el.querySelector('#hidden-hotel'))
   }
 
-  const formCallback = useCallback(getForm, [])
+  const formCallback = useCallback(getForm, [props])
 
   return (
     <Drawer open={open} onOpenChange={setOpen} shouldScaleBackground={true}>
@@ -71,11 +71,11 @@ const RoomDrawer = (props: RoomDrawerProps): JSX.Element => {
             <div className="w-full lg:w-1/2" ref={formCallback}>
               <FormBlock enableIntro={false} form={props.form as any} />
               <p className="text-sm pt-4 text-shark-500">
-                Наш менеджер-консультант зв'яжеться з вами, щоб обговорити деталі вашої подорожі,
-                способи оплати та отримання документів. Під час розмови ви зможете внести зміни до
-                замовлення, якщо знайдете вигідніший варіант. <br /> <br />
+                Наш менеджер-консультант зв&apos;яжеться з вами, щоб обговорити деталі вашої
+                подорожі, способи оплати та отримання документів. Під час розмови ви зможете внести
+                зміни до замовлення, якщо знайдете вигідніший варіант. <br /> <br />
                 <span className="font-bold">
-                  Надсилання замовлення не зобов'язує вас бронювати тур.
+                  Надсилання замовлення не зобов&apos;язує вас бронювати тур.
                 </span>
               </p>
             </div>
