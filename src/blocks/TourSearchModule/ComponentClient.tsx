@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   parseSearchResponse,
   parseSearchBilderResponse,
@@ -533,19 +533,24 @@ const calcRoomsNumber = (results: TourSearchResultType[] | null): number => {
 }
 
 const Hotel = ({ hotel, form }: { hotel: TourSearchResultType; form: Form }) => {
-  const [visibleRooms, setVisibleRooms] = useState<number>(6)
+  const ROOMS_TO_SHOW: number = 6
+  const [visibleRooms, setVisibleRooms] = useState<number>(ROOMS_TO_SHOW)
   const hasMoreRooms = hotel.rooms.length > visibleRooms
 
   const handleShowMore = () => {
-    setVisibleRooms((prev) => prev + 6)
+    setVisibleRooms((prev) => prev + ROOMS_TO_SHOW)
   }
 
   return (
     <div className="mt-20">
       <div className="mb-4">
-        <div className="flex items-center gap-2">
-          <h2 className="text-4xl font-bold text-astral-800">{hotel.title}</h2>
-          <Stars number={hotel.stars} />
+        <div>
+          <h2 className="text-2xl lg:text-4xl font-bold text-astral-800 inline-block pr-2">
+            {hotel.title}
+          </h2>
+          <div className="inline">
+            <Stars number={hotel.stars} />
+          </div>
         </div>
         <div className="flex items-center gap-2 text-shark-500">
           <p>{hotel.location}</p>
