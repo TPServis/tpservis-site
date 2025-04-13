@@ -33,14 +33,23 @@ const RoomDrawer = (props: RoomDrawerProps): JSX.Element => {
     let hotelInput: HTMLInputElement | null = el.querySelector('#hidden-hotel')
     if (!hotelInput) return
 
-    hotelInput.value = `${props.hotel.title} / ${props.room.title}`
+    // hotelInput.value = `${props.hotel.title} / ${props.room.title}`
     // hotelInput.classList.add('hidden')
 
-    console.log(el.querySelector('#hidden-hotel'))
+    // console.log(el.querySelector('#hidden-hotel'))
   }
 
   const formCallback = useCallback(getForm, [props])
 
+  // console.log(props.form)
+
+  useEffect(() => {
+    const hotel = props.form.fields?.find((field) => field['name'] === 'hidden-hotel')
+    if (!hotel) return
+    hotel['defaultValue'] = 'hello there'
+
+    console.log(props.form)
+  }, [])
   return (
     <Drawer open={open} onOpenChange={setOpen} shouldScaleBackground={true}>
       <DrawerTrigger asChild>
@@ -69,7 +78,11 @@ const RoomDrawer = (props: RoomDrawerProps): JSX.Element => {
               <RoomData room={props.room} />
             </div>
             <div className="w-full lg:w-1/2" ref={formCallback}>
-              <FormBlock enableIntro={false} form={props.form as any} />
+              <FormBlock
+                enableIntro={false}
+                form={props.form as any}
+                room="hello this is the room"
+              />
               <p className="text-sm pt-4 text-shark-500">
                 Наш менеджер-консультант зв&apos;яжеться з вами, щоб обговорити деталі вашої
                 подорожі, способи оплати та отримання документів. Під час розмови ви зможете внести
