@@ -29,6 +29,7 @@ export type FormBlockType = {
   introContent?: {
     [k: string]: unknown
   }[]
+  room?: string
 }
 
 export const FormBlock: React.FC<
@@ -41,6 +42,7 @@ export const FormBlock: React.FC<
     form: formFromProps,
     form: { id: formID, confirmationMessage, confirmationType, redirect, submitButtonLabel } = {},
     introContent,
+    room,
   } = props
 
   const formMethods = useForm({
@@ -68,6 +70,12 @@ export const FormBlock: React.FC<
           field: name,
           value,
         }))
+
+        if (room) {
+          dataToSend.push({ field: 'room', value: { room } })
+        }
+
+        console.log(dataToSend)
 
         // delay loading indicator by 1s
         loadingTimerID = setTimeout(() => {
@@ -145,8 +153,9 @@ export const FormBlock: React.FC<
                   formFromProps.fields?.map((field, index) => {
                     const Field: React.FC<any> = fields?.[field.blockType]
                     if (Field) {
+                      // [&:has([id^='hidden-'])]:hidden
                       return (
-                        <div className="mb-6 last:mb-0 [&:has([id^='hidden-'])]:hidden" key={index}>
+                        <div className="mb-6 last:mb-0" key={index}>
                           <Field
                             form={formFromProps}
                             {...field}
