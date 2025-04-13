@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button'
 
 import { buildInitialFormState } from './buildInitialFormState'
 import { fields } from './fields'
+import { Props } from '@payloadcms/ui/elements/CodeEditor'
+import { Key } from 'lucide-react'
 
 export type Value = unknown
 
@@ -21,6 +23,10 @@ export interface Data {
   [key: string]: Property | Property[]
 }
 
+export interface CustomData {
+  [key: string]: string | any
+}
+
 export type FormBlockType = {
   blockName?: string
   blockType?: 'formBlock'
@@ -29,7 +35,7 @@ export type FormBlockType = {
   introContent?: {
     [k: string]: unknown
   }[]
-  room?: string
+  customData?: CustomData[]
 }
 
 export const FormBlock: React.FC<
@@ -42,7 +48,7 @@ export const FormBlock: React.FC<
     form: formFromProps,
     form: { id: formID, confirmationMessage, confirmationType, redirect, submitButtonLabel } = {},
     introContent,
-    room,
+    customData,
   } = props
 
   const formMethods = useForm({
@@ -71,8 +77,14 @@ export const FormBlock: React.FC<
           value,
         }))
 
-        if (room) {
-          dataToSend.push({ field: 'room', value: { room } })
+        if (customData && customData.length > 0) {
+          customData.forEach((item) => {
+            const field = Object.keys(item)[0]
+            dataToSend.push({
+              field,
+              value: item[field],
+            })
+          })
         }
 
         console.log(dataToSend)

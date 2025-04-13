@@ -27,29 +27,28 @@ type RoomDrawerProps = {
 
 const RoomDrawer = (props: RoomDrawerProps): JSX.Element => {
   const [open, setOpen] = useState(false)
+  const hotelData = Object.entries(props.hotel)
+    .filter(([key]) => key !== 'rooms')
+    .map(([key, value]) => {
+      if (key === 'title') return ['hotel_name', value]
+      return [key, value]
+    })
 
-  const getForm = (el: HTMLDivElement) => {
-    if (el === null || !el) return
-    let hotelInput: HTMLInputElement | null = el.querySelector('#hidden-hotel')
-    if (!hotelInput) return
+  const entries = Object.entries({
+    ...props.room,
+  })
 
-    // hotelInput.value = `${props.hotel.title} / ${props.room.title}`
-    // hotelInput.classList.add('hidden')
+  // TODO: fix this any
+  entries.push(...(hotelData as any))
 
-    // console.log(el.querySelector('#hidden-hotel'))
-  }
+  const customData = entries.map(([key, value]) => {
+    return {
+      [key]: value,
+    }
+  })
 
-  const formCallback = useCallback(getForm, [props])
+  console.log(customData)
 
-  // console.log(props.form)
-
-  useEffect(() => {
-    const hotel = props.form.fields?.find((field) => field['name'] === 'hidden-hotel')
-    if (!hotel) return
-    hotel['defaultValue'] = 'hello there'
-
-    console.log(props.form)
-  }, [])
   return (
     <Drawer open={open} onOpenChange={setOpen} shouldScaleBackground={true}>
       <DrawerTrigger asChild>
@@ -77,12 +76,8 @@ const RoomDrawer = (props: RoomDrawerProps): JSX.Element => {
             <div className="flex flex-col gap-8 w-full lg:w-1/2">
               <RoomData room={props.room} />
             </div>
-            <div className="w-full lg:w-1/2" ref={formCallback}>
-              <FormBlock
-                enableIntro={false}
-                form={props.form as any}
-                room="hello this is the room"
-              />
+            <div className="w-full lg:w-1/2">
+              <FormBlock enableIntro={false} form={props.form as any} customData={customData} />
               <p className="text-sm pt-4 text-shark-500">
                 Наш менеджер-консультант зв&apos;яжеться з вами, щоб обговорити деталі вашої
                 подорожі, способи оплати та отримання документів. Під час розмови ви зможете внести
