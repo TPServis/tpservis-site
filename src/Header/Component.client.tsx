@@ -1,12 +1,12 @@
 'use client'
 import { useHeaderTheme } from '@/providers/HeaderTheme'
+import { motion } from 'motion/react'
 import Link from 'next/link.js'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState, useCallback, useRef } from 'react'
-import { motion } from 'motion/react'
 
-import { cn } from '@/utilities/cn'
 import type { Header } from '@/payload-types'
+import { cn } from '@/utilities/cn'
 
 import { Logo } from '@/components/Logo/Logo'
 import { HeaderNav } from './Nav'

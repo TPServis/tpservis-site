@@ -1,5 +1,5 @@
 import { cn } from '@/utilities/cn'
-import React from 'react'
+import type React from 'react'
 
 import { serializeLexical } from './serialize'
 

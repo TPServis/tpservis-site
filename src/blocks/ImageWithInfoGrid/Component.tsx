@@ -1,14 +1,14 @@
 'use client'
 
-import React from 'react'
-import Link from 'next/link'
-import { ChevronRight } from 'lucide-react'
 import RichText from '@/components/RichText'
+import { ChevronRight } from 'lucide-react'
+import Link from 'next/link'
+import React from 'react'
 
 import { Media } from '@/components/Media'
 
+import { motion, useScroll, useSpring, useTransform } from 'motion/react'
 import { useRef } from 'react'
-import { useScroll, motion, useTransform, useSpring } from 'motion/react'
 
 interface ImageWithInfoGridProps {
   title: string

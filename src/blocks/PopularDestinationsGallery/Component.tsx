@@ -1,12 +1,12 @@
 'use client'
 
-import { useRef } from 'react'
-import { useScroll } from 'motion/react'
-import ScrollingRow from './ScrollingRow'
 import type {
   Media,
   PopularDestinationsGallery as PopularDestinationsGalleryType,
 } from '@/payload-types'
+import { useScroll } from 'motion/react'
+import { useRef } from 'react'
+import ScrollingRow from './ScrollingRow'
 
 interface PopularDestinationsGalleryProps {
   title: string

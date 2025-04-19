@@ -1,13 +1,13 @@
 'use client'
-import { useEffect } from 'react'
-import { ArrowRight } from 'lucide-react'
 import HeroFloating from '@/heros/HeroFloating'
+import { ArrowRight } from 'lucide-react'
+import { useEffect } from 'react'
 
 import type { Page } from '@/payload-types'
 
 import useTheme from '@/hooks/useTheme'
 
-import { useScroll, useMotionValueEvent } from 'motion/react'
+import { useMotionValueEvent, useScroll } from 'motion/react'
 import { useRef } from 'react'
 
 export const HighImpactHero: React.FC<Page['hero']> = ({
@@ -49,7 +49,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
           <p className="text-shark-500 text-lg md:text-2xl md:pb-16 pb-8 text-balance md:w-[80%]">
             {subtitle}
           </p>
-          {cta && cta.label && cta.url && (
+          {cta?.label && cta.url && (
             <a
               href={cta.url}
               className="items-center gap-4 group hover:gap-6 transition-all duration-300 flex"

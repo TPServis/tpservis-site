@@ -1,7 +1,7 @@
 'use client'
 
+import { Award, ChevronLeft, ChevronRight, CircleUser, Shield } from 'lucide-react'
 import React, { useCallback, useEffect, useState, useRef } from 'react'
-import { Award, CircleUser, Shield, ChevronLeft, ChevronRight } from 'lucide-react'
 
 import useEmblaCarousel from 'embla-carousel-react'
 

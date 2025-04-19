@@ -1,5 +1,5 @@
-@import './_rich-text';
-@import 'tailwindcss';
+@import "./_rich-text";
+@import "tailwindcss";
 @plugin 'tailwindcss-animate';
 
 html body[data-scroll-locked] {

@@ -1,11 +1,11 @@
-import type { Block } from 'payload'
-import { FormBlock } from '../Form/config'
 import {
   FixedToolbarFeature,
   HeadingFeature,
   InlineToolbarFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
+import type { Block } from 'payload'
+import { FormBlock } from '../Form/config'
 
 export const CustomForm: Block = {
   slug: 'customForm',

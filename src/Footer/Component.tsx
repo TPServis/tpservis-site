@@ -1,7 +1,7 @@
-import { getCachedGlobal } from '@/utilities/getGlobals'
-import Link from 'next/link'
 import { Logo } from '@/components/Logo/Logo'
 import { cn } from '@/utilities/cn'
+import { getCachedGlobal } from '@/utilities/getGlobals'
+import Link from 'next/link'
 
 import { Facebook, Instagram } from 'lucide-react'
 

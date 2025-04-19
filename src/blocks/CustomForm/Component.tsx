@@ -1,13 +1,13 @@
-import { cn } from 'src/utilities/cn'
 import React from 'react'
+import { cn } from 'src/utilities/cn'
 import { RenderBlocks } from '../RenderBlocks'
 import { Contacts } from './Contacts'
 
 import RichText from '@/components/RichText'
 
-import { getPayload } from 'payload'
-import config from '@payload-config'
 import { FormBlock } from '@/payload-types'
+import config from '@payload-config'
+import { getPayload } from 'payload'
 import { tv } from 'tailwind-variants'
 
 interface CustomFormBlockProps {

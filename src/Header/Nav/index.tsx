@@ -1,8 +1,8 @@
 'use client'
 
-import { cn } from '@/utilities/cn'
-import { useState, useEffect, useRef } from 'react'
 import useTheme from '@/hooks/useTheme'
+import { cn } from '@/utilities/cn'
+import { useEffect, useRef, useState } from 'react'
 
 import React from 'react'
 
@@ -12,7 +12,7 @@ import { CMSLink } from '@/components/Link'
 
 import { Menu, X } from 'lucide-react'
 
-import { motion, AnimatePresence, delay } from 'motion/react'
+import { AnimatePresence, delay, motion } from 'motion/react'
 
 // Utility function to get all focusable elements within a container
 function getFocusableElements(container: HTMLElement): HTMLElement[] {

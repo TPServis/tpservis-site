@@ -1,5 +1,5 @@
-import { formatDateTime } from 'src/utilities/formatDateTime'
 import React from 'react'
+import { formatDateTime } from 'src/utilities/formatDateTime'
 
 import type { Post } from '@/payload-types'
 
@@ -8,7 +8,13 @@ import { Media } from '@/components/Media'
 export const PostHero: React.FC<{
   post: Post
 }> = ({ post }) => {
-  const { categories, meta: { image: metaImage } = {}, populatedAuthors, publishedAt, title } = post
+  const {
+    categories,
+    meta: { image: metaImage } = {},
+    populatedAuthors,
+    publishedAt,
+    title,
+  } = post
 
   return (
     <div className="relative -mt-[10.4rem] flex items-end">
@@ -26,7 +32,7 @@ export const PostHero: React.FC<{
                 return (
                   <React.Fragment key={index}>
                     {titleToUse}
-                    {!isLast && <React.Fragment>, &nbsp;</React.Fragment>}
+                    {!isLast && ', &nbsp;'}
                   </React.Fragment>
                 )
               }
@@ -52,15 +58,11 @@ export const PostHero: React.FC<{
                     return (
                       <React.Fragment key={index}>
                         {name}
-                        {secondToLast && populatedAuthors.length > 2 && (
-                          <React.Fragment>, </React.Fragment>
-                        )}
+                        {secondToLast && populatedAuthors.length > 2 && ','}
                         {secondToLast && populatedAuthors.length === 2 && (
                           <React.Fragment> </React.Fragment>
                         )}
-                        {!isLast && populatedAuthors.length > 1 && (
-                          <React.Fragment>and </React.Fragment>
-                        )}
+                        {!isLast && populatedAuthors.length > 1 && 'and'}
                       </React.Fragment>
                     )
                   })}

@@ -1,7 +1,7 @@
-import React from 'react'
 import { cn } from '@/utilities/cn'
-import { tv } from 'tailwind-variants'
 import Image from 'next/image'
+import React from 'react'
+import { tv } from 'tailwind-variants'
 export type ExternalMediaType = {
   url: string
   alt?: string

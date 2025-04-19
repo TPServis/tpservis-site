@@ -1,6 +1,6 @@
 'use client'
-import React from 'react'
 import { Map, Marker } from '@vis.gl/react-maplibre'
+import React from 'react'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 //51.056097, 31.890755

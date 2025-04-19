@@ -3,10 +3,10 @@
 import type { PayloadAdminBarProps } from 'payload-admin-bar'
 
 import { cn } from '@/utilities/cn'
-import { useSelectedLayoutSegments, usePathname } from 'next/navigation'
+import { usePathname, useSelectedLayoutSegments } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { PayloadAdminBar } from 'payload-admin-bar'
 import React, { useState, useCallback, useRef, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 
 import './index.scss'
 

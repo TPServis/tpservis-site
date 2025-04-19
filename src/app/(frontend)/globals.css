@@ -1,8 +1,8 @@
 @tailwind utilities;
 
-@import 'tailwindcss';
-@import './tokens';
-@import './style/global';
+@import "tailwindcss";
+@import "./tokens";
+@import "./style/global";
 
 @theme inline {
   --color-heading: var(--color-astral-600);
@@ -47,7 +47,7 @@
 }
 
 @layer base {
-  [data-theme='blue'] {
+  [data-theme="blue"] {
     --color-heading: var(--color-astral-700);
     --color-background: var(--color-astral-50);
   }

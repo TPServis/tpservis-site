@@ -1,8 +1,8 @@
-import React from 'react'
 import { Media } from '@/components/Media'
 import type { Media as MediaType } from '@/payload-types'
-import { ExternalLink } from 'lucide-react'
 import { cva } from 'class-variance-authority'
+import { ExternalLink } from 'lucide-react'
+import React from 'react'
 
 export type DownloadableFilesBlock = {
   blockType: 'downloadableFiles'

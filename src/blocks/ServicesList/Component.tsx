@@ -1,6 +1,6 @@
+import { cookies } from 'next/headers'
 import React from 'react'
 import ClientServicesList from './ClientServicesList'
-import { cookies } from 'next/headers'
 
 import type { ServiceListType } from './ClientServicesList'
 

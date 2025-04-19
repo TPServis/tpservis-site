@@ -11,8 +11,7 @@
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "ii": "cross-env NODE_OPTIONS=--no-deprecation bun --ignore-workspace install",
-    "lint": "cross-env NODE_OPTIONS=--no-deprecation next lint",
-    "lint:fix": "cross-env NODE_OPTIONS=--no-deprecation next lint --fix",
+    "lint": "biome check",
     "payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload",
     "migrate": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload migrate",
     "migrate:status": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload migrate:status",
@@ -89,9 +88,6 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "15.1.6",
-    "@payloadcms/eslint-config": "^3.28.0",
-    "@tailwindcss/typography": "^0.5.16",
     "@tanstack/react-query-devtools": "^5.69.0",
     "@types/escape-html": "^1.0.4",
     "@types/jsonwebtoken": "^9.0.8",
@@ -101,10 +97,7 @@
     "autoprefixer": "^10.4.20",
     "copyfiles": "^2.4.1",
     "drizzle-kit": "^0.30.4",
-    "eslint": "^9.19.0",
-    "eslint-config-next": "15.1.6",
     "postcss": "^8.5.1",
-    "prettier": "^3.4.2",
     "tailwindcss": "^4.0.17",
     "tsx": "^4.19.2",
     "typescript": "5.8.2"

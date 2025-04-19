@@ -1,7 +1,7 @@
-import React from 'react'
 import RichText from '@/components/RichText'
-import { ThumbsUp, ThumbsDown } from 'lucide-react'
 import { cva } from 'class-variance-authority'
+import { ThumbsDown, ThumbsUp } from 'lucide-react'
+import React from 'react'
 
 export type PlusMinusBlock = {
   blockType: 'plusMinus'

@@ -1,16 +1,16 @@
 import type { Block } from 'payload'
-import { PlusMinus } from '../PlusMinus/config'
 import { DownloadableFiles } from '../DownloadableFiles/config'
 import { ExternalMedia } from '../ExternalMedia/config'
+import { PlusMinus } from '../PlusMinus/config'
 
 import {
+  BlockquoteFeature,
   FixedToolbarFeature,
   HeadingFeature,
   InlineToolbarFeature,
-  lexicalEditor,
-  BlockquoteFeature,
   OrderedListFeature,
   UnorderedListFeature,
+  lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 
 export const ServicesList: Block = {

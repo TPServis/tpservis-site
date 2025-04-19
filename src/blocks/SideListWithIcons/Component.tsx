@@ -1,8 +1,8 @@
-import React from 'react'
 import NextLink from 'next/link'
+import React from 'react'
 
-import { PlaneTakeoff, BusFront, TrainFront } from 'lucide-react'
 import RichText from '@/components/RichText'
+import { BusFront, PlaneTakeoff, TrainFront } from 'lucide-react'
 
 type SideListWithIconsProps = {
   pretitle: string

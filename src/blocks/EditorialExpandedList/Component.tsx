@@ -1,13 +1,13 @@
-import React from 'react'
+import RichText from '@/components/RichText'
 import NextImage from 'next/image'
 import NextLink from 'next/link'
-import RichText from '@/components/RichText'
+import React from 'react'
 import type { ExternalMediaType } from '../ExternalMedia/Component'
 
 import { ExternalMedia } from '../ExternalMedia/Component'
 
-import { PlaneIcon, TrainFront, BusFront, Shuffle } from 'lucide-react'
 import { Media } from '@/components/Media'
+import { BusFront, PlaneIcon, Shuffle, TrainFront } from 'lucide-react'
 
 type EditorialExpandedListProps = {
   list: {

@@ -1,6 +1,6 @@
 'use client'
 import { RefreshRouteOnSave as PayloadLivePreview } from '@payloadcms/live-preview-react'
-import { useRouter, usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import React, { useCallback, useRef, useEffect } from 'react'
 
 export const LivePreviewListener: React.FC = () => {

@@ -1,11 +1,11 @@
 'use client'
 import { cn } from 'src/utilities/cn'
 
-import React, { useRef, useEffect } from 'react'
-import { useState } from 'react'
 import RichText from '@/components/RichText'
 import { ChevronDown } from 'lucide-react'
-import { motion, AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
+import React, { useRef, useEffect } from 'react'
+import { useState } from 'react'
 
 type Props = {
   title: string

@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
 import { setClientCookie } from '@/utilities/setClientCookie'
+import { useEffect, useRef, useState } from 'react'
 import type { ServiceContentType } from './ServiceContent'
 
 import ServiceContent from './ServiceContent'
 
-import { motion, AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 
 // Utility function to get all focusable elements within a container
 function getFocusableElements(container: HTMLElement): HTMLElement[] {

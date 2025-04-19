@@ -2,16 +2,16 @@
 import type { Form as FormType } from '@payloadcms/plugin-form-builder/types'
 import { Payload } from 'payload'
 
-import { useRouter } from 'next/navigation'
-import React, { useCallback, useState } from 'react'
-import { useForm, FormProvider } from 'react-hook-form'
 import RichText from '@/components/RichText'
 import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
+import React, { useCallback, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 
-import { buildInitialFormState } from './buildInitialFormState'
-import { fields } from './fields'
 import { Props } from '@payloadcms/ui/elements/CodeEditor'
 import { Key } from 'lucide-react'
+import { buildInitialFormState } from './buildInitialFormState'
+import { fields } from './fields'
 
 export type Value = unknown
 

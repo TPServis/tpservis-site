@@ -1,18 +1,18 @@
-import RichText from '@/components/RichText'
-import Image from 'next/image'
-import type { PlusMinusBlock } from '@/blocks/PlusMinus/Component'
-import PlusMinus from '@/blocks/PlusMinus/Component'
 import type { DownloadableFilesBlock } from '@/blocks/DownloadableFiles/Component'
 import DownloadableFiles from '@/blocks/DownloadableFiles/Component'
 import type { ExternalMediaType } from '@/blocks/ExternalMedia/Component'
 import { ExternalMedia } from '@/blocks/ExternalMedia/Component'
+import type { PlusMinusBlock } from '@/blocks/PlusMinus/Component'
+import PlusMinus from '@/blocks/PlusMinus/Component'
+import RichText from '@/components/RichText'
+import Image from 'next/image'
 
 import { cn } from '@/utilities/cn'
 import { cva } from 'class-variance-authority'
 
+import { Media } from '@/components/Media'
 import type { Media as MediaType, Page as PageType } from '@/payload-types'
 import Link from 'next/link'
-import { Media } from '@/components/Media'
 
 type ContentBlock = {
   blockType: 'contentBlock'

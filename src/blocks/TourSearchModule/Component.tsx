@@ -1,8 +1,8 @@
 import React from 'react'
 import { TourSearchModule } from './ComponentClient'
 
-import { getPayload } from 'payload'
 import config from '@payload-config'
+import { getPayload } from 'payload'
 
 export const TourSearchModuleComponent = async () => {
   const payload = await getPayload({ config })

@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState, useRef } from 'react'
-import useEmblaCarousel from 'embla-carousel-react'
 import type { EmblaOptionsType } from 'embla-carousel'
+import useEmblaCarousel from 'embla-carousel-react'
 import debounce from 'lodash/debounce'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 interface CarouselState {
   selectedIndex: number
@@ -48,7 +48,7 @@ export const useCarousel = (options: UseCarouselOptions = {}) => {
    * @param resetIndex - The index to reset the carousel to. Defaults to 0.
    */
   const resetCarouselState = useCallback(
-    (resetIndex: number = 0) => {
+    (resetIndex = 0) => {
       if (!emblaApi) return
 
       try {

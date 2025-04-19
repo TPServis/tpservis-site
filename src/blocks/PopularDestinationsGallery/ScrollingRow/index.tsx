@@ -3,8 +3,8 @@ import { motion, useSpring, useTransform } from 'motion/react'
 import type { MotionValue } from 'motion/react'
 import { useRef } from 'react'
 
-import type { Media as MediaType } from '@/payload-types'
 import { Media } from '@/components/Media'
+import type { Media as MediaType } from '@/payload-types'
 
 interface ScrollingRowProps {
   items: {

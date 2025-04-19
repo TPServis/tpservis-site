@@ -1,11 +1,11 @@
 import type { Metadata } from 'next/types'
 
 import { CollectionArchive } from '@/components/CollectionArchive'
+import { Post } from '@/payload-types'
+import { Search } from '@/search/Component'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
-import { Post } from '@/payload-types'
-import { Search } from '@/search/Component'
 import PageClient from './page.client'
 
 type Args = {

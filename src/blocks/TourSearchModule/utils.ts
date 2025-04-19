@@ -1,6 +1,6 @@
+import { UseQueryResult, useQuery } from '@tanstack/react-query'
 import * as cheerio from 'cheerio'
-import { parse, addDays, format } from 'date-fns'
-import { useQuery, UseQueryResult } from '@tanstack/react-query'
+import { addDays, format, parse } from 'date-fns'
 import { useMemo } from 'react'
 
 const DEFAULT_HOTEL_RATING = '4+78'

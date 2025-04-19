@@ -1,7 +1,7 @@
 'use client'
+import { Media } from '@/components/Media'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
-import { Media } from '@/components/Media'
 
 import type { Media as MediaType, Page } from '@/payload-types'
 import { cn } from '@/utilities/cn'

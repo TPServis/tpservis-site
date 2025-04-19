@@ -1,9 +1,8 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Slider } from '@/components/ui/slider';
-import { Moon } from 'lucide-react';
-
+import { Button } from '@/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Slider } from '@/components/ui/slider'
+import { Moon } from 'lucide-react'
+import React from 'react'
 
 type NightsSelectorProps = {
   nights: number[]
@@ -52,4 +51,4 @@ const NightsSelector = ({ nights, setNights }: NightsSelectorProps) => {
   )
 }
 
-export default NightsSelector;
+export default NightsSelector

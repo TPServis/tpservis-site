@@ -4,7 +4,9 @@ import type { Page, Post } from '../payload-types'
 
 import { mergeOpenGraph } from './mergeOpenGraph'
 
-export const generateMeta = async (args: { doc: Page | Post }): Promise<Metadata> => {
+export const generateMeta = async (args: {
+  doc: Page | Post
+}): Promise<Metadata> => {
   const { doc } = args || {}
 
   const ogImage =
@@ -13,9 +15,7 @@ export const generateMeta = async (args: { doc: Page | Post }): Promise<Metadata
     'url' in doc.meta.image &&
     `${process.env.NEXT_PUBLIC_SERVER_URL}${doc.meta.image.url}`
 
-  const title = doc?.meta?.title
-    ? doc?.meta?.title
-    : 'TPServise'
+  const title = doc?.meta?.title ? doc?.meta?.title : 'TPServise'
 
   return {
     description: doc?.meta?.description,

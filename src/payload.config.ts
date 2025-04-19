@@ -1,13 +1,13 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 // storage-adapter-import-placeholder
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
-import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
-import { s3Storage, S3StorageOptions } from '@payloadcms/storage-s3'
-import { resendAdapter } from '@payloadcms/email-resend'
-import { uploadthingStorage } from '@payloadcms/storage-uploadthing'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 import {
   BoldFeature,
   FixedToolbarFeature,
@@ -16,26 +16,26 @@ import {
   LinkFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
-import sharp from 'sharp' // editor-import
 import { UnderlineFeature } from '@payloadcms/richtext-lexical'
-import path from 'path'
+import { type S3StorageOptions, s3Storage } from '@payloadcms/storage-s3'
+import { uploadthingStorage } from '@payloadcms/storage-uploadthing'
 import { buildConfig } from 'payload'
-import { fileURLToPath } from 'url'
+import sharp from 'sharp' // editor-import
 
+import type { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
+import type { Page, Post } from 'src/payload-types'
+import { Contacts } from './Contacts/config'
+import { Footer } from './Footer/config'
+import { Header } from './Header/config'
 import Categories from './collections/Categories'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import Users from './collections/Users'
-import { Footer } from './Footer/config'
-import { Header } from './Header/config'
-import { Contacts } from './Contacts/config'
 import { revalidateRedirects } from './hooks/revalidateRedirects'
-import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
-import { Page, Post } from 'src/payload-types'
 
-import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
+import { searchFields } from '@/search/fieldOverrides'
 import { MediaBlock } from './blocks/MediaBlock/config'
 
 const filename = fileURLToPath(import.meta.url)
@@ -208,7 +208,9 @@ export default buildConfig({
                     return [
                       ...rootFeatures,
                       FixedToolbarFeature(),
-                      HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
+                      HeadingFeature({
+                        enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'],
+                      }),
                     ]
                   },
                 }),

@@ -1,15 +1,13 @@
-import React from 'react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
-import { UsersRound, Minus, Plus } from 'lucide-react';
-import { tv } from 'tailwind-variants';
+import { Button } from '@/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Minus, Plus, UsersRound } from 'lucide-react'
+import React from 'react'
+import { tv } from 'tailwind-variants'
 
-
-const MAX_ADULTS_NUMBER = 4;
-const MIN_ADULTS_NUMBER = 1;
-const MAX_CHILDREN_NUMBER = 3;
-const MIN_CHILDREN_NUMBER = 0;
-
+const MAX_ADULTS_NUMBER = 4
+const MIN_ADULTS_NUMBER = 1
+const MAX_CHILDREN_NUMBER = 3
+const MIN_CHILDREN_NUMBER = 0
 
 const buttonVariants = tv({
   base: 'bg-jaffa-50 text-jaffa-900 rounded-xl shadow-none cursor-pointer hover:bg-jaffa-100',
@@ -21,28 +19,30 @@ const buttonVariants = tv({
   defaultVariants: {
     disabled: false,
   },
-});
-
+})
 
 type PeopleSelectorProps = {
-  childrenNumber: number;
-  setChildrenNumber: (number: number) => void;
-  adultsNumber: number;
-  setAdultsNumber: (number: number) => void;
+  childrenNumber: number
+  setChildrenNumber: (number: number) => void
+  adultsNumber: number
+  setAdultsNumber: (number: number) => void
 }
 
-const PeopleSelector = ({ childrenNumber, setChildrenNumber, adultsNumber, setAdultsNumber }: PeopleSelectorProps) => {
-
-
+const PeopleSelector = ({
+  childrenNumber,
+  setChildrenNumber,
+  adultsNumber,
+  setAdultsNumber,
+}: PeopleSelectorProps) => {
   const handleAdultsNumberChange = (number: number): void => {
     if (number >= MIN_ADULTS_NUMBER && number <= MAX_ADULTS_NUMBER) {
-      setAdultsNumber(number);
+      setAdultsNumber(number)
     }
   }
 
   const handleChildrenNumberChange = (number: number): void => {
     if (number >= MIN_CHILDREN_NUMBER && number <= MAX_CHILDREN_NUMBER) {
-      setChildrenNumber(number);
+      setChildrenNumber(number)
     }
   }
 
@@ -66,7 +66,7 @@ const PeopleSelector = ({ childrenNumber, setChildrenNumber, adultsNumber, setAd
               >
                 <Minus className="w-4 h-4" />
               </Button>
-              <span className='flex justify-center items-center w-4'>{adultsNumber}</span>
+              <span className="flex justify-center items-center w-4">{adultsNumber}</span>
               <Button
                 className={buttonVariants({ disabled: adultsNumber === MAX_ADULTS_NUMBER })}
                 onClick={() => handleAdultsNumberChange(adultsNumber + 1)}
@@ -84,7 +84,7 @@ const PeopleSelector = ({ childrenNumber, setChildrenNumber, adultsNumber, setAd
               >
                 <Minus className="w-4 h-4" />
               </Button>
-              <span className='flex justify-center items-center w-4'>{childrenNumber}</span>
+              <span className="flex justify-center items-center w-4">{childrenNumber}</span>
               <Button
                 className={buttonVariants({ disabled: childrenNumber === MAX_CHILDREN_NUMBER })}
                 onClick={(): void => handleChildrenNumberChange(childrenNumber + 1)}
@@ -99,4 +99,4 @@ const PeopleSelector = ({ childrenNumber, setChildrenNumber, adultsNumber, setAd
   )
 }
 
-export default PeopleSelector;
+export default PeopleSelector

@@ -11,7 +11,7 @@ export const LowImpactHero: React.FC<Page['hero']> = ({ title, subtitle, cta, me
           </h2>
           <div className="flex flex-col gap-4 md:col-span-1">
             {subtitle && <p className="text-shark-500 text-balance">{subtitle}</p>}
-            {cta && cta.label && cta.url && (
+            {cta?.label && cta.url && (
               <a href={cta.url} className="btn">
                 {cta.label}
               </a>

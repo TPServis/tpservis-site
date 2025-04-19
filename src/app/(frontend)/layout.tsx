@@ -1,28 +1,28 @@
 import type { Metadata } from 'next'
 
-import { cn } from 'src/utilities/cn'
+import { Toaster } from '@/components/ui/sonner'
 import { Inter } from 'next/font/google'
 import React from 'react'
-import { Toaster } from '@/components/ui/sonner'
+import { cn } from 'src/utilities/cn'
 
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
-import { AdminBar } from '@/components/AdminBar'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
+import { AdminBar } from '@/components/AdminBar'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { ReactQueryProvider } from '@/components/Providers/ReactQueryProvider'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
-import { ReactQueryProvider } from '@/components/Providers/ReactQueryProvider'
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
   variable: '--font-inter',
   display: 'swap',
-  adjustFontFallback: false
+  adjustFontFallback: false,
 })
 
 import './globals.css'
