@@ -52,19 +52,19 @@ import type { TourSearchResultType } from "./types";
 // https://www.ittour.com.ua/tour_search.php?callback=jQuery17103968606778564445_1741514676869&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4+78&items_per_page=50&hotel=&region=&child_age=&package_tour_type=1&transport_type=2&country=318&food=498+512+560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%3A%2F%2Flocalhost%3A3000%2Ftours&preview=1&_=1741514762876
 // https://www.ittour.com.ua/tour_search.php?callback=jQuery9569997690939707_1741515817928&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=package_tour_search&hotel_rating=4%2B78&items_per_page=50&package_tour_type=1&transport_type=2&country=318&food=498%2B512%2B560&adults=2&children=0&date_from=10.03.25&date_till=21.03.25&night_from=6&night_till=8&price_from=0&price_till=900000&switch_price=UAH&departure_city=2014&module_location_url=http%253A%252F%252Flocalhost%253A3000%252Ftours&preview=1&_=1741515817928
 
-const MERCHANT_ID = "DG400625103918756O740800";
-const MODULE_TYPE = "tour_search";
+// const MERCHANT_ID = "DG400625103918756O740800";
+// const MODULE_TYPE = "tour_search";
+// const HOTEL = "";
+// const REGION = "";
+// const CHILD_AGE = "";
+// const TRANSPORT_TYPE = "2";
+// const COUNTRY = "318";
+// const FOOD = "498+512+560";
+// const PRICE_FROM = "0";
+// const PRICE_TILL = "900000";
+// const SWITCH_PRICE = "UAH";
+// const DEPARTURE_CITY = "2014";
 const HOTEL_RATING = "4+78";
-const HOTEL = "";
-const REGION = "";
-const CHILD_AGE = "";
-const TRANSPORT_TYPE = "2";
-const COUNTRY = "318";
-const FOOD = "498+512+560";
-const PRICE_FROM = "0";
-const PRICE_TILL = "900000";
-const SWITCH_PRICE = "UAH";
-const DEPARTURE_CITY = "2014";
 
 // Move cache outside component to avoid recreation
 const searchCache = new Map<string, { results: SearchResultType[]; timestamp: number }>();
