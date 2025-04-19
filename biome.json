@@ -16,7 +16,7 @@
 		"attributePosition": "multiline",
 		"indentStyle": "tab",
 		"indentWidth": 2,
-		"lineWidth": 80,
+		"lineWidth": 100,
 		"lineEnding": "lf"
 	},
 	"organizeImports": {
@@ -28,7 +28,11 @@
 			"all": true,
 			"nursery": {
 				"all": true,
-				"noImgElement": "off"
+				"noImgElement": "off",
+				"useSortedClasses": "off"
+			},
+			"correctness": {
+				"useImportExtensions": "off"
 			},
 			"suspicious": {
 				"noReactSpecificProps": "off"
@@ -51,13 +55,13 @@
 	},
 	"javascript": {
 		"formatter": {
-			"jsxQuoteStyle": "single",
+			"jsxQuoteStyle": "double",
 			"quoteProperties": "asNeeded",
 			"trailingCommas": "all",
 			"semicolons": "always",
 			"arrowParentheses": "always",
 			"bracketSameLine": false,
-			"quoteStyle": "single",
+			"quoteStyle": "double",
 			"attributePosition": "auto",
 			"bracketSpacing": true
 		}
