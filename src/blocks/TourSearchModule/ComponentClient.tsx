@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import type { Form } from "@/payload-types";
 import { cn } from "@/utilities/cn";
+// biome-ignore lint: library choice
 import * as cheerio from "cheerio";
 import { format } from "date-fns";
 import dayjs from "dayjs";
@@ -122,6 +123,7 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 	}, [parsedDepartureCities, selectedDepartureCity]);
 
 	useEffect(() => {
+		// biome-ignore lint: complexity
 		const fetchResults = async (): Promise<void> => {
 			if (!searchParams || Object.keys(searchParams).length === 0) {
 				return;
@@ -200,15 +202,22 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 			const formattedDataTo = dayjs(date?.to).format("DD.MM.YY");
 
 			const params: Partial<ITTourSearchParams> = {
+				// biome-ignore lint: library choice
 				date_from: formattedDataFrom,
+				// biome-ignore lint: library choice
 				date_till: formattedDataTo,
 				adults: adultsNumber.toString(),
 				children: childrenNumber.toString(),
+				// biome-ignore lint: library choice
 				departure_city: selectedDepartureCity || "",
 				country: selectedCountry || "",
+				// biome-ignore lint: library choice
 				night_from: nights[0].toString(),
+				// biome-ignore lint: library choice
 				night_till: nights[1].toString(),
+				// biome-ignore lint: library choice
 				transport_type: transportType,
+				// biome-ignore lint: library choice
 				items_per_page: "100",
 			};
 
@@ -245,11 +254,16 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 					rooms: groupedByHotel[hotelTitle].map((item) => ({
 						id: item.id,
 						title: item.room_title ?? "",
+						// biome-ignore lint: to refactor
 						price_usd: Number.parseInt(item.price_usd ?? "0"),
+						// biome-ignore lint: to refactor
 						price_uah: Number.parseInt(item.price_uah ?? "0"),
 						nights: Number.parseInt(item.nights ?? "0"),
+						// biome-ignore lint: to refactor
 						meal_type: item.meal_type ?? "",
+						// biome-ignore lint: to refactor
 						date_from: item.date_from ?? "",
+						// biome-ignore lint: to refactor
 						date_till: item.date_till ?? "",
 					})),
 				});
@@ -406,13 +420,19 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 										}}
 										classNames={{
 											cell: "hover:bg-jaffa-50 rounded-md",
+											// biome-ignore lint: library choice
 											day_disabled: "!text-gray-400 !cursor-not-allowed hover:!bg-white",
+											// biome-ignore lint: library choice
 											day_selected: "!font-bold",
+											// biome-ignore lint: library choice
 											day_range_start:
 												"bg-linear-to-br from-jaffa-50 from-50% to-50% to-jaffa-100 text-jaffa-800 rounded-r-none",
+											// biome-ignore lint: library choice
 											day_range_end:
 												"bg-linear-to-br from-jaffa-100 from-50% to-50% to-jaffa-50 text-jaffa-800 rounded-l-none",
+											// biome-ignore lint: library choice
 											day_range_middle: "bg-jaffa-100 text-jaffa-800 rounded-none",
+											// biome-ignore lint: library choice
 											day_outside: "invisible",
 										}}
 										selected={date}
@@ -561,6 +581,16 @@ const Hotel = ({ hotel, form }: { hotel: TourSearchResultType; form: Form }): JS
 		});
 	}
 
+	function getRoomPluralForm(roomCount: number): string {
+		if (roomCount === 1) {
+			return "номер";
+		}
+		if (roomCount >= 2 && roomCount <= 4) {
+			return "номери";
+		}
+		return "номерів";
+	}
+
 	return (
 		<div className="mt-20">
 			<div className="mb-4">
@@ -577,12 +607,7 @@ const Hotel = ({ hotel, form }: { hotel: TourSearchResultType; form: Form }): JS
 					<p>{hotel.location}</p>
 					<span className="w-1 h-1 rounded-full bg-shark-300" />
 					<p className="text-sm">
-						{hotel.rooms.length}{" "}
-						{hotel.rooms.length === 1
-							? "номер"
-							: hotel.rooms.length > 1 && hotel.rooms.length < 5
-								? "номери"
-								: "номерів"}{" "}
+						{hotel.rooms.length} {getRoomPluralForm(hotel.rooms.length)}
 						знайдено
 					</p>
 				</div>

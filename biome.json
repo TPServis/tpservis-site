@@ -29,7 +29,8 @@
 			"nursery": {
 				"all": true,
 				"noImgElement": "off",
-				"useSortedClasses": "off"
+				"useSortedClasses": "off",
+				"noSecrets": "off"
 			},
 			"correctness": {
 				"useImportExtensions": "off"
