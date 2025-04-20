@@ -594,22 +594,26 @@ const Hotel = ({ hotel, form }: { hotel: TourSearchResultType; form: Form }): JS
 	return (
 		<div className="mt-20">
 			<div className="mb-4">
-				<HotelGallery images={images} />
-				<div>
-					<h2 className="text-2xl lg:text-4xl font-bold text-astral-800 text-balance">
-						{hotel.title}
-						<div className="inline-block ml-2 align-middle">
-							<Stars number={hotel.stars} />
+				<div className="flex gap-4 items-center">
+					<HotelGallery images={images} />
+					<div>
+						<div>
+							<h2 className="text-2xl lg:text-4xl font-bold text-astral-800 text-balance">
+								{hotel.title}
+								<div className="inline-block ml-2 align-middle">
+									<Stars number={hotel.stars} />
+								</div>
+							</h2>
 						</div>
-					</h2>
-				</div>
-				<div className="flex items-center gap-2 text-shark-500">
-					<p>{hotel.location}</p>
-					<span className="w-1 h-1 rounded-full bg-shark-300" />
-					<p className="text-sm">
-						{hotel.rooms.length} {getRoomPluralForm(hotel.rooms.length)}
-						знайдено
-					</p>
+						<div className="flex items-center gap-2 text-shark-500">
+							<p>{hotel.location}</p>
+							<span className="w-1 h-1 rounded-full bg-shark-300" />
+							<p className="text-sm">
+								{hotel.rooms.length} {getRoomPluralForm(hotel.rooms.length)}
+								знайдено
+							</p>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div className="grid grid-cols-12 gap-4">
