@@ -2,7 +2,8 @@ import { useState } from 'react'
 import type { JSX } from 'react'
 import Image from 'next/image'
 import { useCarousel } from '@/hooks/useCarousel'
-
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/utilities/cn";
 type Props = {
   images: string[]
 }
@@ -56,21 +57,37 @@ export const HotelGallery = ({ images }: Props): JSX.Element => {
 						))}
 				</button>
 				{isOpen && (
-					<div className="fixed inset-0 bg-black/20 z-1000 flex justify-center items-center">
+					<div
+						className="fixed inset-0 bg-black/40 z-1000 flex justify-center items-center backdrop-blur-sm"
+						ref={containerRef}
+					>
 						<button
 							type="button"
 							className="absolute inset-0 bg-transparent"
 							onClick={(): void => handleToggle()}
+							aria-label="Close"
+						/>
+
+						<button
+							type="button"
+							className="relative z-10"
+							onClick={(): void => scrollPrev()}
+							aria-label="Close"
 						>
-							{" "}
-							close{" "}
+							<ChevronLeft className="w-10 h-10" />
 						</button>
 
 						<div className="w-[60vw] h-[80vh]" ref={emblaRef}>
 							<div className="flex gap-4">
 								{images.map(
 									(image, index): JSX.Element => (
-										<div key={image} className="w-full h-auto shrink-0 border-8 border-white">
+										<div
+											key={image}
+											className={cn(
+												"w-full h-auto shrink-0 rounded-2xl overflow-hidden-2xl overflow-hidden shadow-2xl transition-all duration-300",
+												index !== selectedIndex && "opacity-70 blur-lg",
+											)}
+										>
 											<Image
 												src={image}
 												alt={`Hotel ${index + 1}`}
@@ -83,6 +100,15 @@ export const HotelGallery = ({ images }: Props): JSX.Element => {
 								)}
 							</div>
 						</div>
+
+						<button
+							type="button"
+							className="relative z-10"
+							onClick={(): void => scrollNext()}
+							aria-label="Close"
+						>
+							<ChevronRight className="w-10 h-10" />
+						</button>
 					</div>
 				)}
 			</div>
