@@ -1,19 +1,12 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import type { Form } from "@/payload-types";
-import { cn } from "@/utilities/cn";
+import { Loader2, MapPin, Plane } from "lucide-react";
 // biome-ignore lint: library choice
 import { format } from "date-fns";
-import dayjs from "dayjs";
-import { CalendarIcon, Loader2, MapPin, Plane } from "lucide-react";
-import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
 import type { JSX } from "react/jsx-runtime";
 import type { DateRange } from "react-day-picker";
 import { toast } from "sonner";
-import NightsSelector from "./NightsSelector";
+import { NightsSelector } from "./NightsSelector";
 import PeopleSelector from "./PeopleSelector";
 import TransportSelector from "./TransportSelector";
 import {
@@ -27,11 +20,12 @@ import {
 } from "./utils";
 import { HotelGroup } from "./HotelGroup";
 import * as v from "valibot";
-
+import { useState, useEffect, useMemo } from "react";
 import { SearchModule } from "./SearchModule";
 import { SearchSelectField } from "./SearchSelectField";
+import { DatePopover } from "./DatePopover";
 import type { SearchResultType, ITTourSearchParams, Option } from "./utils";
-
+import { SearchTooltip } from "./SearchTooltip";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import type { TourSearchResultType } from "./types";
@@ -209,15 +203,14 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 
 	const runSearch = (): void => {
 		try {
-			setLoadedResults(0);
-			setTourSearchData(null);
-			const params = getSearchParams();
-			setSearchParams(params);
-		} catch (error) {
-			console.error(error);
-			toast.error(error.message);
-			throw error;
-		}
+    setLoadedResults(0);
+    setTourSearchData(null);
+    const params = getSearchParams();
+    setSearchParams(params);
+  } catch (error) {
+    toast.error(error.message);
+    throw error;
+  }
 	};
 
 	const buildResultResponse = (list: SearchResultType[]): TourSearchResultType[] | null => {
@@ -267,179 +260,87 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 	};
 		
 	return (
-		<div className="w-full container-spacing">
-			<div className="container-wrapper min-h-[300px] relative">
-				<SearchModule runSearch={runSearch}>
-					<>
-						<div className="col-span-3">
-							<TransportSelector transportType={transportType} setTransportType={setTransportType} />
-						</div>
-						<div className="col-span-9 w-full">
-							<SearchSelectField
-								options={parsedCountries?.countries ?? []}
-								selectedOption={selectedCountry || ""}
-								setSelectedOption={setSelectedCountry}
-								isLoadingOptions={isLoadingCountries}
-								icon={<Plane className="h-4" />}
-							/>
-						</div>
-						<div className="col-span-12 w-full">
-							<SearchSelectField
-								options={parsedDepartureCities?.departureCities ?? []}
-								selectedOption={selectedDepartureCity || ""}
-								setSelectedOption={setSelectedDepartureCity}
-								isLoadingOptions={isLoadingDepartureCities}
-								icon={<MapPin className="h-4" />}
-							/>
-						</div>
-						<div className="grid gap-2 col-span-12 w-full">
-							<Popover>
-								<TooltipProvider>
-									<Tooltip delayDuration={600}>
-										<TooltipTrigger asChild={true}>
-											<PopoverTrigger asChild={true}>
-												<Button
-													id="date"
-													variant="outline"
-													className={cn(
-														"lg:min-w-[300px] w-full justify-start text-left bg-jaffa-50 text-jaffa-900 font-bold border-none shadow-none rounded-xl",
-														!date && "text-muted-foreground",
-													)}
-												>
-													<CalendarIcon />
-													{date?.from ? (
-														date.to ? (
-															<>
-																{format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-															</>
-														) : (
-															format(date.from, "LLL dd, y")
-														)
-													) : (
-														<span>Виберіть дату</span>
-													)}
-												</Button>
-											</PopoverTrigger>
-										</TooltipTrigger>
-										<TooltipContent
-											className="bg-jaffa-50 text-jaffa-900 rounded-lg border-none font-bold text-sm"
-											sideOffset={8}
-										>
-											<p>Оберіть бажаний діапазон дат вильоту</p>
-										</TooltipContent>
-									</Tooltip>
-								</TooltipProvider>
-								<PopoverContent className="w-auto p-0 bg-white border-none" align="start">
-									<Calendar
-										initialFocus={true}
-										mode="range"
-										defaultMonth={date?.from}
-										disabled={{
-											before: dayjs().add(1, "day").toDate(),
-											after: date?.from ? dayjs(date?.from).add(11, "day").toDate() : undefined,
-										}}
-										classNames={{
-											cell: "hover:bg-jaffa-50 rounded-md",
-											// biome-ignore lint: library choice
-											day_disabled: "!text-gray-400 !cursor-not-allowed hover:!bg-white",
-											// biome-ignore lint: library choice
-											day_selected: "!font-bold",
-											// biome-ignore lint: library choice
-											day_range_start:
-												"bg-linear-to-br from-jaffa-50 from-50% to-50% to-jaffa-100 text-jaffa-800 rounded-r-none",
-											// biome-ignore lint: library choice
-											day_range_end:
-												"bg-linear-to-br from-jaffa-100 from-50% to-50% to-jaffa-50 text-jaffa-800 rounded-l-none",
-											// biome-ignore lint: library choice
-											day_range_middle: "bg-jaffa-100 text-jaffa-800 rounded-none",
-											// biome-ignore lint: library choice
-											day_outside: "invisible",
-										}}
-										selected={date}
-										onSelect={(range): void => {
-											setDate(
-												range
-													? {
-															from: range.from,
-															to: range.to,
-														}
-													: {
-															from: undefined,
-															to: undefined,
-														},
-											);
-										}}
-										numberOfMonths={2}
-									/>
-								</PopoverContent>
-							</Popover>
-						</div>
-						<div className="col-span-6">
-							<TooltipProvider>
-								<Tooltip delayDuration={600}>
-									<TooltipTrigger asChild={true}>
-										<div>
-											<NightsSelector nights={nights} setNights={setNights} />
-										</div>
-									</TooltipTrigger>
-									<TooltipContent
-										className="bg-jaffa-50 text-jaffa-900 rounded-lg border-none font-bold text-sm"
-										sideOffset={8}
-									>
-										<p>Оберіть бажану кількість ночей</p>
-									</TooltipContent>
-								</Tooltip>
-							</TooltipProvider>
-						</div>
-						<div className="col-span-6">
-							<TooltipProvider>
-								<Tooltip delayDuration={600}>
-									<TooltipTrigger asChild={true}>
-										<div>
-											<PeopleSelector
-												childrenNumber={childrenNumber}
-												setChildrenNumber={setChildrenNumber}
-												adultsNumber={adultsNumber}
-												setAdultsNumber={setAdultsNumber}
-											/>
-										</div>
-									</TooltipTrigger>
-									<TooltipContent
-										className="bg-jaffa-50 text-jaffa-900 rounded-lg border-none font-bold text-sm"
-										sideOffset={8}
-									>
-										<p>Оберіть кількість дорослих та дітей</p>
-									</TooltipContent>
-								</Tooltip>
-							</TooltipProvider>
-						</div>
-					</>
-				</SearchModule>
+  <div className="w-full container-spacing">
+    <div className="container-wrapper min-h-[300px] relative">
+      <SearchModule runSearch={runSearch}>
+        <>
+          <div className="col-span-3">
+            <SearchTooltip content="Оберіть тип транспорту">
+              <TransportSelector
+                transportType={transportType}
+                setTransportType={setTransportType}
+              />
+            </SearchTooltip>
+          </div>
+          <div className="col-span-9 w-full">
+            <SearchTooltip content="Оберіть країну призначення">
+              <SearchSelectField
+                options={parsedCountries?.countries ?? []}
+                selectedOption={selectedCountry || ""}
+                setSelectedOption={setSelectedCountry}
+                isLoadingOptions={isLoadingCountries}
+                icon={<Plane className="h-4" />}
+              />
+            </SearchTooltip>
+          </div>
+          <div className="col-span-12 w-full">
+            <SearchTooltip content="Оберіть місто відправлення">
+              <SearchSelectField
+                options={parsedDepartureCities?.departureCities ?? []}
+                selectedOption={selectedDepartureCity || ""}
+                setSelectedOption={setSelectedDepartureCity}
+                isLoadingOptions={isLoadingDepartureCities}
+                icon={<MapPin className="h-4" />}
+              />
+            </SearchTooltip>
+          </div>
+          <div className="grid gap-2 col-span-12 w-full">
+            <SearchTooltip content="Оберіть бажаний діапазон дат вильоту">
+              <DatePopover date={date} setDate={setDate} />
+            </SearchTooltip>
+          </div>
+          <div className="col-span-6">
+            <SearchTooltip content="Оберіть кількість ночей">
+              <NightsSelector nights={nights} setNights={setNights} />
+            </SearchTooltip>
+          </div>
+          <div className="col-span-6">
+            <SearchTooltip content="Оберіть кількість дорослих та дітей">
+              <PeopleSelector
+                childrenNumber={childrenNumber}
+                setChildrenNumber={setChildrenNumber}
+                adultsNumber={adultsNumber}
+                setAdultsNumber={setAdultsNumber}
+              />
+            </SearchTooltip>
+          </div>
+        </>
+      </SearchModule>
 
-				{(isLoadingResults || (tourSearchData && tourSearchData.length > 0)) && (
-					<div className="">
-						<div className="flex items-center gap-4">
-							<p className="text-sm text-shark-500">
-								{isLoadingResults ? (
-									<span className="flex items-center gap-2">
-										<Loader2 className="h-4 w-4 animate-spin" />
-										Знайдено {loadedResults} варіантів...
-									</span>
-								) : (
-									`${calcRoomsNumber(tourSearchData)} номерів знайдено`
-								)}
-							</p>
-						</div>
-						{!isLoadingResults &&
-							tourSearchData &&
-							tourSearchData.map((hotel: TourSearchResultType) => (
-								<HotelGroup key={hotel.title} hotel={hotel} form={form} />
-							))}
-					</div>
-				)}
-			</div>
-		</div>
-	);
+      {(isLoadingResults || (tourSearchData && tourSearchData.length > 0)) && (
+        <div className="">
+          <div className="flex items-center gap-4">
+            <p className="text-sm text-shark-500">
+              {isLoadingResults ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Знайдено {loadedResults} варіантів...
+                </span>
+              ) : (
+                `${calcRoomsNumber(tourSearchData)} номерів знайдено`
+              )}
+            </p>
+          </div>
+          {!isLoadingResults &&
+            tourSearchData &&
+            tourSearchData.map((hotel: TourSearchResultType) => (
+              <HotelGroup key={hotel.title} hotel={hotel} form={form} />
+            ))}
+        </div>
+      )}
+    </div>
+  </div>
+);
 };
 
 const calcRoomsNumber = (results: TourSearchResultType[] | null): number => {
