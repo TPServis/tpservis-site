@@ -1,4 +1,6 @@
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import {useQuery } from "@tanstack/react-query";
+import type { UseQueryResult } from "@tanstack/react-query";
+// biome-ignore lint: import
 import * as cheerio from "cheerio";
 import { addDays, format, parse } from "date-fns";
 import { useMemo } from "react";
@@ -18,7 +20,8 @@ const getBaseUrl = (url: string): string => {
 	return urlObj.toString();
 };
 
-const useITTourRequest = (tourId: string) => {
+// biome-ignore lint: this is a valid case 
+const useITTourRequest = (tourId: string): UseQueryResult<any> => {
 	const { timestamp, jQueryCallback } = createTimestampCallback();
 
 	const url = new URL("https://www.ittour.com.ua/tour_search.php");
@@ -43,9 +46,10 @@ const createTimestampCallback = (): { timestamp: number; jQueryCallback: string 
 	return { timestamp, jQueryCallback };
 };
 
-const fetchJSONP = (url: string, jQueryCallback: string): Promise<any> => {
+// biome-ignore lint: this is a valid case 
+const fetchJSONP = (url: string, jQueryCallback: string): Promise<Content> => {
 	return new Promise((resolve, reject): void => {
-		(window as any)[jQueryCallback] = function (data: any) {
+		(window as Window & typeof globalThis)[jQueryCallback] = (data: Content): void => {
 			cleanup();
 			resolve(data);
 		};
@@ -54,14 +58,14 @@ const fetchJSONP = (url: string, jQueryCallback: string): Promise<any> => {
 		script.src = url;
 		script.type = "text/javascript";
 
-		const cleanup = () => {
+		const cleanup = (): void => {
 			if (script.parentNode) {
 				script.parentNode.removeChild(script);
 			}
-			delete (window as any)[jQueryCallback];
+			delete (window as Window & typeof globalThis)[jQueryCallback];
 		};
 
-		script.onerror = () => {
+		script.onerror = (): void => {
 			cleanup();
 			reject(new Error("Script loading failed"));
 		};
@@ -71,7 +75,8 @@ const fetchJSONP = (url: string, jQueryCallback: string): Promise<any> => {
 };
 
 // Modified JSONP fetcher that accepts base URL
-const fetchJSONPWithCache = (baseUrl: string): Promise<any> => {
+// biome-ignore lint: this is a valid case 
+const fetchJSONPWithCache = (baseUrl: string): Promise<Content> => {
 	const { timestamp, jQueryCallback } = createTimestampCallback();
 
 	// Create URL object to manipulate parameters
@@ -98,35 +103,44 @@ const fetchJSONPWithCache = (baseUrl: string): Promise<any> => {
 	return fetchJSONP(fullUrl, jQueryCallback);
 };
 
-export const useJSONPQuery = (url: string) => {
+// biome-ignore lint: this is a valid case 
+export const useJSONPQuery = <T = unknown>(url: string): UseQueryResult<T> => {
 	const baseUrl = getBaseUrl(url);
 
-	return useQuery({
+	return useQuery<T, Error>({
 		queryKey: ["jsonp", baseUrl], // Cache key uses base URL without random parameters
-		queryFn: () => fetchJSONPWithCache(baseUrl),
+		queryFn: (): Promise<T> => fetchJSONPWithCache(baseUrl) as Promise<T>,
 		staleTime: 30 * 60 * 1000, // Consider data fresh for 30 minutes
 	});
 };
 
-const cleanPrice = (price: string) => {
+const cleanPrice = (price: string): number => {
 	const priceMatch = price.match(/(\d+[\d\s]*)/);
-	return priceMatch ? parseInt(priceMatch[0].trim()) : "";
+	return priceMatch ? Number.parseInt(priceMatch[0].trim()) : 0;
 };
 
-const isValidSearchItem = (row: any): boolean => {
+// biome-ignore lint: cheerio types are not typed
+type Row = any;
+const isValidSearchItem = (row: Row): boolean => {
 	return row.hasClass("itt_odd") || row.hasClass("itt_even");
 };
 
 export type SearchResultType = {
 	title: string;
 	id: string;
+	// biome-ignore lint: this is a valid case 
 	room_title?: string;
 	rating?: string;
+	// biome-ignore lint: this is a valid case 
 	price_usd?: string;
+	// biome-ignore lint: this is a valid case 
 	price_uah?: string;
 	nights?: string;
+	// biome-ignore lint: this is a valid case 
 	meal_type?: string;
+	// biome-ignore lint: this is a valid case 
 	date_from?: string;
+	// biome-ignore lint: this is a valid case 
 	date_till?: string;
 	location?: string;
 };
@@ -143,31 +157,39 @@ const searchSelectors = {
 	items: "tbody > tr",
 	title: "td:nth-child(4) > div",
 	id: "td:nth-child(2) > input",
+	// biome-ignore lint: this is a valid case 
 	room_title: "td:nth-child(6)",
 	rating: "td:nth-child(5)",
 	price: "td:nth-child(11) > a > span:nth-child(1) > span:nth-child(1)",
+	// biome-ignore lint: this is a valid case 
 	price_uah: "td:nth-child(11) > a > span:nth-child(2) > span:nth-child(1)",
 	nights: "td:nth-child(8)",
+	// biome-ignore lint: this is a valid case 
 	meal_type: "td:nth-child(7)",
+	// biome-ignore lint: this is a valid case 
 	date_from: "td:nth-child(10)",
 	location: "td:nth-child(3)",
 };
 
-const parseSearchResponse = (response: any): ParseSearchResponse => {
+const parseSearchResponse = (response: Content): ParseSearchResponse => {
 	try {
 		const validContent = getValidContent(response);
 
-		const $ = cheerio.load(validContent);
+		const $ = cheerio.load(validContent ?? "");
 
 		const results: SearchResultType[] = [];
 
 		$(searchSelectors.items).each((_, item) => {
-			if (!isValidSearchItem($(item))) return;
+			if (!isValidSearchItem($(item))) {
+				throw new Error("Invalid search item");
+			};
 
 			const title = $(item).find(searchSelectors.title).text().trim();
 			const id = $(item).find(searchSelectors.id).attr("id");
 
-			if (!title || !id) return;
+			if (!(title && id)) {
+				throw new Error("No valid title or id found");
+			};
 
 			const departureDate = $(item).find(searchSelectors.date_from).text().trim();
 			const nights = $(item).find(searchSelectors.nights).text().trim();
@@ -176,13 +198,19 @@ const parseSearchResponse = (response: any): ParseSearchResponse => {
 			const result = {
 				title,
 				id,
+				// biome-ignore lint: this is a valid case 
 				room_title: $(item).find(searchSelectors.room_title).attr("title"),
 				rating: $(item).find(searchSelectors.rating).text().trim(),
+				// biome-ignore lint: this is a valid case 
 				price_usd: $(item).find(searchSelectors.price).text().trim(),
+				// biome-ignore lint: this is a valid case 
 				price_uah: $(item).find(searchSelectors.price_uah).text().trim(),
 				nights: $(item).find(searchSelectors.nights).text().trim(),
+				// biome-ignore lint: this is a valid case 
 				meal_type: $(item).find(searchSelectors.meal_type).text().trim(),
+				// biome-ignore lint: this is a valid case 
 				date_from: departureDate,
+				// biome-ignore lint: this is a valid case 
 				date_till: returnDate,
 				location: $(item).find(searchSelectors.location).text().trim(),
 			};
@@ -195,14 +223,13 @@ const parseSearchResponse = (response: any): ParseSearchResponse => {
 			status: "200",
 		};
 	} catch (error) {
-		console.error("Error stack:", error.stack);
 		return {
 			status: "400",
 		};
 	}
 };
 
-const getReturnDate = (nights: number, departureDate: string) => {
+const getReturnDate = (nights: number, departureDate: string): string => {
 	const date = parse(departureDate, "dd.MM.yy", new Date());
 	const returnDate = addDays(date, nights);
 	return format(returnDate, "dd.MM.yy");
@@ -245,7 +272,9 @@ const getOptions = (htmlString: string): GetOptionsResponse => {
 			const id = $(item).attr("value");
 			const name = $(item).text().trim();
 
-			if (!id || !name) throw new Error("No valid id or name found");
+			if (!(id && name)) {
+				throw new Error("No valid id or name found");
+			}
 
 			result.push({ id, name });
 		});
@@ -255,7 +284,6 @@ const getOptions = (htmlString: string): GetOptionsResponse => {
 			status: "200",
 		};
 	} catch (error) {
-		console.error("Error parsing options:", error);
 		return {
 			status: "400",
 		};
@@ -268,7 +296,8 @@ type ParserSearchBilderResponse = {
 	status?: "200" | "400";
 };
 
-const parseSearchBilderResponse = (response: any): ParserSearchBilderResponse => {
+type SearchBilderResponse = CountryResponse;
+const parseSearchBilderResponse = (response: SearchBilderResponse): ParserSearchBilderResponse => {
 	try {
 		if (!response) {
 			return {
@@ -278,7 +307,7 @@ const parseSearchBilderResponse = (response: any): ParserSearchBilderResponse =>
 			};
 		}
 
-		let { country, departure_city } = response;
+		const { country, departure_city } = response;
 
 		let countries: Option[] = [];
 		let departureCities: Option[] = [];
@@ -299,28 +328,31 @@ const parseSearchBilderResponse = (response: any): ParserSearchBilderResponse =>
 			status: "200",
 		};
 	} catch (error) {
-		console.error("Error parsing ITTour response:", error);
 		return {
 			status: "400",
 		};
 	}
 };
 
-const getValidContent = (content: any) => {
-	if (content && typeof content.text === "string") {
+
+type Content = { text: string } | string;
+const getValidContent = (content: Content): string | null => {
+	if (content instanceof Object && "text" in content && typeof content.text === "string") {
 		return content.text;
-	} else if (typeof content === "string") {
-		return content;
-	} else if (content && typeof content === "object") {
-		return JSON.stringify(content);
-	} else {
-		throw new Error("No HTML valid content found");
 	}
+	if (typeof content === "string") {
+		return content;
+	}
+	if (content && typeof content === "object") {
+		return JSON.stringify(content);
+	}
+	return null;
 };
 
-const parseITTourResponse = (response: any) => {
+// biome-ignore lint: this is a valid case 
+const parseITTourResponse = (response: Content): object => {
 	try {
-		const $ = cheerio.load(getValidContent(response));
+		const $ = cheerio.load(getValidContent(response) ?? "");
 
 		const price = cleanPrice($(selectors.price).text().trim());
 
@@ -361,7 +393,6 @@ const parseITTourResponse = (response: any) => {
 
 		return result;
 	} catch (error) {
-		console.error("Error parsing ITTour response:", error);
 		return {
 			error: "Failed to parse response",
 			raw: response,
@@ -369,24 +400,30 @@ const parseITTourResponse = (response: any) => {
 	}
 };
 
-const getGallery = ($: cheerio.CheerioAPI) => {
+const getGallery = ($: cheerio.CheerioAPI): string[] | undefined => {
 	const gallery = $("#gallery_big_img_tour");
 	return gallery
 		?.html()
 		?.split('src="')
-		.map((item) => item.split('"')[0])
-		.filter((item) => item.includes("https://www.ittour.com.ua/images/hotel_image/"));
+		.map((item): string => item.split('"')[0])
+		.filter((item): boolean => item.includes("https://www.ittour.com.ua/images/hotel_image/"));
 };
 
 // Helper function to determine tour status
 const getStatus = ($: cheerio.CheerioAPI): string => {
+	// biome-ignore lint: block is not prefered here
 	if ($(".tour_not_found").length > 0) return "not_found";
+	// biome-ignore lint: block is not prefered here
 	if ($("#tour_order_success_message").length > 0) return "success";
+	// biome-ignore lint: block is not prefered here
 	if ($('.ittour_order_tour_price:contains("Готель у стопі")').length > 0) return "hotel_stop";
+	// biome-ignore lint: block is not prefered here
 	if ($('.ittour_order_tour_price:contains("Немає місць в готелі")').length > 0)
 		return "no_hotel_rooms";
+	// biome-ignore lint: block is not prefered here
 	if ($('.ittour_order_tour_price:contains("Немає місць на авіарейсі")').length > 0)
 		return "no_flight_seats";
+	// biome-ignore lint: block is not prefered here
 	if ($('.ittour_order_tour_price:contains("Перевірити ціну не вдалося")').length > 0)
 		return "price_check_failed";
 	return "available";
@@ -396,6 +433,7 @@ interface CountryResponse {
 	country?: string;
 	region?: string;
 	hotel?: string;
+	// biome-ignore lint: this case is valid
 	departure_city?: string;
 }
 
@@ -418,10 +456,11 @@ const useCountries = (
 	transportType: string = DEFAULT_TRANSPORT_TYPE,
 ): UseQueryResult<CountryResponse> => {
 	const baseUrl = getCountriesBaseUrl(hotelRating, transportType);
-	return useJSONPQuery(baseUrl);
+	return useJSONPQuery<CountryResponse>(baseUrl);
 };
 
 interface DepartureCityResponse {
+	// biome-ignore lint: this is a valid case 
 	departure_city?: string;
 	error?: string;
 }
@@ -430,7 +469,7 @@ const getDepartureCitiesBaseUrl = (
 	countryId: string,
 	hotelRating: string = DEFAULT_HOTEL_RATING,
 	transportType: string = DEFAULT_TRANSPORT_TYPE,
-) => {
+): string => {
 	const url = new URL("https://www.ittour.com.ua/tour_search.php");
 	url.searchParams.append("module_type", MODULE_TYPE);
 	url.searchParams.append("id", MERCHANT_ID);
@@ -448,73 +487,104 @@ const useDepartureCities = (
 	transportType: string = DEFAULT_TRANSPORT_TYPE,
 ): UseQueryResult<DepartureCityResponse> => {
 	const baseUrl = getDepartureCitiesBaseUrl(countryId, hotelRating, transportType);
-	return useJSONPQuery(baseUrl);
+	return useJSONPQuery<DepartureCityResponse>(baseUrl);
 };
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
+// biome-ignore lint: this is a valid case 
 export interface ITTourSearchParams {
 	callback: string;
+// biome-ignore lint: this is a valid case 
 	module_type: "tour_search";
 	id: string;
 	ver: "1";
 	type: "2970";
 	theme: "38";
 	action: "package_tour_search";
+// biome-ignore lint: this is a valid case 
 	hotel_rating: string;
+// biome-ignore lint: this is a valid case 
 	items_per_page: string;
 	hotel?: string;
 	region?: string;
+// biome-ignore lint: this is a valid case 
 	child_age?: string;
+// biome-ignore lint: this is a valid case 
 	package_tour_type: "1";
+// biome-ignore lint: this is a valid case 
 	transport_type: string;
 	country: string;
 	food: string;
 	adults: string;
 	children: string;
+// biome-ignore lint: this is a valid case 
 	date_from: string;
+// biome-ignore lint: this is a valid case 
 	date_till: string;
+// biome-ignore lint: this is a valid case 
 	night_from: string;
+// biome-ignore lint: this is a valid case 
 	night_till: string;
+// biome-ignore lint: this is a valid case 
 	price_from: string;
+// biome-ignore lint: this is a valid case 
 	price_till: string;
+// biome-ignore lint: this is a valid case 
 	switch_price: "UAH";
+// biome-ignore lint: this is a valid case 
 	departure_city: string;
+// biome-ignore lint: this is a valid case 
 	module_location_url: string;
 	preview: "1";
 	_: string;
 	page?: number;
 }
 
+// biome-ignore lint: this is a valid case 
 const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
+// biome-ignore lint: this is a valid case 
 	const baseURL = "https://www.ittour.com.ua/tour_search.php";
 
 	const defaultParams = {
+// biome-ignore lint: this is a valid case 
 		module_type: "tour_search",
 		id: MERCHANT_ID,
 		ver: "1",
 		type: "2970",
 		theme: "38",
 		action: "package_tour_search",
+// biome-ignore lint: this is a valid case 
 		hotel_rating: "4+78",
+// biome-ignore lint: this is a valid case 
 		items_per_page: "50",
 		hotel: "",
 		region: "",
+// biome-ignore lint: this is a valid case 
 		child_age: "",
+// biome-ignore lint: this is a valid case 
 		package_tour_type: "1",
+// biome-ignore lint: this is a valid case 
 		transport_type: "2",
 		country: params.country || "318",
 		food: "498+512+560",
 		adults: params.adults || "2",
 		children: params.children || "0",
+// biome-ignore lint: this is a valid case 
 		date_from: params.date_from || "",
+// biome-ignore lint: this is a valid case 
 		date_till: params.date_till || "",
+// biome-ignore lint: this is a valid case 
 		night_from: params.night_from || "7",
+// biome-ignore lint: this is a valid case 
 		night_till: params.night_till || "9",
-		price_from: "0",
+// biome-ignore lint: this is a valid case 
+		price_from: "200000",
+// biome-ignore lint: this is a valid case 
 		price_till: "900000",
+// biome-ignore lint: this is a valid case 
 		switch_price: "UAH",
+// biome-ignore lint: this is a valid case 
 		departure_city: params.departure_city || "2014",
+// biome-ignore lint: this is a valid case 
 		module_location_url: encodeURIComponent(window.location.href),
 		preview: "2",
 		...params,
@@ -523,14 +593,14 @@ const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
 	const url = new URL(baseURL);
 
 	// Add parameters in specific order
-	Object.entries(defaultParams).forEach(([key, value]) => {
+	for (const [key, value] of Object.entries(defaultParams)) {
 		if (value !== undefined && value !== null && !["callback", "_"].includes(key)) {
 			url.searchParams.append(key, value.toString());
 		}
-	});
+	}
 
 	// Fix encoding for specific parameters and ensure proper format
-	let finalUrl = url
+	const finalUrl = url
 		.toString()
 		.replace(/hotel_rating=4%2B78/g, "hotel_rating=4+78")
 		.replace(/food=498%2B512%2B560/g, "food=498+512+560");
@@ -552,11 +622,10 @@ const validateSearchParams = (params: Partial<ITTourSearchParams>): boolean => {
 	];
 
 	const missingParams = requiredParams.filter(
-		(param) => !params[param as keyof ITTourSearchParams],
+		(param): boolean => !params[param as keyof ITTourSearchParams],
 	);
 
 	if (missingParams.length > 0) {
-		console.warn("Missing required parameters:", missingParams);
 		return false;
 	}
 
@@ -566,13 +635,12 @@ const validateSearchParams = (params: Partial<ITTourSearchParams>): boolean => {
 const useFetchSearchResults = (
 	params: Partial<ITTourSearchParams>,
 	onPageLoad?: (results: SearchResultType[]) => void,
-) => {
+): UseQueryResult<SearchResultType[]> => {
 	const baseUrl = useMemo(() => {
 		if (!params || Object.keys(params).length === 0) {
 			return null;
 		}
 		if (!validateSearchParams(params)) {
-			console.error("Invalid search parameters");
 			return null;
 		}
 		return buildITTourSearchURL(params);
@@ -580,7 +648,7 @@ const useFetchSearchResults = (
 
 	return useQuery({
 		queryKey: ["searchResults", baseUrl],
-		queryFn: async () => {
+		queryFn: async (): Promise<SearchResultType[]> => {
 			if (!baseUrl) {
 				return [];
 			}

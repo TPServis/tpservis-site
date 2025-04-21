@@ -12,7 +12,6 @@ import {
 import type { Form } from "@/payload-types";
 import { cn } from "@/utilities/cn";
 // biome-ignore lint: library choice
-import * as cheerio from "cheerio";
 import { format } from "date-fns";
 import dayjs from "dayjs";
 import { CalendarIcon, Loader2, MapPin, Plane } from "lucide-react";
@@ -21,11 +20,8 @@ import { useEffect, useMemo, useState } from "react";
 import type { JSX } from "react/jsx-runtime";
 import type { DateRange } from "react-day-picker";
 import { toast } from "sonner";
-import { HotelGallery } from "./HotelGallery";
 import NightsSelector from "./NightsSelector";
 import PeopleSelector from "./PeopleSelector";
-import RoomCard from "./RoomCard";
-import { Stars } from "./Stars";
 import TransportSelector from "./TransportSelector";
 import {
 	buildITTourSearchURL,
@@ -34,9 +30,9 @@ import {
 	parseSearchResponse,
 	useCountries,
 	useDepartureCities,
-	useITTourRequest,
 	validateSearchParams,
 } from "./utils";
+import { HotelGroup } from "./HotelGroup";
 
 import type { SearchResultType, ITTourSearchParams, Option } from "./utils";
 
@@ -98,11 +94,11 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 	);
 
 	const parsedCountries = useMemo(() => {
-		return parseSearchBilderResponse(countries);
+		return parseSearchBilderResponse(countries ?? {});
 	}, [countries]);
 
 	const parsedDepartureCities = useMemo(() => {
-		return parseSearchBilderResponse(departureCities);
+		return parseSearchBilderResponse(departureCities ?? {});
 	}, [departureCities]);
 
 	useEffect(() => {
@@ -272,6 +268,7 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 
 		return result;
 	};
+		
 	return (
 		<div className="w-full container-spacing">
 			<div className="container-wrapper min-h-[300px] relative">
@@ -288,10 +285,7 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 					</div>
 					<div className="grid grid-cols-12 lg:flex gap-1.5 bg-jaffa-400 p-4 rounded-3xl w-full md:w-[calc(100%-2rem)] mx-auto -translate-y-1/2">
 						<div className="col-span-3">
-							<TransportSelector
-								transportType={transportType}
-								setTransportType={setTransportType}
-							/>
+							<TransportSelector transportType={transportType} setTransportType={setTransportType} />
 						</div>
 						<div className="col-span-9 w-full">
 							<Select value={selectedCountry || ""} onValueChange={setSelectedCountry}>
@@ -362,8 +356,7 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 											key={city.id}
 											value={city.id}
 											className={cn("hover:bg-jaffa-100 rounded-xl", {
-												"bg-jaffa-200 font-bold hover:bg-jaffa-400":
-													selectedDepartureCity === city.id,
+												"bg-jaffa-200 font-bold hover:bg-jaffa-400": selectedDepartureCity === city.id,
 											})}
 										>
 											{city.name}
@@ -520,27 +513,10 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 						{!isLoadingResults &&
 							tourSearchData &&
 							tourSearchData.map((hotel: TourSearchResultType) => (
-								<Hotel key={hotel.title} hotel={hotel} form={form} />
+								<HotelGroup key={hotel.title} hotel={hotel} form={form} />
 							))}
 					</div>
 				)}
-
-				{/* <div
-					id="tour_search_module"
-					className="relative z-10 hidden"
-				></div> */}
-				{/* <Script
-          src="https://code.jquery.com/jquery-1.7.1.min.js"
-          strategy="beforeInteractive"
-          onLoad={() => {
-            ;(window as any).jq = (window as any).jQuery
-          }}
-        />
-        <Script
-          src="https://www.ittour.com.ua/tour_search.jsx?id=DG400625103918756O740800&ver=1&type=2970"
-          // strategy="afterInteractive"
-          onLoad={handleLoad}
-        /> */}
 			</div>
 		</div>
 	);
@@ -557,81 +533,3 @@ const calcRoomsNumber = (results: TourSearchResultType[] | null): number => {
 	return totalRooms;
 };
 
-const Hotel = ({ hotel, form }: { hotel: TourSearchResultType; form: Form }): JSX.Element => {
-	const roomsToShow: number = 6;
-	const [visibleRooms, setVisibleRooms] = useState<number>(roomsToShow);
-	const hasMoreRooms = hotel.rooms.length > visibleRooms;
-
-	const images: string[] = [];
-
-	const handleShowMore = (): void => {
-		setVisibleRooms((prev) => prev + roomsToShow);
-	};
-
-	// getting images for the gallery
-	const tour = useITTourRequest(hotel.rooms[0].id);
-	if (tour.data?.text) {
-		const $ = cheerio.load(tour.data.text);
-
-		$("#gallery_big_img_tour img.gallery_big_img_tour_item").map((_, el) => {
-			const image = $(el).attr("src");
-			if (image) {
-				images.push(image);
-			}
-		});
-	}
-
-	function getRoomPluralForm(roomCount: number): string {
-		if (roomCount === 1) {
-			return "номер";
-		}
-		if (roomCount >= 2 && roomCount <= 4) {
-			return "номери";
-		}
-		return "номерів";
-	}
-
-	return (
-		<div className="mt-20">
-			<div className="mb-4">
-				<div className="flex gap-4 items-center">
-					<HotelGallery images={images} />
-					<div>
-						<div>
-							<h2 className="text-2xl lg:text-4xl font-bold text-astral-800 text-balance">
-								{hotel.title}
-								<div className="inline-block ml-2 align-middle">
-									<Stars number={hotel.stars} />
-								</div>
-							</h2>
-						</div>
-						<div className="flex items-center gap-2 text-shark-500">
-							<p>{hotel.location}</p>
-							<span className="w-1 h-1 rounded-full bg-shark-300" />
-							<p className="text-sm">
-								{hotel.rooms.length} {getRoomPluralForm(hotel.rooms.length)}
-								знайдено
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div className="grid grid-cols-12 gap-4">
-				{hotel.rooms.slice(0, visibleRooms).map((room) => (
-					<RoomCard key={room.id} room={room} hotel={hotel} form={form} />
-				))}
-			</div>
-			{hasMoreRooms && (
-				<div className="mt-8 flex justify-center">
-					<Button
-						onClick={handleShowMore}
-						variant="outline"
-						className="bg-astral-50 hover:bg-astral-100 text-astral-900"
-					>
-						Показати ще {Math.min(6, hotel.rooms.length - visibleRooms)} номерів
-					</Button>
-				</div>
-			)}
-		</div>
-	);
-};
