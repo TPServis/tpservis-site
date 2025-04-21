@@ -161,6 +161,7 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 				setTourSearchData(buildResultResponse(parsedResponse.results));
 			} catch (error) {
 				toast.error("Виникла помилка. Спробуйте пізніше.", error);
+				throw error;
 			} finally {
 				setIsLoadingResults(false);
 			}
@@ -220,6 +221,7 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 			setSearchParams(params);
 		} catch (error) {
 			toast.error("Виникла помилка. Спробуйте пізніше.", error);
+			throw error;
 		}
 	};
 
