@@ -10,13 +10,10 @@ import { NightsSelector } from "./NightsSelector";
 import PeopleSelector from "./PeopleSelector";
 import TransportSelector from "./TransportSelector";
 import {
-	buildITTourSearchURL,
-	fetchJSONPWithCache,
-	parseSearchBilderResponse,
-	parseSearchResponse,
-	useCountries,
-	useDepartureCities,
-	validateSearchParams,
+  buildITTourSearchURL,
+  fetchJSONPWithCache,
+  parseSearchResponse,
+  validateSearchParams,
 } from "./utils";
 import { HotelGroup } from "./HotelGroup";
 import * as v from "valibot";
@@ -24,10 +21,9 @@ import { useState, useEffect, useMemo } from "react";
 import { SearchModule } from "./SearchModule";
 import { SearchSelectField } from "./SearchSelectField";
 import { DatePopover } from "./DatePopover";
-import type { SearchResultType, ITTourSearchParams, Option } from "./utils";
+import type { SearchResultType, ITTourSearchParams } from "./utils";
 import { SearchTooltip } from "./SearchTooltip";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-
+import { useLocationData } from "./hooks/useLocationData";
 import type { TourSearchResultType } from "./types";
 // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350047&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-f33af08145db2441a65b3aedcbbb3b1b&sharding_rule_id=&_=1741030363394
 // https://www.ittour.com.ua/tour_search.php?callback=jQuery1710914436537394425_1741030350049&module_type=tour_search&id=DG400625103918756O740800&ver=1&type=2970&theme=38&action=get_package_tour_order_form&tour_id=03-08-dfdd67c6b7607347a5a9dc3c822b5e84&sharding_rule_id=&_=1741030479830
@@ -62,103 +58,79 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 	const [isLoadingResults, setIsLoadingResults] = useState<boolean>(false);
 	const [loadedResults, setLoadedResults] = useState<number>(0);
 	const [date, setDate] = useState<DateRange | undefined>({
-		from: undefined,
-		to: undefined,
-	});
-	const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
-	const [selectedDepartureCity, setSelectedDepartureCity] = useState<string | null>(null);
+  from: undefined,
+  to: undefined,
+});
 	const [tourSearchData, setTourSearchData] = useState<TourSearchResultType[] | null>(null);
 	const [adultsNumber, setAdultsNumber] = useState<number>(2);
 	const [childrenNumber, setChildrenNumber] = useState<number>(0);
 	const [nights, setNights] = useState<number[]>([7, 9]);
 	const [searchParams, setSearchParams] = useState<Partial<ITTourSearchParams>>({});
 
-	const { data: countries, isLoading: isLoadingCountries } = useCountries(
-		HOTEL_RATING,
-		transportType,
-	);
-	const { data: departureCities, isLoading: isLoadingDepartureCities } = useDepartureCities(
-		selectedCountry || "",
-		HOTEL_RATING,
-		transportType,
-	);
 
-	const parsedCountries = useMemo(() => {
-		return parseSearchBilderResponse(countries ?? {});
-	}, [countries]);
+const {
+  parsedCountries,
+  parsedDepartureCities,
+  isLoadingCountries,
+  isLoadingDepartureCities,
+  selectedCountry,
+  selectedDepartureCity,
+  setSelectedCountry,
+  setSelectedDepartureCity,
+} = useLocationData(transportType);
 
-	const parsedDepartureCities = useMemo(() => {
-		return parseSearchBilderResponse(departureCities ?? {});
-	}, [departureCities]);
+	
+useEffect(() => {
+  // biome-ignore lint: complexity
+  const fetchResults = async (): Promise<void> => {
+    if (!searchParams || Object.keys(searchParams).length === 0) {
+      return;
+    }
 
-	useEffect(() => {
-		if (parsedCountries?.countries && parsedCountries?.countries?.length > 0 && !selectedCountry) {
-			setSelectedCountry(parsedCountries.countries[0].id);
-		}
-	}, [parsedCountries, selectedCountry]);
+    if (!validateSearchParams(searchParams)) {
+      toast.error("Невірні параметри пошуку");
+      return;
+    }
 
-	useEffect(() => {
-		if (
-			parsedDepartureCities?.departureCities &&
-			parsedDepartureCities?.departureCities?.length > 0 &&
-			!selectedDepartureCity
-		) {
-			const kyiv = parsedDepartureCities.departureCities.find((city) => city.name === "Київ");
-			setSelectedDepartureCity(kyiv?.id || parsedDepartureCities.departureCities[0].id);
-		}
-	}, [parsedDepartureCities, selectedDepartureCity]);
+    try {
+      setIsLoadingResults(true);
 
-	useEffect(() => {
-		// biome-ignore lint: complexity
-		const fetchResults = async (): Promise<void> => {
-			if (!searchParams || Object.keys(searchParams).length === 0) {
-				return;
-			}
+      const baseUrl = buildITTourSearchURL(searchParams);
 
-			if (!validateSearchParams(searchParams)) {
-				toast.error("Невірні параметри пошуку");
-				return;
-			}
+      // Check cache first
+      const cachedData = searchCache.get(baseUrl);
+      if (cachedData && Date.now() - cachedData.timestamp < CACHE_DURATION) {
+        setLoadedResults(cachedData.results.length);
+        setTourSearchData(buildResultResponse(cachedData.results));
+        setIsLoadingResults(false);
+        return;
+      }
 
-			try {
-				setIsLoadingResults(true);
+      const response = await fetchJSONPWithCache(baseUrl);
+      const parsedResponse = parseSearchResponse(response);
 
-				const baseUrl = buildITTourSearchURL(searchParams);
+      if (parsedResponse.status === "400" || !parsedResponse.results) {
+        throw new Error("Failed to parse search results");
+      }
 
-				// Check cache first
-				const cachedData = searchCache.get(baseUrl);
-				if (cachedData && Date.now() - cachedData.timestamp < CACHE_DURATION) {
-					setLoadedResults(cachedData.results.length);
-					setTourSearchData(buildResultResponse(cachedData.results));
-					setIsLoadingResults(false);
-					return;
-				}
+      // Update cache
+      searchCache.set(baseUrl, {
+        results: parsedResponse.results,
+        timestamp: Date.now(),
+      });
 
-				const response = await fetchJSONPWithCache(baseUrl);
-				const parsedResponse = parseSearchResponse(response);
+      setLoadedResults(parsedResponse.results.length);
+      setTourSearchData(buildResultResponse(parsedResponse.results));
+    } catch (error) {
+      toast.error("Виникла помилка. Спробуйте пізніше.", error);
+      throw error;
+    } finally {
+      setIsLoadingResults(false);
+    }
+  };
 
-				if (parsedResponse.status === "400" || !parsedResponse.results) {
-					throw new Error("Failed to parse search results");
-				}
-
-				// Update cache
-				searchCache.set(baseUrl, {
-					results: parsedResponse.results,
-					timestamp: Date.now(),
-				});
-
-				setLoadedResults(parsedResponse.results.length);
-				setTourSearchData(buildResultResponse(parsedResponse.results));
-			} catch (error) {
-				toast.error("Виникла помилка. Спробуйте пізніше.", error);
-				throw error;
-			} finally {
-				setIsLoadingResults(false);
-			}
-		};
-
-		fetchResults();
-	}, [searchParams]);
+  fetchResults();
+}, [searchParams]);
 
 
 	const searchQuerySchema = v.object({

@@ -11,10 +11,10 @@
 	},
 	"formatter": {
 		"enabled": true,
-		"formatWithErrors": false,
+		"formatWithErrors": true,
 		"ignore": [],
 		"attributePosition": "multiline",
-		"indentStyle": "tab",
+		"indentStyle": "space",
 		"indentWidth": 2,
 		"lineWidth": 100,
 		"lineEnding": "lf"

@@ -7,7 +7,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/utilities/cn";
-import type { Option } from "./utils";
+import type { Option } from "./types";
 
 type SearchSelectFieldProps = {
 	options: Option[];

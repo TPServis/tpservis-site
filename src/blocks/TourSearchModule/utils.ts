@@ -4,13 +4,15 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import * as cheerio from "cheerio";
 import { addDays, format, parse } from "date-fns";
 import { useMemo } from "react";
+import type { ResponsesStatus } from "./types";
+
+
 
 const DEFAULT_HOTEL_RATING = "4+78";
 const DEFAULT_TRANSPORT_TYPE = "2";
 const MODULE_TYPE = "tour_search";
 const MERCHANT_ID = "DG400625103918756O740800";
 
-type ResponsesStatus = "200" | "400";
 
 const getBaseUrl = (url: string): string => {
 	const urlObj = new URL(url);
@@ -170,65 +172,63 @@ const searchSelectors = {
 
 const parseSearchResponse = (response: Content): ParseSearchResponse => {
 	try {
-		const validContent = getValidContent(response);
-		if (!validContent) {
-			throw new Error("Invalid content");
-		}
-		const $ = cheerio.load(validContent);
+  const validContent = getValidContent(response);
+  if (!validContent) {
+    throw new Error("Invalid content");
+  }
+  const $ = cheerio.load(validContent);
 
-		const results: SearchResultType[] = [];
+  const results: SearchResultType[] = [];
 
+  $(searchSelectors.items).each((_, item): void => {
+    //! this is necessary to skip invalid items and cannot return an error as it will break the loop
+    if (!isValidSearchItem($(item))) {
+      return;
+    }
 
-		$(searchSelectors.items).each((_, item): void => {
-			//! this is necessary to skip invalid items and cannot return an error as it will break the loop
-			if (!isValidSearchItem($(item))) {
-				return;
-			}
+    const title = $(item).find(searchSelectors.title).text().trim();
+    const id = $(item).find(searchSelectors.id).attr("id");
 
-			const title = $(item).find(searchSelectors.title).text().trim();
-			const id = $(item).find(searchSelectors.id).attr("id");
+    if (!(title && id)) {
+      return;
+    }
 
-			if (!(title && id)) {
-				return;
-			}
+    const departureDate = $(item).find(searchSelectors.date_from).text().trim();
+    const nights = $(item).find(searchSelectors.nights).text().trim();
+    const returnDate = getReturnDate(Number(nights), departureDate);
 
-			const departureDate = $(item).find(searchSelectors.date_from).text().trim();
-			const nights = $(item).find(searchSelectors.nights).text().trim();
-			const returnDate = getReturnDate(Number(nights), departureDate);
+    const result = {
+      title,
+      id,
+      // biome-ignore lint: this is a valid case
+      room_title: $(item).find(searchSelectors.room_title).attr("title"),
+      rating: $(item).find(searchSelectors.rating).text().trim(),
+      // biome-ignore lint: this is a valid case
+      price_usd: $(item).find(searchSelectors.price).text().trim(),
+      // biome-ignore lint: this is a valid case
+      price_uah: $(item).find(searchSelectors.price_uah).text().trim(),
+      nights: $(item).find(searchSelectors.nights).text().trim(),
+      // biome-ignore lint: this is a valid case
+      meal_type: $(item).find(searchSelectors.meal_type).text().trim(),
+      // biome-ignore lint: this is a valid case
+      date_from: departureDate,
+      // biome-ignore lint: this is a valid case
+      date_till: returnDate,
+      location: $(item).find(searchSelectors.location).text().trim(),
+    };
 
-			const result = {
-				title,
-				id,
-				// biome-ignore lint: this is a valid case
-				room_title: $(item).find(searchSelectors.room_title).attr("title"),
-				rating: $(item).find(searchSelectors.rating).text().trim(),
-				// biome-ignore lint: this is a valid case
-				price_usd: $(item).find(searchSelectors.price).text().trim(),
-				// biome-ignore lint: this is a valid case
-				price_uah: $(item).find(searchSelectors.price_uah).text().trim(),
-				nights: $(item).find(searchSelectors.nights).text().trim(),
-				// biome-ignore lint: this is a valid case
-				meal_type: $(item).find(searchSelectors.meal_type).text().trim(),
-				// biome-ignore lint: this is a valid case
-				date_from: departureDate,
-				// biome-ignore lint: this is a valid case
-				date_till: returnDate,
-				location: $(item).find(searchSelectors.location).text().trim(),
-			};
+    results.push(result);
+  });
 
-			results.push(result);
-		});
-
-		return {
-			results,
-			status: "200",
-		};
-	} catch (error) {
-		console.error("Error parsing search response:", error);
-		return {
-			status: "400",
-		};
-	}
+  return {
+    results,
+    status: "200",
+  };
+} catch (error) {
+  return {
+    status: "400",
+  };
+}
 };
 
 const getReturnDate = (nights: number, departureDate: string): string => {
@@ -255,86 +255,8 @@ const selectors = {
 	nights: ".ittour_order_tour_info .ittour_order_right_list .ittour_order_description",
 };
 
-export type Option = {
-	id: string;
-	name: string;
-};
 
-type GetOptionsResponse = {
-	options?: Option[];
-	status: ResponsesStatus;
-};
 
-const getOptions = (htmlString: string): GetOptionsResponse => {
-	try {
-		const $ = cheerio.load(htmlString);
-		const result: Option[] = [];
-
-		$("option").each((_, item): void => {
-			const id = $(item).attr("value");
-			const name = $(item).text().trim();
-
-			if (!(id && name)) {
-				throw new Error("No valid id or name found");
-			}
-
-			result.push({ id, name });
-		});
-
-		return {
-			options: result,
-			status: "200",
-		};
-	} catch (error) {
-		return {
-			status: "400",
-		};
-	}
-};
-
-type ParserSearchBilderResponse = {
-	countries?: Option[];
-	departureCities?: Option[];
-	status?: "200" | "400";
-};
-
-type SearchBilderResponse = CountryResponse;
-const parseSearchBilderResponse = (response: SearchBilderResponse): ParserSearchBilderResponse => {
-	try {
-		if (!response) {
-			return {
-				countries: [],
-				departureCities: [],
-				status: "400",
-			};
-		}
-
-		const { country, departure_city } = response;
-
-		let countries: Option[] = [];
-		let departureCities: Option[] = [];
-
-		if (country) {
-			const countriesResponse = getOptions(country);
-			countries = countriesResponse.options ?? [];
-		}
-
-		if (departure_city) {
-			const departureCitiesResponse = getOptions(departure_city);
-			departureCities = departureCitiesResponse.options ?? [];
-		}
-
-		return {
-			countries: countries ?? [],
-			departureCities: departureCities ?? [],
-			status: "200",
-		};
-	} catch (error) {
-		return {
-			status: "400",
-		};
-	}
-};
 
 type Content = { text: string } | string;
 const getValidContent = (content: Content): string | null => {
@@ -670,17 +592,15 @@ const useFetchSearchResults = (
 };
 
 export {
-	useITTourRequest,
-	parseITTourResponse,
-	fetchJSONP,
-	createTimestampCallback,
-	parseSearchResponse,
-	buildITTourSearchURL,
-	parseSearchBilderResponse,
-	useCountries,
-	useDepartureCities,
-	getOptions,
-	useFetchSearchResults,
-	validateSearchParams,
-	fetchJSONPWithCache,
+  useITTourRequest,
+  parseITTourResponse,
+  fetchJSONP,
+  createTimestampCallback,
+  parseSearchResponse,
+  buildITTourSearchURL,
+  useCountries,
+  useDepartureCities,
+  useFetchSearchResults,
+  validateSearchParams,
+  fetchJSONPWithCache,
 };
