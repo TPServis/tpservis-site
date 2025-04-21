@@ -2,13 +2,6 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import type { Form } from "@/payload-types";
 import { cn } from "@/utilities/cn";
 // biome-ignore lint: library choice
@@ -33,7 +26,10 @@ import {
 	validateSearchParams,
 } from "./utils";
 import { HotelGroup } from "./HotelGroup";
+import * as v from "valibot";
 
+import { SearchModule } from "./SearchModule";
+import { SearchSelectField } from "./SearchSelectField";
 import type { SearchResultType, ITTourSearchParams, Option } from "./utils";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -168,59 +164,58 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 		};
 
 		fetchResults();
-	}, [searchParams]); // No need for CACHE_DURATION and searchCache in deps as they're now outside component
+	}, [searchParams]);
+
+
+	const searchQuerySchema = v.object({
+		date_from: v.pipe(v.string(), v.nonEmpty("Дата відправлення є обов'язковою")),
+		date_till: v.pipe(v.string(), v.nonEmpty("Дата прибуття є обов'язковою")),
+		adults: v.pipe(v.string()),
+		children: v.pipe(v.string()),
+		country: v.pipe(v.string(), v.nonEmpty("Країна є обов'язковою")),
+		departure_city: v.pipe(v.string(), v.nonEmpty("Місто відправлення є обов'язковою")),
+		night_from: v.pipe(v.string()),
+		night_till: v.pipe(v.string()),
+		transport_type: v.pipe(v.string()),
+		items_per_page: v.pipe(v.string()),
+	});
+
+	type SearchQuery = v.InferOutput<typeof searchQuerySchema>;
+
+	const getSearchParams = (): Partial<SearchQuery> => {
+		const formattedDataFrom = date?.from ? format(date?.from, "dd.MM.yy") : "";
+		const formattedDataTo = date?.to ? format(date?.to, "dd.MM.yy") : "";
+
+		return v.parse(searchQuerySchema, {
+			// biome-ignore lint: library choice
+			date_from: formattedDataFrom,
+			// biome-ignore lint: library choice
+			date_till: formattedDataTo,
+			adults: adultsNumber.toString(),
+			children: childrenNumber.toString(),
+			// biome-ignore lint: library choice
+			departure_city: selectedDepartureCity || "",
+			country: selectedCountry || "",
+			// biome-ignore lint: library choice
+			night_from: nights[0].toString(),
+			// biome-ignore lint: library choice
+			night_till: nights[1].toString(),
+			// biome-ignore lint: library choice
+			transport_type: transportType,
+			// biome-ignore lint: library choice
+			items_per_page: "100",
+		});
+	};
 
 	const runSearch = (): void => {
-		if (!(date?.from || date?.to)) {
-			toast.error("Будь ласка, оберіть дату");
-			return;
-		}
-
-		if (!(selectedCountry || selectedDepartureCity)) {
-			toast.error("Будь ласка, оберіть країну та місто відправлення");
-			return;
-		}
-
-		if (nights[1] <= 3) {
-			toast.error("Кількість ночей має бути не менше 3.");
-			return;
-		}
-
-		if (adultsNumber === 0) {
-			toast.error("Будь ласка, оберіть кількість дорослих");
-			return;
-		}
-
 		try {
 			setLoadedResults(0);
 			setTourSearchData(null);
-
-			const formattedDataFrom = dayjs(date?.from).format("DD.MM.YY");
-			const formattedDataTo = dayjs(date?.to).format("DD.MM.YY");
-
-			const params: Partial<ITTourSearchParams> = {
-				// biome-ignore lint: library choice
-				date_from: formattedDataFrom,
-				// biome-ignore lint: library choice
-				date_till: formattedDataTo,
-				adults: adultsNumber.toString(),
-				children: childrenNumber.toString(),
-				// biome-ignore lint: library choice
-				departure_city: selectedDepartureCity || "",
-				country: selectedCountry || "",
-				// biome-ignore lint: library choice
-				night_from: nights[0].toString(),
-				// biome-ignore lint: library choice
-				night_till: nights[1].toString(),
-				// biome-ignore lint: library choice
-				transport_type: transportType,
-				// biome-ignore lint: library choice
-				items_per_page: "100",
-			};
-
+			const params = getSearchParams();
 			setSearchParams(params);
 		} catch (error) {
-			toast.error("Виникла помилка. Спробуйте пізніше.", error);
+			console.error(error);
+			toast.error(error.message);
 			throw error;
 		}
 	};
@@ -274,98 +269,28 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 	return (
 		<div className="w-full container-spacing">
 			<div className="container-wrapper min-h-[300px] relative">
-				<div className="w-full h-[300px] relative mb-40">
-					<div className="w-full h-full overflow-hidden rounded-4xl">
-						<Image
-							src="https://o0z4coknhf.ufs.sh/f/UucILLerskLA60WL4Z0DxYO4iVTzFcfGgbECp9eH6Z8yrIAn"
-							alt="ITTour"
-							className="w-full h-full object-cover"
-							width={1920}
-							height={1080}
-							priority={true}
-						/>
-					</div>
-					<div className="grid grid-cols-12 lg:flex gap-1.5 bg-jaffa-400 p-4 rounded-3xl w-full md:w-[calc(100%-2rem)] mx-auto -translate-y-1/2">
+				<SearchModule runSearch={runSearch}>
+					<>
 						<div className="col-span-3">
 							<TransportSelector transportType={transportType} setTransportType={setTransportType} />
 						</div>
 						<div className="col-span-9 w-full">
-							<Select value={selectedCountry || ""} onValueChange={setSelectedCountry}>
-								<TooltipProvider>
-									<Tooltip delayDuration={600}>
-										<TooltipTrigger asChild={true}>
-											<SelectTrigger className="w-full border-none bg-jaffa-50  text-jaffa-900 font-bold rounded-xl">
-												<div
-													className={cn("flex gap-2 items-center transition-all duration-100", {
-														"blur-sm": isLoadingCountries,
-													})}
-												>
-													<Plane className="h-4" />
-													<SelectValue placeholder="Select a country" />
-												</div>
-											</SelectTrigger>
-										</TooltipTrigger>
-										<TooltipContent
-											className="bg-jaffa-50 text-jaffa-900 rounded-lg border-none font-bold text-sm"
-											sideOffset={8}
-										>
-											<p>Оберіть країну призначення</p>
-										</TooltipContent>
-									</Tooltip>
-								</TooltipProvider>
-								<SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
-									{parsedCountries?.countries?.map((country: Option) => (
-										<SelectItem
-											key={country.id}
-											value={country.id}
-											className={cn("hover:bg-jaffa-100 rounded-xl", {
-												"bg-jaffa-200 font-bold hover:bg-jaffa-400": selectedCountry === country.id,
-											})}
-										>
-											{country.name}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
+							<SearchSelectField
+								options={parsedCountries?.countries ?? []}
+								selectedOption={selectedCountry || ""}
+								setSelectedOption={setSelectedCountry}
+								isLoadingOptions={isLoadingCountries}
+								icon={<Plane className="h-4" />}
+							/>
 						</div>
 						<div className="col-span-12 w-full">
-							<Select value={selectedDepartureCity || ""} onValueChange={setSelectedDepartureCity}>
-								<TooltipProvider>
-									<Tooltip delayDuration={600}>
-										<TooltipTrigger asChild={true}>
-											<SelectTrigger className="w-full border-none bg-jaffa-50 text-jaffa-900 font-bold rounded-xl">
-												<div
-													className={cn("flex gap-2 items-center transition-all duration-100", {
-														"blur-sm": isLoadingDepartureCities,
-													})}
-												>
-													<MapPin className="h-4" />
-													<SelectValue placeholder="Select a departure city" />
-												</div>
-											</SelectTrigger>
-										</TooltipTrigger>
-										<TooltipContent
-											className="bg-jaffa-50 text-jaffa-900 rounded-lg border-none font-bold text-sm"
-											sideOffset={8}
-										>
-											<p>Оберіть місто відправлення</p>
-										</TooltipContent>
-									</Tooltip>
-								</TooltipProvider>
-								<SelectContent className="bg-jaffa-50 text-jaffa-900 rounded-2xl border-none">
-									{parsedDepartureCities?.departureCities?.map((city: Option) => (
-										<SelectItem
-											key={city.id}
-											value={city.id}
-											className={cn("hover:bg-jaffa-100 rounded-xl", {
-												"bg-jaffa-200 font-bold hover:bg-jaffa-400": selectedDepartureCity === city.id,
-											})}
-										>
-											{city.name}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
+							<SearchSelectField
+								options={parsedDepartureCities?.departureCities ?? []}
+								selectedOption={selectedDepartureCity || ""}
+								setSelectedOption={setSelectedDepartureCity}
+								isLoadingOptions={isLoadingDepartureCities}
+								icon={<MapPin className="h-4" />}
+							/>
 						</div>
 						<div className="grid gap-2 col-span-12 w-full">
 							<Popover>
@@ -488,15 +413,8 @@ export const TourSearchModule = ({ form }: { form: Form }): JSX.Element => {
 								</Tooltip>
 							</TooltipProvider>
 						</div>
-
-						<Button
-							className="rounded-xl bg-jaffa-900 text-jaffa-50 col-span-12 font-bold"
-							onClick={runSearch}
-						>
-							Знайти тури
-						</Button>
-					</div>
-				</div>
+					</>
+				</SearchModule>
 
 				{(isLoadingResults || (tourSearchData && tourSearchData.length > 0)) && (
 					<div className="">

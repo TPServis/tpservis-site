@@ -149,9 +149,6 @@ type ParseSearchResponse = {
 	results?: SearchResultType[];
 	status: ResponsesStatus;
 };
-// main_image:
-//   'ittour_order_block_content_box_right_frame > .ittour_order_block_content_box_right_frame_rounde > img.ittour_order_rounded_image',
-// image_gallery: '#gallery_big_img_tour',
 
 const searchSelectors = {
 	items: "tbody > tr",
@@ -581,7 +578,7 @@ const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
 		// biome-ignore lint: this is a valid case
 		night_till: params.night_till || "9",
 		// biome-ignore lint: this is a valid case
-		price_from: "2000",
+		price_from: "20000",
 		// biome-ignore lint: this is a valid case
 		price_till: "900000",
 		// biome-ignore lint: this is a valid case
