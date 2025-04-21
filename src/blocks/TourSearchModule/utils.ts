@@ -1,4 +1,4 @@
-import {useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import type { UseQueryResult } from "@tanstack/react-query";
 // biome-ignore lint: import
 import * as cheerio from "cheerio";
@@ -20,7 +20,7 @@ const getBaseUrl = (url: string): string => {
 	return urlObj.toString();
 };
 
-// biome-ignore lint: this is a valid case 
+// biome-ignore lint: this is a valid case
 const useITTourRequest = (tourId: string): UseQueryResult<any> => {
 	const { timestamp, jQueryCallback } = createTimestampCallback();
 
@@ -46,7 +46,7 @@ const createTimestampCallback = (): { timestamp: number; jQueryCallback: string 
 	return { timestamp, jQueryCallback };
 };
 
-// biome-ignore lint: this is a valid case 
+// biome-ignore lint: this is a valid case
 const fetchJSONP = (url: string, jQueryCallback: string): Promise<Content> => {
 	return new Promise((resolve, reject): void => {
 		(window as Window & typeof globalThis)[jQueryCallback] = (data: Content): void => {
@@ -75,7 +75,7 @@ const fetchJSONP = (url: string, jQueryCallback: string): Promise<Content> => {
 };
 
 // Modified JSONP fetcher that accepts base URL
-// biome-ignore lint: this is a valid case 
+// biome-ignore lint: this is a valid case
 const fetchJSONPWithCache = (baseUrl: string): Promise<Content> => {
 	const { timestamp, jQueryCallback } = createTimestampCallback();
 
@@ -103,7 +103,7 @@ const fetchJSONPWithCache = (baseUrl: string): Promise<Content> => {
 	return fetchJSONP(fullUrl, jQueryCallback);
 };
 
-// biome-ignore lint: this is a valid case 
+// biome-ignore lint: this is a valid case
 export const useJSONPQuery = <T = unknown>(url: string): UseQueryResult<T> => {
 	const baseUrl = getBaseUrl(url);
 
@@ -126,24 +126,24 @@ const isValidSearchItem = (row: Row): boolean => {
 };
 
 export type SearchResultType = {
-	title: string;
-	id: string;
-	// biome-ignore lint: this is a valid case 
-	room_title?: string;
-	rating?: string;
-	// biome-ignore lint: this is a valid case 
-	price_usd?: string;
-	// biome-ignore lint: this is a valid case 
-	price_uah?: string;
-	nights?: string;
-	// biome-ignore lint: this is a valid case 
-	meal_type?: string;
-	// biome-ignore lint: this is a valid case 
-	date_from?: string;
-	// biome-ignore lint: this is a valid case 
-	date_till?: string;
-	location?: string;
-};
+		title: string;
+		id: string;
+		// biome-ignore lint: this is a valid case
+		room_title?: string;
+		rating?: string;
+		// biome-ignore lint: this is a valid case
+		price_usd?: string;
+		// biome-ignore lint: this is a valid case
+		price_uah?: string;
+		nights?: string;
+		// biome-ignore lint: this is a valid case
+		meal_type?: string;
+		// biome-ignore lint: this is a valid case
+		date_from?: string;
+		// biome-ignore lint: this is a valid case
+		date_till?: string;
+		location?: string;
+	};
 
 type ParseSearchResponse = {
 	results?: SearchResultType[];
@@ -157,16 +157,16 @@ const searchSelectors = {
 	items: "tbody > tr",
 	title: "td:nth-child(4) > div",
 	id: "td:nth-child(2) > input",
-	// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	room_title: "td:nth-child(6)",
 	rating: "td:nth-child(5)",
 	price: "td:nth-child(11) > a > span:nth-child(1) > span:nth-child(1)",
-	// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	price_uah: "td:nth-child(11) > a > span:nth-child(2) > span:nth-child(1)",
 	nights: "td:nth-child(8)",
-	// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	meal_type: "td:nth-child(7)",
-	// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	date_from: "td:nth-child(10)",
 	location: "td:nth-child(3)",
 };
@@ -174,22 +174,26 @@ const searchSelectors = {
 const parseSearchResponse = (response: Content): ParseSearchResponse => {
 	try {
 		const validContent = getValidContent(response);
-
-		const $ = cheerio.load(validContent ?? "");
+		if (!validContent) {
+			throw new Error("Invalid content");
+		}
+		const $ = cheerio.load(validContent);
 
 		const results: SearchResultType[] = [];
 
-		$(searchSelectors.items).each((_, item) => {
+
+		$(searchSelectors.items).each((_, item): void => {
+			//! this is necessary to skip invalid items and cannot return an error as it will break the loop
 			if (!isValidSearchItem($(item))) {
-				throw new Error("Invalid search item");
-			};
+				return;
+			}
 
 			const title = $(item).find(searchSelectors.title).text().trim();
 			const id = $(item).find(searchSelectors.id).attr("id");
 
 			if (!(title && id)) {
-				throw new Error("No valid title or id found");
-			};
+				return;
+			}
 
 			const departureDate = $(item).find(searchSelectors.date_from).text().trim();
 			const nights = $(item).find(searchSelectors.nights).text().trim();
@@ -198,19 +202,19 @@ const parseSearchResponse = (response: Content): ParseSearchResponse => {
 			const result = {
 				title,
 				id,
-				// biome-ignore lint: this is a valid case 
+				// biome-ignore lint: this is a valid case
 				room_title: $(item).find(searchSelectors.room_title).attr("title"),
 				rating: $(item).find(searchSelectors.rating).text().trim(),
-				// biome-ignore lint: this is a valid case 
+				// biome-ignore lint: this is a valid case
 				price_usd: $(item).find(searchSelectors.price).text().trim(),
-				// biome-ignore lint: this is a valid case 
+				// biome-ignore lint: this is a valid case
 				price_uah: $(item).find(searchSelectors.price_uah).text().trim(),
 				nights: $(item).find(searchSelectors.nights).text().trim(),
-				// biome-ignore lint: this is a valid case 
+				// biome-ignore lint: this is a valid case
 				meal_type: $(item).find(searchSelectors.meal_type).text().trim(),
-				// biome-ignore lint: this is a valid case 
+				// biome-ignore lint: this is a valid case
 				date_from: departureDate,
-				// biome-ignore lint: this is a valid case 
+				// biome-ignore lint: this is a valid case
 				date_till: returnDate,
 				location: $(item).find(searchSelectors.location).text().trim(),
 			};
@@ -223,6 +227,7 @@ const parseSearchResponse = (response: Content): ParseSearchResponse => {
 			status: "200",
 		};
 	} catch (error) {
+		console.error("Error parsing search response:", error);
 		return {
 			status: "400",
 		};
@@ -334,7 +339,6 @@ const parseSearchBilderResponse = (response: SearchBilderResponse): ParserSearch
 	}
 };
 
-
 type Content = { text: string } | string;
 const getValidContent = (content: Content): string | null => {
 	if (content instanceof Object && "text" in content && typeof content.text === "string") {
@@ -349,7 +353,7 @@ const getValidContent = (content: Content): string | null => {
 	return null;
 };
 
-// biome-ignore lint: this is a valid case 
+// biome-ignore lint: this is a valid case
 const parseITTourResponse = (response: Content): object => {
 	try {
 		const $ = cheerio.load(getValidContent(response) ?? "");
@@ -460,7 +464,7 @@ const useCountries = (
 };
 
 interface DepartureCityResponse {
-	// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	departure_city?: string;
 	error?: string;
 }
@@ -490,101 +494,101 @@ const useDepartureCities = (
 	return useJSONPQuery<DepartureCityResponse>(baseUrl);
 };
 
-// biome-ignore lint: this is a valid case 
+// biome-ignore lint: this is a valid case
 export interface ITTourSearchParams {
 	callback: string;
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	module_type: "tour_search";
 	id: string;
 	ver: "1";
 	type: "2970";
 	theme: "38";
 	action: "package_tour_search";
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	hotel_rating: string;
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	items_per_page: string;
 	hotel?: string;
 	region?: string;
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	child_age?: string;
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	package_tour_type: "1";
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	transport_type: string;
 	country: string;
 	food: string;
 	adults: string;
 	children: string;
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	date_from: string;
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	date_till: string;
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	night_from: string;
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	night_till: string;
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	price_from: string;
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	price_till: string;
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	switch_price: "UAH";
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	departure_city: string;
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	module_location_url: string;
 	preview: "1";
 	_: string;
 	page?: number;
 }
 
-// biome-ignore lint: this is a valid case 
+// biome-ignore lint: this is a valid case
 const buildITTourSearchURL = (params: Partial<ITTourSearchParams>): string => {
-// biome-ignore lint: this is a valid case 
+	// biome-ignore lint: this is a valid case
 	const baseURL = "https://www.ittour.com.ua/tour_search.php";
 
 	const defaultParams = {
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
 		module_type: "tour_search",
 		id: MERCHANT_ID,
 		ver: "1",
 		type: "2970",
 		theme: "38",
 		action: "package_tour_search",
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
 		hotel_rating: "4+78",
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
 		items_per_page: "50",
 		hotel: "",
 		region: "",
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
 		child_age: "",
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
 		package_tour_type: "1",
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
 		transport_type: "2",
 		country: params.country || "318",
 		food: "498+512+560",
 		adults: params.adults || "2",
 		children: params.children || "0",
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
 		date_from: params.date_from || "",
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
 		date_till: params.date_till || "",
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
 		night_from: params.night_from || "7",
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
 		night_till: params.night_till || "9",
-// biome-ignore lint: this is a valid case 
-		price_from: "200000",
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
+		price_from: "2000",
+		// biome-ignore lint: this is a valid case
 		price_till: "900000",
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
 		switch_price: "UAH",
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
 		departure_city: params.departure_city || "2014",
-// biome-ignore lint: this is a valid case 
+		// biome-ignore lint: this is a valid case
 		module_location_url: encodeURIComponent(window.location.href),
 		preview: "2",
 		...params,
