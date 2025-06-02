@@ -1,5 +1,4 @@
 @import "./_rich-text";
-@import "./_it-tour";
 
 html body[data-scroll-locked] {
   margin-right: 0 !important;
