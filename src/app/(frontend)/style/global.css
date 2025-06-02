@@ -1,7 +1,5 @@
 @import "./_rich-text";
-@import "tailwindcss";
 @import "./_it-tour";
-@plugin 'tailwindcss-animate';
 
 html body[data-scroll-locked] {
   margin-right: 0 !important;

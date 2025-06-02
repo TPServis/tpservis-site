@@ -44,22 +44,7 @@ export const TourSearchModuleITTourComponent = (): JSX.Element => {
           onLoad={handleScriptLoad}
           onError={handleScriptError}
         />
-
-        {/* <div id="showcase_hotprice_v3_showcase_module" />
-        <Script
-          src="https://www.ittour.com.ua/showcase_search.jsx?id=8D642313948G021142197N12&type=110&num=1"
-          strategy="afterInteractive"
-        /> */}
       </div>
     </div>
   );
 };
-
-// (<div id="itTourWidgetWrapper" data-agency-id="16227"></div>) < script;
-// id = "itTourWidgetScriptJsx";
-// tourTab = "1";
-// euroTab = "1";
-// guidedTab = "1";
-// ticketsTab = "1";
-// src="https://www.ittour.com.ua/tour_search.jsx?id=D4854657771G08080956N20&ver=3">
-// </script>

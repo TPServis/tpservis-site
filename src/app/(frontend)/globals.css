@@ -1,8 +1,7 @@
-@tailwind utilities;
-
 @import "tailwindcss";
 @import "./tokens";
 @import "./style/global";
+@tailwind utilities;
 
 @theme inline {
   --color-heading: var(--color-astral-600);
