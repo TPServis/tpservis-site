@@ -25,6 +25,7 @@ import { ServicesList } from '@/blocks/ServicesList/Component'
 import { SideListWithIcons } from '@/blocks/SideListWithIcons/Component'
 import { TextAside } from '@/blocks/TextAside/Component'
 import { TourSearchModuleComponent as TourSearchModule } from '@/blocks/TourSearchModule/Component'
+import { TourSearchModuleITTourComponent as TourSearchModuleITTour } from "@/blocks/TourSearchModuleITTour/Component";
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -48,8 +49,9 @@ const blockComponents = {
   editorialFullFrame: EditorialFullFrame,
   editorialExpandedList: EditorialExpandedList,
   tourSearchModule: TourSearchModule,
+  tourSearchModuleITTour: TourSearchModuleITTour,
   externalMedia: ExternalMedia,
-}
+};
 
 export const RenderBlocks: React.FC<{
   blocks: Page['layout'][0][]
