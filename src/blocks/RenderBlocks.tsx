@@ -26,6 +26,7 @@ import { SideListWithIcons } from '@/blocks/SideListWithIcons/Component'
 import { TextAside } from '@/blocks/TextAside/Component'
 import { TourSearchModuleComponent as TourSearchModule } from '@/blocks/TourSearchModule/Component'
 import { TourSearchModuleITTourComponent as TourSearchModuleITTour } from "@/blocks/TourSearchModuleITTour/Component";
+import { ITTourShowcaseModuleComponent as ITTourShowcaseModule } from "@/blocks/ITTourShowcaseModule/Component";
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -50,6 +51,7 @@ const blockComponents = {
   editorialExpandedList: EditorialExpandedList,
   tourSearchModule: TourSearchModule,
   tourSearchModuleITTour: TourSearchModuleITTour,
+  itTourShowcaseModule: ITTourShowcaseModule,
   externalMedia: ExternalMedia,
 };
 

@@ -14,6 +14,7 @@ import { ServicesList } from "@/blocks/ServicesList/config";
 import { SideListWithIcons } from "@/blocks/SideListWithIcons/config";
 import { TourSearchModule } from "@/blocks/TourSearchModule/config";
 import { TourSearchModuleITTour } from "@/blocks/TourSearchModuleITTour/config";
+import { ITTourShowcaseModule } from "@/blocks/ITTourShowcaseModule/config";
 import { slugField } from "@/fields/slug";
 import { hero } from "@/heros/config";
 import { authenticated } from "../../access/authenticated";
@@ -107,6 +108,7 @@ export const Pages: CollectionConfig = {
                 EditorialExpandedList,
                 TourSearchModule,
                 TourSearchModuleITTour,
+                ITTourShowcaseModule,
                 ExternalMedia,
               ],
               required: true,

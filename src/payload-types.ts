@@ -191,6 +191,11 @@ export interface Page {
         blockName?: string | null;
         blockType: 'tourSearchModuleITTour';
       }
+    | {
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'itTourShowcaseModule';
+      }
     | ExternalMedia
   )[];
   meta?: {
@@ -1426,6 +1431,12 @@ export interface PagesSelect<T extends boolean = true> {
               blockName?: T;
             };
         tourSearchModuleITTour?:
+          | T
+          | {
+              id?: T;
+              blockName?: T;
+            };
+        itTourShowcaseModule?:
           | T
           | {
               id?: T;
