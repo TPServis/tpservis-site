@@ -26,6 +26,7 @@ const inter = Inter({
 })
 
 import './globals.css'
+import SiteClosed from '@/components/closed'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
@@ -51,15 +52,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             )}
             {isEnabled && <LivePreviewListener />}
 
-            <Header />
-            {children}
-            <Footer />
+            {/* <Header /> */}
+            <SiteClosed />
+            {/* {children} */}
+            {/* <Footer /> */}
           </Providers>
           <Analytics />
           <SpeedInsights />
         </ReactQueryProvider>
       </body>
-    </html>
+    </html >
   )
 }
 
